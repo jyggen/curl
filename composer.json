@@ -1,0 +1,20 @@
+{
+    "name": "jyggen/curl",
+    "type": "library",
+    "description": "A lightweight cURL library with support for multiple requests in parallel.",
+    "keywords": ["cURL", "HTTP", "Multi-thread", "parallel", "spider", "bot"],
+    "homepage": "https://github.com/jyggen/curl",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonas Stendahl",
+            "email": "jonas.stendahl@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "jyggen\\Curl": "classes/" }
+    },
+    "require": {
+        "fleck/http": "dev-master"
+    }
+}
