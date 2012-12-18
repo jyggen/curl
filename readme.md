@@ -14,9 +14,13 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 This library was created with simplicity in mind, so in most cases you can use the static helpers in the `Curl` class. Each helper will return an array with two indexes: `data` and `info`. `data` will contain the response from your request and `info` anything that can normally be retrieved by `curl_getinfo()`. If multiple URLs are requested the helpers will return an array with a response array for each URL.
 
+#### DELETE
+
+`Curl::delete()` makes a DELETE request. See `Curl::get()` for usage.
+
 #### GET
 
-The first helper is `Curl::get()` which simply makes a GET request to the URL you supply.
+`Curl::get()` simply makes a GET request to the URL you supply.
 
 ```php
 $response = jyggen\Curl::get('http://example.com/');
@@ -30,7 +34,7 @@ $responses = jyggen\Curl::get(array('http://example.com/', 'http://example.org/'
 
 #### POST
 
-The next helper is `Curl::post()`. This method requires two arguments; the request URL and an array of POST data.
+The next helper is `Curl::post()`. This method makes a POST request and requires two arguments; the request URL and an array of POST data.
 
 ```php
 $response = jyggen\Curl::post('http://example.com/', array('username' => 'foo', 'password' => 'bar'));
@@ -46,6 +50,10 @@ $request_info = array(
 
 $responses = jyggen\Curl::post($request_info);
 ```
+
+#### PUT
+
+`Curl::put()` makes a PUT request. See `Curl::post()` for usage.
 
 ### Session and Dispatcher
 
