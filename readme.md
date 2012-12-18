@@ -12,7 +12,7 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ### Static Helpers
 
-This library was created with simplicity in mind, so in most cases you can use the static helpers in the `Curl` class. Every helper will return an array with two indexes: `data` and `info`. `data` will contain the response from your request and `info` anything that can normally be retrieved by `curl_getinfo()`. If multiple URLs are requested the helpers will return an array with a response array for each URL.
+This library was created with simplicity in mind, so in most cases you can use the static helpers in the `Curl` class. Each helper will return an array with two indexes: `data` and `info`. `data` will contain the response from your request and `info` anything that can normally be retrieved by `curl_getinfo()`. If multiple URLs are requested the helpers will return an array with a response array for each URL.
 
 #### GET
 
