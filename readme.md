@@ -49,4 +49,33 @@ $responses = jyggen\Curl::post($request_info);
 
 ### Session and Dispatcher
 
-For more advanced usage you'll have to go for the classes underneath the helpers. First we have the `Session`, which could be referred to as your URL, and then there's `Dispatcher` which keeps track of your sessions and executes your requests.
+For more advanced usage you'll have to go for the classes underneath the helpers. First we have `Session`, which could be referred to as your URL, and then there's `Dispatcher` which keeps track of your sessions and executes your requests.
+
+#### Session
+
+The `Session` object is basically a wrapper around a cURL resource.
+
+* ____construct(string $url)__  
+The constructor requires an URL and will initialize a new cURL resource with `CURLOPT_URL` set to it.
+* __getHandle()__  
+Get the session's cURL resource.
+* __getInfo(int $key = null)__  
+Get information about the session. A wrapper around `curl_getinfo()`.
+* __getResponse()__  
+Get the session's response. This is an array with two indexes: `data` and `info`.
+* __setOption(mixed $option, mixed $value = null)__  
+Set an option for the session. A wrapper around `curl_setopt` and `curl_setopt_array`.
+* __setResponse(string $response)__  
+Set the session's response. This is used by `Dispatcher` and should probably never be touched by you.
+
+
+#### Dispatcher
+
+The `Dispatcher` object is your session handler and request executor.
+
+* __addSession(mixed $session)__  
+Add a `Session` object (or an array of `Session` objects) to the dispatcher.
+* __execute(int $key = null)__  
+Execute all or a specific request.
+* __getResponses()__  
+Retrieve the response of all sessions attached to the dispatcher.
