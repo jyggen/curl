@@ -6,7 +6,7 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ## Changelog
 
-*This library is still under development.*
+*This library is still under development and therefore has no releases yet.*
 
 ## Usage
 
