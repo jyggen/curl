@@ -55,7 +55,7 @@ For more advanced usage you'll have to go for the classes underneath the helpers
 
 The `Session` object is basically a wrapper around a cURL resource.
 
-* ____construct(string $url)__  
+* __\_\_construct(string $url)__  
 The constructor requires an URL and will initialize a new cURL resource with `CURLOPT_URL` set to it.
 * __getHandle()__  
 Get the session's cURL resource.
