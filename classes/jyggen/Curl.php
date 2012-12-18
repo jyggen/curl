@@ -29,15 +29,9 @@ class Curl
 
 		// Create a new Dispatcher.
 		$dispatcher = new Dispatcher;
-		$multiple   = true;
 
 		// Turn $urls into an array if it isn't.
-		if(!is_array($urls)) {
-
-			$urls     = array($urls);
-			$multiple = false;
-
-		}
+		if(!is_array($urls)) { $urls = array($urls); }
 
 		// Foreach $urls:
 		foreach ($urls as $url) {
@@ -56,10 +50,12 @@ class Curl
 		// Execute the request(s).
 		$responses = $dispatcher->execute()->getResponses();
 
-		if($multiple === true) {
+		// If more than one URL was requested:
+		if(count($urls) > 1) {
 
 			return $responses;
 
+		// Else:
 		} else {
 
 			return $responses[0];
