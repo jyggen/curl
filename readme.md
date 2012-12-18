@@ -36,7 +36,7 @@ The next helper is `Curl::post()`. This method requires two arguments; the reque
 $response = jyggen\Curl::post('http://example.com/', array('username' => 'foo', 'password' => 'bar'));
 ```
 
-For multiple URLs only one argument is needed. This should be an array with POST data with the URL as the key for each index.
+For multiple URLs only one argument is needed. This should be an array of POST data with the URL as the key for each index.
 
 ```php
 $request_info = array(
