@@ -31,7 +31,7 @@ class Curl
 		$dispatcher = new Dispatcher;
 
 		// Turn $urls into an array if it isn't.
-		if(!is_array($urls)) { $urls = array($urls); }
+		if (!is_array($urls)) { $urls = array($urls); }
 
 		// Foreach $urls:
 		foreach ($urls as $url) {
@@ -41,6 +41,57 @@ class Curl
 
 			// Follow any 3xx HTTP status code.
 			$session->setOption(CURLOPT_FOLLOWLOCATION, true);
+
+			// Add the session to the dispatcher.
+			$dispatcher->addSession($session);
+
+		}
+
+		// Execute the request(s).
+		$responses = $dispatcher->execute()->getResponses();
+
+		// If more than one URL was requested:
+		if(count($urls) > 1) {
+
+			return $responses;
+
+		// Else:
+		} else {
+
+			return $responses[0];
+
+		}
+
+	}
+
+	/**
+	 * Static helper to retrieve URLs.
+	 *
+	 * @param	mixed	$url
+	 * @param	array	$data
+	 * @return	array
+	 */
+	public static function post($urls, $data = null)
+	{
+
+		// Create a new Dispatcher.
+		$dispatcher = new Dispatcher;
+
+		// Turn $urls into an array if it isn't.
+		if (!is_array($urls)) { $urls = array($urls => $data); }
+
+		// Foreach $urls:
+		foreach ($urls as $url => $data) {
+
+			// Create a new Session.
+			$session = new Session($url);
+
+			// Follow any 3xx HTTP status code.
+			$session->setOption(CURLOPT_FOLLOWLOCATION, true);
+
+			// Add the POST data to the session.
+			$session->setOption(CURLOPT_POST, true);
+			$session->setOption(CURLOPT_POSTFIELDS, $data);
 
 			// Add the session to the dispatcher.
 			$dispatcher->addSession($session);
