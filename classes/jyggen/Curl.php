@@ -19,7 +19,15 @@ class Curl
 {
 
 	/**
-	 * Static helper to retrieve URLs.
+	 * Static helper to do DELETE requests.
+	 *
+	 * @param	mixed	$url
+	 * @return	array
+	 */
+	public static function delete($urls);
+
+	/**
+	 * Static helper to do GET requests.
 	 *
 	 * @param	mixed	$url
 	 * @return	array
@@ -65,7 +73,7 @@ class Curl
 	}
 
 	/**
-	 * Static helper to retrieve URLs.
+	 * Static helper to do POST requests.
 	 *
 	 * @param	mixed	$url
 	 * @param	array	$data
@@ -114,6 +122,14 @@ class Curl
 		}
 
 	}
+
+	/**
+	 * Static helper to do PUT requests.
+	 *
+	 * @param	mixed	$url
+	 * @return	array
+	 */
+	public static function put($urls, $data = null);
 
 	/*
 	 * @todo refactor Curl::get() and Curl::post() to utilize
