@@ -17,14 +17,9 @@ use jyggen\Curl;
 class CurlTests extends PHPUnit_Framework_TestCase
 {
 
-	public function testForge()
+	public function testGet()
 	{
 
-		$dispatcher = new Dispatcher;
-		$session    = new Session;
-		$curl       = new Curl;
-
 	}
-
 
 }
