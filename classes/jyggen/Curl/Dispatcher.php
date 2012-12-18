@@ -79,35 +79,6 @@ class Dispatcher
 
 	}
 
-	/**
-	 * Execute a single session.
-	 *
-	 * @param	int		$key
-	 * @return	void
-	 */
-	protected function executeSingle($key = 0)
-	{
-
-		// If $key is a valid session:
-		if (array_key_exists($key, $this->sessions)) {
-
-			$session  = $this->sessions[$key];
-			$handle   = $session->getHandle();
-			$response = curl_exec($handle);
-
-			// If $response isn't false:
-			if($response !== false) {
-
-				$session->setResponse($response);
-
-			// Else throw a CurlErrorExcepetion.
-			} else throw new \jyggen\CurlErrorException(curl_error($handle));
-
-		// Else throw an InvalidKeyException.
-		} else throw new \jyggen\InvalidKeyException('Session with key #'.$key.' does not exist.');
-
-	}
-
 	protected function executeMultiple()
 	{
 
@@ -160,6 +131,35 @@ class Dispatcher
 		}
 
 		curl_multi_close($mh);
+
+	}
+
+	/**
+	 * Execute a single session.
+	 *
+	 * @param	int		$key
+	 * @return	void
+	 */
+	protected function executeSingle($key = 0)
+	{
+
+		// If $key is a valid session:
+		if (array_key_exists($key, $this->sessions)) {
+
+			$session  = $this->sessions[$key];
+			$handle   = $session->getHandle();
+			$response = curl_exec($handle);
+
+			// If $response isn't false:
+			if($response !== false) {
+
+				$session->setResponse($response);
+
+			// Else throw a CurlErrorExcepetion.
+			} else throw new \jyggen\CurlErrorException(curl_error($handle));
+
+		// Else throw an InvalidKeyException.
+		} else throw new \jyggen\InvalidKeyException('Session with key #'.$key.' does not exist.');
 
 	}
 
