@@ -72,6 +72,18 @@ class Session
 	}
 
 	/**
+	 * Get this session's response.
+	 *
+	 * @return	array
+	 */
+	public function getResponse()
+	{
+
+		return $this->response;
+
+	}
+
+	/**
 	 * Set an option for the session.
 	 *
 	 * @param	int		$option
@@ -117,13 +129,6 @@ class Session
 			);
 
 		}
-
-	}
-
-	public function getResponse()
-	{
-
-		return $this->response;
 
 	}
 
