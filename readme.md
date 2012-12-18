@@ -10,22 +10,43 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ## Usage
 
-This library was created with simplicity in mind, so in most cases you can use the static helpers in the `Curl` class. There's currently two helpers available; `get` and `post`.
+### Static Helpers
+
+This library was created with simplicity in mind, so in most cases you can use the static helpers in the `Curl` class. Every helper will return an array with two indexes: `data` and `info`. `data` will contain the response from your request and `info` anything that can normally be retrieved by `curl_getinfo()`. If multiple URLs are requested the helpers will return an array with a response array for each URL.
+
+#### GET
+
+The first helper is `Curl::get()` which simply makes a GET request to the URL you supply.
 
 ```php
-$response = Curl::get('http://example.com/');
-
-print_r($response);
+$response = jyggen\Curl::get('http://example.com/');
 ```
 
-This will return an array with two indexes: `data` and `info`. `data` contains the response from your request and `info` anything that can be retrieved by `curl_getinfo()`.
-
-If you want to request multiple URLs you can pass an array to the helper, this will utilize parallel (commonly referred to as multi-threaded) requests.
+If you want to request multiple URLs you can pass an array to the helper. This will utilize parallel requests (commonly referred to as multi-threaded).
 
 ```php
-$responses = Curl::get(array('http://example.com/', 'http://example.org/'));
-
-foreach($responses as $response) {
-	print_r($response);
-}
+$responses = jyggen\Curl::get(array('http://example.com/', 'http://example.org/'));
 ```
+
+#### POST
+
+The next helper is `Curl::post()`. This method requires two arguments; the request URL and an array of POST data.
+
+```php
+$response = jyggen\Curl::post('http://example.com/', array('username' => 'foo', 'password' => 'bar'));
+```
+
+For multiple URLs only one argument is needed. This should be an array with POST data with the URL as the key for each index.
+
+```php
+$request_info = array(
+  'http://www.example.com/' => array('username' => 'foo', 'password' => 'bar'),
+  'http://www.example.org/' => array('username' => 'foo', 'password' => 'bar')
+);
+
+$responses = jyggen\Curl::post($request_info);
+```
+
+### Session and Dispatcher
+
+For more advanced usage you'll have to go for the classes underneath the helpers. First we have the `Session`, which could be referred to as your URL, and then there's `Dispatcher` which keeps track of your sessions and executes your requests.
