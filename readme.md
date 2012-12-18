@@ -16,11 +16,11 @@ This library was created with simplicity in mind, so in most cases you can use t
 
 #### DELETE
 
-`Curl::delete()` makes a DELETE request. See `Curl::get()` for usage.
+To make a DELETE request you'd use `Curl::delete()`. See `Curl::get()` for usage.
 
 #### GET
 
-`Curl::get()` simply makes a GET request to the URL you supply.
+To make a GET request you'd use `Curl::get()`. To retrieve a single URL, simply pass it as an argument:
 
 ```php
 $response = jyggen\Curl::get('http://example.com/');
@@ -34,7 +34,7 @@ $responses = jyggen\Curl::get(array('http://example.com/', 'http://example.org/'
 
 #### POST
 
-The next helper is `Curl::post()`. This method makes a POST request and requires two arguments; the request URL and an array of POST data.
+To make a POST request you'd use `Curl::post()`. This method requires two arguments; the request URL and an array of POST data.
 
 ```php
 $response = jyggen\Curl::post('http://example.com/', array('username' => 'foo', 'password' => 'bar'));
@@ -53,7 +53,7 @@ $responses = jyggen\Curl::post($request_info);
 
 #### PUT
 
-`Curl::put()` makes a PUT request. See `Curl::post()` for usage.
+To make a PUT request you'd use `Curl::put()`. See `Curl::post()` for usage.
 
 ### Session and Dispatcher
 
