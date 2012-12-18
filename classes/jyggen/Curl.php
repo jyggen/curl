@@ -115,4 +115,10 @@ class Curl
 
 	}
 
+	/*
+	 * @todo refactor Curl::get() and Curl::post() to utilize
+	 *       this method to avoid code repetition.
+	 */
+	protected static function makeRequest($method, $urls);
+
 }
