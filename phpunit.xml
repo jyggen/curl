@@ -10,7 +10,7 @@
          stopOnFailure="true"
          syntaxCheck="false">
    <testsuites>
-      <testsuite name="curl/tests">
+      <testsuite name="youtubethumb/tests">
          <directory suffix=".php">./tests/</directory>
       </testsuite>
    </testsuites>
