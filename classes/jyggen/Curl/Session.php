@@ -98,16 +98,22 @@ class Session
 
 			foreach ($option as $opt => $val) {
 
-				return $this->setOption($this->handle, $opt, $val);
+				$return = $this->setOption($this->handle, $opt, $val);
+
+				if($return === false) {
+					return false;
+				}
 
 			}
+
+			return true;
 
 		// Else if $option isn't a required default value:
 		} elseif (!array_key_exists($option, $this->defaults)) {
 
 			return curl_setopt($this->handle, $option, $value);
 
-		// Else throw a ProtectedOPtionException.
+		// Else throw a ProtectedOptionException.
 		} else throw new \jyggen\ProtectedOptionException('To prevent unexpected behavior you are not allowed to change option '.$option.'.');
 
 	}
