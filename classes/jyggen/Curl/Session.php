@@ -98,7 +98,7 @@ class Session
 
 			foreach ($option as $opt => $val) {
 
-				$return = $this->setOption($this->handle, $opt, $val);
+				$return = $this->setOption($opt, $val);
 
 				if($return === false) {
 					return false;
