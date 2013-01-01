@@ -90,6 +90,20 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
 	}
 
+	public function testSetOptionWithError()
+	{
+
+		$this->assertFalse(@static::getInstance()->setOption(CURLOPT_FILE, 'nope'));
+
+	}
+
+	public function testSetOptionArrayWithError()
+	{
+
+		$this->assertFalse(@static::getInstance()->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope')));
+
+	}
+
 	public function testSetProtectedOption()
 	{
 
