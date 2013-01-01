@@ -15,10 +15,25 @@ use jyggen\Curl\Dispatcher;
 class DispatcherTests extends PHPUnit_Framework_TestCase
 {
 
+	protected static $instance;
+
+	public static function getInstance()
+	{
+
+		if(static::$instance == null) {
+
+			static::$instance = new Dispatcher;
+
+		}
+
+		return static::$instance;
+
+	}
+
 	public function testConstruct()
 	{
 
-		$dispatcher = new Dispatcher;
+		$dispatcher = static::getInstance();
 
 		$this->assertInstanceOf('jyggen\\Curl\\Dispatcher', $dispatcher);
 
