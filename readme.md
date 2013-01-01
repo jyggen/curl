@@ -6,7 +6,9 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ## Changelog
 
-*This library is still under development and therefore has no releases yet.*
+### 1.0.1
+* Fixed an issue with Session::setOption() no recursing arrays correctly.
+* Added 100% test coverage for Session.
 
 ## Usage
 
