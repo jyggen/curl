@@ -86,6 +86,8 @@ class Session
 	/**
 	 * Set an option for the session.
 	 *
+	 * @todo	should probably throw an Exception on error instead of bool.
+	 *
 	 * @param	int		$option
 	 * @param	mixed	$value
 	 * @return	bool
