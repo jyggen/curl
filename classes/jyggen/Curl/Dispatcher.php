@@ -77,7 +77,11 @@ class Dispatcher
 			$this->executeMultiple();
 
 		// Else throw an EmptyDispatcherException.
-		} else throw new \jyggen\EmptyDispatcherException('You must add at least one session to the dispatcher to execute requests.');
+		} else {
+
+			throw new \jyggen\EmptyDispatcherException('You must add at least one session to the dispatcher to execute requests.');
+
+		}
 
 		return $this;
 

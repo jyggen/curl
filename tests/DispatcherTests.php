@@ -50,16 +50,43 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 
 	}
 
+	public function testExecuteEmpty()
+	{
+
+		$this->setExpectedException('jyggen\\EmptyDispatcherException');
+		static::getInstance()->execute();
+
+	}
+
 	public function testAddSessionSingle()
 	{
 
 		$dispatcher = static::getInstance();
 		$session    = new Session('http://example.com/');
 
+		$session->setOption(CURLOPT_FOLLOWLOCATION, true);
 		$dispatcher->addSession($session);
 
 		$sessions = $dispatcher->getSessions();
 		$this->assertEquals('http://example.com/', $sessions[0]->getInfo(CURLINFO_EFFECTIVE_URL));
+
+	}
+
+	public function testExecuteSingle()
+	{
+
+		$dispatcher = static::getInstance();
+		$sessions   = $dispatcher->getSessions();
+
+		$dispatcher->execute();
+
+		$response = $sessions[0]->getResponse();
+
+		$this->assertTrue(array_key_exists('data', $response));
+		$this->assertTrue(array_key_exists('info', $response));
+		$this->assertEquals(200, $response['info']['http_code']);
+		$this->assertEquals('http://www.iana.org/domains/example', $response['info']['url']);
+		$this->assertSelectEquals('html body div h1', 'Example Domain', true, $response['data']);
 
 	}
 
@@ -68,12 +95,36 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 
 		$dispatcher = static::getInstance();
 
-		$dispatcher->addSession(array(new Session('http://example.net/'), new Session('http://example.org/')));
+		$session1 = new Session('http://example.net/');
+		$session1->setOption(CURLOPT_FOLLOWLOCATION, true);
+
+		$session2 = new Session('http://example.org/');
+		$session2->setOption(CURLOPT_FOLLOWLOCATION, true);
+
+		$dispatcher->addSession(array($session1, $session2));
 
 		$sessions = $dispatcher->getSessions();
 
 		$this->assertEquals('http://example.net/', $sessions[1]->getInfo(CURLINFO_EFFECTIVE_URL));
 		$this->assertEquals('http://example.org/', $sessions[2]->getInfo(CURLINFO_EFFECTIVE_URL));
+
+	}
+
+	public function testExecuteWithKey()
+	{
+
+		$dispatcher = static::getInstance();
+		$sessions   = $dispatcher->getSessions();
+
+		$dispatcher->execute(1);
+
+		$response = $sessions[1]->getResponse();
+
+		$this->assertTrue(array_key_exists('data', $response));
+		$this->assertTrue(array_key_exists('info', $response));
+		$this->assertEquals(200, $response['info']['http_code']);
+		$this->assertEquals('http://www.iana.org/domains/example', $response['info']['url']);
+		$this->assertSelectEquals('html body div h1', 'Example Domain', true, $response['data']);
 
 	}
 
