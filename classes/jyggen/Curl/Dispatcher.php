@@ -42,7 +42,11 @@ class Dispatcher
 			$this->sessions[] = $session;
 
 		// Else throw an UnexpectedvalueException.
-		} else throw new \jyggen\UnexpectedValueException('Argument must be an instance or array with instances of jyggen\\Curl\\Session, "'.gettype($session).'" given.');
+		} else {
+
+			throw new \jyggen\UnexpectedValueException('Argument must be an instance or array with instances of jyggen\\Curl\\Session, "'.gettype($session).'" given.');
+
+		}
 
 		return $this;
 
@@ -175,6 +179,13 @@ class Dispatcher
 		}
 
 		return $responses;
+
+	}
+
+	public function getSessions()
+	{
+
+		return $this->sessions;
 
 	}
 

@@ -89,3 +89,5 @@ Add a `Session` object (or an array of `Session` objects) to the dispatcher.
 Execute all or a specific request.
 * __getResponses()__  
 Retrieve the response of all sessions attached to the dispatcher.
+* __getSessions()__  
+Retrieve all sessions attached to the dispatcher.
