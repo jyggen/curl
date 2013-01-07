@@ -100,7 +100,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	public function testSetOptionArrayWithError()
 	{
 
-		$this->assertFalse(@static::getInstance()->setOption(array(CURLOPT_FOLLOWLOCATION => false, CURLOPT_FILE => 'nope')));
+		$this->assertFalse(@static::getInstance()->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope')));
 
 	}
 
@@ -140,8 +140,8 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
 		$this->assertTrue(array_key_exists('data', $response));
 		$this->assertTrue(array_key_exists('info', $response));
-		$this->assertEquals(302, $response['info']['http_code']);
-		$this->assertEquals('http://example.com/', $response['info']['url']);
+		$this->assertEquals(200, $response['info']['http_code']);
+		$this->assertEquals('http://www.iana.org/domains/example/', $response['info']['url']);
 		$this->assertSelectEquals('html body div h1', 'Example Domain', true, $response['data']);
 
 	}
