@@ -3,7 +3,7 @@
  * A lightweight cURL library with support for multiple requests in parallel.
  *
  * @package Curl
- * @version 1.0
+ * @version 1.1
  * @author Jonas Stendahl
  * @license MIT License
  * @copyright 2012 Jonas Stendahl
@@ -20,7 +20,7 @@ class Dispatcher
 	protected $sessions = array();
 
 	/**
-	 * Add a new session to the dispatcher.
+	 * Add new session(s) to the dispatcher.
 	 *
 	 * @param	mixed	$session
 	 * @return	jyggen\Curl\Dispatcher
@@ -47,6 +47,20 @@ class Dispatcher
 			throw new \jyggen\UnexpectedValueException('Argument must be an instance or array with instances of jyggen\\Curl\\Session, "'.gettype($session).'" given.');
 
 		}
+
+		return $this;
+
+	}
+
+	/**
+	 * Remove all sessions from the dispatcher.
+	 *
+	 * @return	jyggen\Curl\Dispatcher
+	 */
+	public function clearSessions()
+	{
+
+		$this->sessions = array();
 
 		return $this;
 
@@ -87,6 +101,61 @@ class Dispatcher
 
 	}
 
+	/**
+	 * Get the response from added Session objects.
+	 * @return	array
+	 */
+	public function getResponses()
+	{
+
+		$responses = array();
+
+		foreach($this->sessions as $session) {
+
+			$responses[] = $session->getResponse();
+
+		}
+
+		return $responses;
+
+	}
+
+	/**
+	 * Get an array of added Session objects.
+	 * @return	array
+	 */
+	public function getSessions()
+	{
+
+		return $this->sessions;
+
+	}
+
+	/**
+	 * Remove a specific session from the Dispatcher.
+	 * @param	int		$key
+	 * @return	bool
+	 */
+	public function removeSession($key)
+	{
+
+		if (array_key_exists($key, $this->sessions)) {
+
+			unset($this->sessions[$key]);
+			return true;
+
+		} else {
+
+			return false;
+
+		}
+
+	}
+
+	/**
+	 * Execute multiple sessions in parallel.
+	 * @return	void
+	 */
 	protected function executeMultiple()
 	{
 
@@ -168,28 +237,6 @@ class Dispatcher
 
 		// Else throw an InvalidKeyException.
 		} else throw new \jyggen\InvalidKeyException('Session with key #'.$key.' does not exist.');
-
-	}
-
-	public function getResponses()
-	{
-
-		$responses = array();
-
-		foreach($this->sessions as $session) {
-
-			$responses[] = $session->getResponse();
-
-		}
-
-		return $responses;
-
-	}
-
-	public function getSessions()
-	{
-
-		return $this->sessions;
 
 	}
 
