@@ -6,9 +6,15 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ## Changelog
 
+### 1.0.2
+
+* Added `Dispatcher::getSessions()`.
+* Added 98% test coverage for `Dispatcher`.
+* Minor code cleanup.
+
 ### 1.0.1
-* Fixed an issue with Session::setOption() no recursing arrays correctly.
-* Added 100% test coverage for Session.
+* Fixed an issue with `Session::setOption()` no recursing arrays correctly.
+* Added 100% test coverage for `Session`.
 
 ## Usage
 
