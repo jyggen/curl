@@ -177,12 +177,13 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	public function testRemoveSession()
 	{
 
-		$dispatcher = static::getInstance();
+		$dispatcher  = static::getInstance();
+		$resultTrue  = $dispatcher->removeSession(2);
+		$resultFalse = $dispatcher->removeSession(2);
+		$sessions    = $dispatcher->getSessions();
 
-		$dispatcher->removeSession(2);
-
-		$sessions = $dispatcher->getSessions();
-
+		$this->assertTrue($resultTrue);
+		$this->assertFalse($resultFalse);
 		$this->assertEquals(2, count($sessions));
 
 	}
