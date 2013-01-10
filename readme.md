@@ -65,6 +65,8 @@ To make a PUT request you'd use `Curl::put()`. See `Curl::post()` for usage.
 
 ### Session and Dispatcher
 
+*The documentation is still work-in-progress, check the code!*
+
 For more advanced usage you'll have to go for the classes underneath the helpers. First we have `Session`, which could be referred to as your URL, and then there's `Dispatcher` which keeps track of your sessions and executes your requests.
 
 #### Session
@@ -97,3 +99,26 @@ Execute all or a specific request.
 Retrieve the response of all sessions attached to the dispatcher.
 * __getSessions()__  
 Retrieve all sessions attached to the dispatcher.
+
+## About
+
+### Requirements
+
+* PHP 5.3 or above.
+* PHPUnit to execute the test suite (optional).
+
+### Bugs and Feature Requests
+
+Please create an issue or pull request on [GitHub](https://github.com/jyggen/curl).
+
+### Author
+
+Jonas Stendahl
+jonas.stendahl@gmail.com
+http://twitter.com/jyggen
+
+[See the list of contributors here](https://github.com/jyggen/curl/contributors).
+
+### License
+
+This library is licensed under the MIT license.
