@@ -128,6 +128,44 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 
 	}
 
+	public function testExecuteMultiple()
+	{
+
+		$dispatcher = static::getInstance();
+		$sessions   = $dispatcher->getSessions();
+
+		$dispatcher->execute();
+
+		$response = $sessions[2]->getResponse();
+
+		$this->assertTrue(array_key_exists('data', $response));
+		$this->assertTrue(array_key_exists('info', $response));
+		$this->assertEquals(200, $response['info']['http_code']);
+		$this->assertEquals('http://www.iana.org/domains/example', $response['info']['url']);
+		$this->assertSelectEquals('html body div h1', 'Example Domain', true, $response['data']);
+
+	}
+
+	public function testGetResponses()
+	{
+
+		$responses = static::getInstance()->getResponses();
+
+		$this->assertTrue(is_array($responses));
+		$this->assertEquals(3, count($responses));
+
+		foreach ($responses as $response) {
+
+			$this->assertTrue(array_key_exists('data', $response));
+			$this->assertTrue(array_key_exists('info', $response));
+			$this->assertEquals(200, $response['info']['http_code']);
+			$this->assertEquals('http://www.iana.org/domains/example', $response['info']['url']);
+			$this->assertSelectEquals('html body div h1', 'Example Domain', true, $response['data']);
+
+		}
+
+	}
+
 	public function testAddSessionException()
 	{
 
