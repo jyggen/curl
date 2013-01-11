@@ -1,45 +1,85 @@
 <?php
 /**
- * A lightweight cURL library with support for multiple requests in parallel.
+ * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
- * @package Curl
- * @version 1.0
- * @author Jonas Stendahl
- * @license MIT License
- * @copyright 2012 Jonas Stendahl
- * @link http://github.com/jyggen/curl
+ * @package     Curl
+ * @version     2.0
+ * @author      Jonas Stendahl
+ * @license     MIT License
+ * @copyright   2013 Jonas Stendahl
+ * @link        http://github.com/jyggen/curl
  */
 
 namespace jyggen\Curl;
 
-class Session
+use jyggen\Curl\Response;
+
+class Session implements SessionInterface
 {
 
-	protected $handle, $response;
-
-	protected $defaults = array(
-		CURLOPT_RETURNTRANSFER => true,
-	);
+	/**
+	 * A list of defaults options that can't be overwritten.
+	 *
+	 * @var array
+	 */
+	protected $defaults = array(CURLOPT_RETURNTRANSFER => true);
 
 	/**
-	 * Create a new Session.
+	 * If the session is attached to a cURL multi handle.
 	 *
-	 * @param	string	$url
-	 * @return	void
+	 * @var boolean
+	 */
+	protected $isMulti  = false;
+
+	/**
+	 * The cURL handle.
+	 *
+	 * @var curl
+	 */
+	protected $handle;
+
+	/**
+	 * The Response object.
+	 *
+	 * @var jyggen\Curl\Response
+	 */
+	protected $response;
+
+	/**
+	 * Create a new Session instance.
+	 *
+	 * @param  string $url
+	 * @return void
 	 */
 	public function __construct($url)
 	{
 
 		$this->handle = curl_init($url);
 
-		curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, true);
+		foreach ($this->defaults as $option => $value) {
+
+			curl_setopt($this->handle, $option, $value);
+
+		}
 
 	}
 
 	/**
-	 * Retrieve the session's cURL handle.
+	 * Retrieve the latest error.
 	 *
-	 * @return	resource
+	 * @return string
+	 */
+	public function getErrorMessage()
+	{
+
+		return curl_error($this->handle);
+
+	}
+
+	/**
+	 * Retrieve the cURL handle.
+	 *
+	 * @return curl
 	 */
 	public function getHandle()
 	{
@@ -51,8 +91,8 @@ class Session
 	/**
 	 * Get information regarding the session.
 	 *
-	 * @param	int		$key
-	 * @return	string
+	 * @param  int $key null
+	 * @return mixed
 	 */
 	public function getInfo($key = null)
 	{
@@ -74,7 +114,7 @@ class Session
 	/**
 	 * Get this session's response.
 	 *
-	 * @return	array
+	 * @return array
 	 */
 	public function getResponse()
 	{
@@ -86,57 +126,99 @@ class Session
 	/**
 	 * Set an option for the session.
 	 *
-	 * @todo	should probably throw an Exception on error instead of bool.
-	 *
-	 * @param	int		$option
-	 * @param	mixed	$value
-	 * @return	bool
+	 * @param  mixed $option
+	 * @param  mixed $value  null
+	 * @return jyggen\Curl\Session
 	 */
 	public function setOption($option, $value = null)
 	{
 
-		// If $option is an array:
+		// $option is an array, loop through each option and call this method recursively.
 		if (is_array($option)) {
 
 			foreach ($option as $opt => $val) {
+				$this->setOption($opt, $val);
+			}
 
-				$return = $this->setOption($opt, $val);
+		// $option isn't a default value, call curl_setopt and throw an exception on false.
+		} elseif (!array_key_exists($option, $this->defaults)) {
 
-				if($return === false) {
-					return false;
-				}
+			if (curl_setopt($this->handle, $option, $value) === false) {
+
+				throw new \jyggen\CurlErrorException(sprintf('Couldn\'t set option #%u.', $option));
 
 			}
 
-			return true;
+		// $option is a protected default value and shouldn't be overwritten, throw an exception!
+		} else {
 
-		// Else if $option isn't a required default value:
-		} elseif (!array_key_exists($option, $this->defaults)) {
+			throw new \jyggen\ProtectedOptionException('To prevent unexpected behavior you are not allowed to change option #'.$option.'.');
 
-			return curl_setopt($this->handle, $option, $value);
-
-		// Else throw a ProtectedOptionException.
-		} else throw new \jyggen\ProtectedOptionException('To prevent unexpected behavior you are not allowed to change option '.$option.'.');
+		}
 
 	}
 
-	public function setResponse($response)
+	/**
+	 * Add the session to a cURL multi handle.
+	 *
+	 * @param  curl_multi $multiHandle
+	 * @return int
+	 */
+	public function addMultiHandle($multiHandle)
 	{
 
-		if ($response === true) {
+		$this->isMulti = true;
 
-			$this->response = array(
-				'info' => $this->getInfo(),
-			);
+		return curl_multi_add_handle($multiHandle, $this->handle);
+
+	}
+
+	/**
+	 * Execute the request.
+	 *
+	 * @return void
+	 */
+	public function execute()
+	{
+
+		if ($this->isMulti) {
+
+			$content = curl_multi_getcontent($this->handle);
 
 		} else {
 
-			$this->response = array(
-				'data' => $response,
-				'info' => $this->getInfo(),
-			);
+			$content = curl_exec($this->handle);
 
 		}
+
+		$this->response = new Response;
+
+	}
+
+	/**
+	 * If the request was successful or not.
+	 *
+	 * @return boolean
+	 */
+	public function isSuccessful()
+	{
+
+		return ($this->getErrorMessage() === '') ? true : false;
+
+	}
+
+	/**
+	 * Remove the session from a cURL multi handle.
+	 *
+	 * @param  curl_multi $multiHandle
+	 * @return int
+	 */
+	public function removeMultiHandle($multiHandle)
+	{
+
+		$this->isMulti = false;
+
+		return curl_multi_remove_handle($multiHandle, $this->handle);
 
 	}
 
