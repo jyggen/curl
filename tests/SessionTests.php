@@ -1,13 +1,13 @@
 <?php
 /**
- * A lightweight cURL library with support for multiple requests in parallel.
+ * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
- * @package Curl
- * @version 1.0
- * @author Jonas Stendahl
- * @license MIT License
- * @copyright 2012 Jonas Stendahl
- * @link http://github.com/jyggen/curl
+ * @package     Curl
+ * @version     2.0
+ * @author      Jonas Stendahl
+ * @license     MIT License
+ * @copyright   2013 Jonas Stendahl
+ * @link        http://github.com/jyggen/curl
  */
 
 use jyggen\Curl\Session;
@@ -15,67 +15,59 @@ use jyggen\Curl\Session;
 class SessionTests extends PHPUnit_Framework_TestCase
 {
 
-	protected static $instance;
-
-	public static function getInstance()
-	{
-
-		if(static::$instance == null) {
-
-			static::$instance = new Session('http://example.com/');
-
-		}
-
-		return static::$instance;
-
-	}
-
 	public function testConstruct()
 	{
 
-		$this->assertInstanceOf('jyggen\\Curl\\Session', $this->getInstance());
+		$this->assertInstanceof('jyggen\\Curl\\Session', new Session('http://example.com/'));
+
+	}
+
+	public function testGetErrorMessage()
+	{
+
+		$session = new Session('http://example.com/');
+		$this->assertEquals('', $session->getErrorMessage());
 
 	}
 
 	public function testGetHandle()
 	{
 
-		$handle = static::getInstance()->getHandle();
-
-		$this->assertInternalType('resource', $handle);
-		$this->assertEquals('curl', get_resource_type($handle));
+		$session = new Session('http://example.com/');
+		$this->assertInternalType('resource', $session->getHandle());
+		$this->assertEquals('curl', get_resource_type($session->getHandle()));
 
 	}
 
 	public function testGetInfo()
 	{
 
-		$info = static::getInstance()->getInfo();
-
-		$this->assertEquals('http://example.com/', $info['url']);
+		$session = new Session('http://example.com/');
+		$this->assertInternalType('array', $session->getInfo());
 
 	}
 
 	public function testGetInfoWithKey()
 	{
 
-		$this->assertEquals('http://example.com/', static::getInstance()->getInfo(CURLINFO_EFFECTIVE_URL));
+		$session = new Session('http://example.com/');
+		$this->assertEquals('http://example.com/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
 
-	public function testGetResponseBeforeExecute()
+	public function testGetResponse()
 	{
 
-		$this->assertNull(static::getInstance()->getResponse());
+		$session = new Session('http://example.com/');
+		$this->assertEquals(null, $session->getResponse());
 
 	}
 
 	public function testSetOption()
 	{
 
-		$session = static::getInstance();
-
-		$this->assertTrue($session->setOption(CURLOPT_URL, 'http://example.org/'));
+		$session = new Session('http://example.com/');
+		$session->setOption(CURLOPT_URL, 'http://example.org/');
 		$this->assertEquals('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
@@ -83,66 +75,79 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	public function testSetOptionArray()
 	{
 
-		$session = static::getInstance();
-
-		$this->assertTrue($session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.com/')));
-		$this->assertEquals('http://example.com/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+		$session = new Session('http://example.com/');
+		$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
+		$this->assertEquals('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
 
-	public function testSetOptionWithError()
+	/**
+     * @expectedException        jyggen\CurlErrorException
+     * @expectedExceptionMessage Couldn't set option
+     */
+	public function testSetOptionError()
 	{
 
-		$this->assertFalse(@static::getInstance()->setOption(CURLOPT_FILE, 'nope'));
+		$session = new Session('http://example.com/');
+		@$session->setOption(CURLOPT_FILE, 'nope');
 
 	}
 
-	public function testSetOptionArrayWithError()
+	/**
+     * @expectedException        jyggen\CurlErrorException
+     * @expectedExceptionMessage Couldn't set option
+     */
+	public function testSetOptionArrayError()
 	{
 
-		$this->assertFalse(@static::getInstance()->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope')));
+		$session = new Session('http://example.com/');
+		@$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
 
 	}
 
+	/**
+     * @expectedException        jyggen\ProtectedOptionException
+     * @expectedExceptionMessage not allowed to change
+     */
 	public function testSetProtectedOption()
 	{
 
-		$this->setExpectedException('jyggen\\ProtectedOptionException');
-		static::getInstance()->setOption(CURLOPT_RETURNTRANSFER, true);
+		$session = new Session('http://example.com/');
+		$session->setOption(CURLOPT_RETURNTRANSFER, true);
 
 	}
 
-	public function testSetResponseWithBool()
+	public function testAddMultiHandle()
 	{
 
-		$session = static::getInstance();
-
-		$session->setResponse(true);
-
-		$response = $session->getResponse();
-
-		$this->assertFalse(array_key_exists('data', $response));
-		$this->assertTrue(array_key_exists('info', $response));
-		$this->assertEquals(0, $response['info']['http_code']);
-		$this->assertEquals('http://example.com/', $response['info']['url']);
+		$session = new Session('http://example.com/');
+		$multi   = curl_multi_init();
+		$this->assertEquals(0, $session->addMultiHandle($multi));
 
 	}
 
-	public function testSetResponseWithContent()
+	public function testExecute()
 	{
 
-		$session = static::getInstance();
-		$data    = curl_exec($session->getHandle());
+		$session = new Session('http://example.com/');
 
-		$session->setResponse($data);
+	}
 
-		$response = $session->getResponse();
+	public function testIsSuccessful()
+	{
 
-		$this->assertTrue(array_key_exists('data', $response));
-		$this->assertTrue(array_key_exists('info', $response));
-		$this->assertEquals(200, $response['info']['http_code']);
-		$this->assertEquals('http://www.iana.org/domains/example', $response['info']['url']);
-		$this->assertSelectEquals('html body div h1', 'Example Domain', true, $response['data']);
+		$session = new Session('http://example.com/');
+		$this->assertTrue($session->isSuccessful());
+
+	}
+
+	public function testRemoveMultiHandle()
+	{
+
+		$session = new Session('http://example.com/');
+		$multi   = curl_multi_init();
+		$session->addMultiHandle($multi);
+		$this->assertEquals(0, $session->removeMultiHandle($multi));
 
 	}
 
