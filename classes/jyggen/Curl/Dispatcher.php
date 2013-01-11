@@ -1,186 +1,122 @@
 <?php
 /**
- * A lightweight cURL library with support for multiple requests in parallel.
+ * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
- * @package Curl
- * @version 1.1
- * @author Jonas Stendahl
- * @license MIT License
- * @copyright 2012 Jonas Stendahl
- * @link http://github.com/jyggen/curl
+ * @package     Curl
+ * @version     2.0
+ * @author      Jonas Stendahl
+ * @license     MIT License
+ * @copyright   2013 Jonas Stendahl
+ * @link        http://github.com/jyggen/curl
  */
 
 namespace jyggen\Curl;
 
 use jyggen\Curl\Session;
+use jyggen\Curl\Session_Interface;
 
 class Dispatcher
 {
 
+	/**
+	 * The cURL multi handle.
+	 *
+	 * @var curl_multi
+	 */
+	protected $handle;
+
+	/**
+	 * All of the added sessions.
+	 *
+	 * @var array
+	 */
 	protected $sessions = array();
 
 	/**
-	 * Add new session(s) to the dispatcher.
+	 * Create a new Dispatcher instance.
 	 *
-	 * @param	mixed	$session
-	 * @return	jyggen\Curl\Dispatcher
+	 * @return void
 	 */
-	public function addSession($session)
+	public function __construct()
 	{
 
-		// If $session is an array:
-		if (is_array($session)) {
-			foreach($session as $value) {
+		$this->handle = curl_multi_init();
 
-				// Call this method again.
-				$this->addSession($value);
+	}
+	/**
+	 * Shutdown sequence.
+	 *
+	 * @return void
+	 */
+	public function __destruct()
+	{
 
-			}
-		// If $session is an instance of jyggen\Curl\Session:
-		} elseif ($session instanceof Session) {
-
-			$this->sessions[] = $session;
-
-		// Else throw an UnexpectedvalueException.
-		} else {
-
-			throw new \jyggen\UnexpectedValueException('Argument must be an instance or array with instances of jyggen\\Curl\\Session, "'.gettype($session).'" given.');
-
-		}
-
-		return $this;
+		curl_multi_close($this->handle);
 
 	}
 
 	/**
-	 * Remove all sessions from the dispatcher.
+	 * Add a Session.
 	 *
-	 * @return	jyggen\Curl\Dispatcher
+	 * @param  jyggen\Curl\SessionInterface $session
+	 * @return void
 	 */
-	public function clearSessions()
+	public function add(SessionInterface $session)
 	{
 
-		$this->sessions = array();
+		// Tell the session to use our handle.
+		$session->addMultiHandle($this->handle);
 
-		return $this;
+		// Store the session.
+		$this->sessions[] = $session;
+
+		return (count($this->sessions) - 1);
+
+	}
+
+	/**
+	 * Remove all sessions.
+	 *
+	 * @return void
+	 */
+	public function clear()
+	{
+
+		// Loop through all sessions and remove
+		// their relationship to our handle.
+		foreach ($this->sessions as $session) {
+
+			$session->removeMultiHandle($this->handle);
+
+		}
+
+		// Reset the sessions array.
+		$this->sessions = array();
 
 	}
 
 	/**
 	 * Execute all added sessions.
 	 *
-	 * @param	int		$key
-	 * @return	jyggen\Curl\Dispatcher
+	 * @return void
 	 */
-	public function execute($key = null)
+	public function execute()
 	{
-
-		// If a key is specified:
-		if ($key !== null) {
-
-			$this->executeSingle($key);
-
-		// If there's only one session:
-		} elseif (($no = count($this->sessions)) === 1) {
-
-			$this->executeSingle();
-
-		// If there's multiple sessions:
-		} elseif ($no !== 0) {
-
-			$this->executeMultiple();
-
-		// Else throw an EmptyDispatcherException.
-		} else {
-
-			throw new \jyggen\EmptyDispatcherException('You must add at least one session to the dispatcher to execute requests.');
-
-		}
-
-		return $this;
-
-	}
-
-	/**
-	 * Get the response from added Session objects.
-	 * @return	array
-	 */
-	public function getResponses()
-	{
-
-		$responses = array();
-
-		foreach($this->sessions as $session) {
-
-			$responses[] = $session->getResponse();
-
-		}
-
-		return $responses;
-
-	}
-
-	/**
-	 * Get an array of added Session objects.
-	 * @return	array
-	 */
-	public function getSessions()
-	{
-
-		return $this->sessions;
-
-	}
-
-	/**
-	 * Remove a specific session from the Dispatcher.
-	 * @param	int		$key
-	 * @return	bool
-	 */
-	public function removeSession($key)
-	{
-
-		if (array_key_exists($key, $this->sessions)) {
-
-			unset($this->sessions[$key]);
-			return true;
-
-		} else {
-
-			return false;
-
-		}
-
-	}
-
-	/**
-	 * Execute multiple sessions in parallel.
-	 * @return	void
-	 */
-	protected function executeMultiple()
-	{
-
-		$mh = curl_multi_init();
-
-		foreach ($this->sessions as $session) {
-
-			curl_multi_add_handle($mh, $session->getHandle());
-
-		}
 
 		do {
 
-			$mrc = curl_multi_exec($mh, $active);
+			$mrc = curl_multi_exec($this->handle, $active);
 
 		} while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
 		while ($active and $mrc === CURLM_OK) {
 
 			// Workaround for PHP Bug #61141.
-			if (curl_multi_select($mh) !== -1) { usleep(100); }
+			if (curl_multi_select($this->handle) !== -1) { usleep(100); }
 
 			do {
 
-				$mrc = curl_multi_exec($mh, $active);
+				$mrc = curl_multi_exec($this->handle, $active);
 
 			} while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
@@ -195,48 +131,66 @@ class Dispatcher
 
 		foreach ($this->sessions as $key => $session) {
 
-			$handle = $session->getHandle();
+			if ($session->isSuccessful()) {
 
-			if (($error = curl_error($handle)) === '') {
+				$session->execute();
 
-				$session->setResponse(curl_multi_getcontent($handle));
+			} else {
 
-			} else throw new \jyggen\CurlErrorException($error);
+				throw new \jyggen\CurlErrorException($session->getErrorMessage());
 
-			curl_multi_remove_handle($mh, $handle);
+			}
+
+			$session->removeMultiHandle($this->handle);
 
 		}
-
-		curl_multi_close($mh);
 
 	}
 
 	/**
-	 * Execute a single session.
+	 * Retrieve all or a specific session.
 	 *
-	 * @param	int		$key
-	 * @return	void
+	 * @param  int $key null
+	 * @return mixed
 	 */
-	protected function executeSingle($key = 0)
+	public function get($key = null)
 	{
 
-		// If $key is a valid session:
+		// Return all sessions.
+		if (is_null($key)) {
+
+			return $this->sessions;
+
+		// Return a specific session if it exists.
+		} elseif (array_key_exists($key, $this->sessions)) {
+
+			return $this->sessions[$key];
+
+		// Return false.
+		} else {
+
+			return false;
+
+		}
+
+	}
+
+	/**
+	 * Remove a specific session.
+	 *
+	 * @param  int $key
+	 * @return jyggen\Curl\Dispatcher
+	 */
+	public function remove($key)
+	{
+
+		// Make sure the session exists before we try to remove it.
 		if (array_key_exists($key, $this->sessions)) {
 
-			$session  = $this->sessions[$key];
-			$handle   = $session->getHandle();
-			$response = curl_exec($handle);
+			$this->sessions[$key]->removeMultiHandle($this->handle);
+			unset($this->sessions[$key]);
 
-			// If $response isn't false:
-			if($response !== false) {
-
-				$session->setResponse($response);
-
-			// Else throw a CurlErrorExcepetion.
-			} else throw new \jyggen\CurlErrorException(curl_error($handle));
-
-		// Else throw an InvalidKeyException.
-		} else throw new \jyggen\InvalidKeyException('Session with key #'.$key.' does not exist.');
+		}
 
 	}
 
