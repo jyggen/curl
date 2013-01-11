@@ -6,6 +6,12 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ## Changelog
 
+### 2.0
+
+* Added `Dispatcher::clearSessions()`.
+* Added `Dispatcher::removeSession()`.
+* Minor code cleanup and restructuring.
+
 ### 1.0.2
 
 * Added `Dispatcher::getSessions()`.
@@ -113,8 +119,8 @@ Please create an issue or pull request on [GitHub](https://github.com/jyggen/cur
 
 ### Author
 
-Jonas Stendahl
-jonas.stendahl@gmail.com
+Jonas Stendahl  
+jonas.stendahl@gmail.com  
 http://twitter.com/jyggen
 
 [See the list of contributors here](https://github.com/jyggen/curl/contributors).
