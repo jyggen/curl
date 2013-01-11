@@ -1,13 +1,13 @@
 <?php
 /**
- * A lightweight cURL library with support for multiple requests in parallel.
+ * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
- * @package Curl
- * @version 1.0
- * @author Jonas Stendahl
- * @license MIT License
- * @copyright 2012 Jonas Stendahl
- * @link http://github.com/jyggen/curl
+ * @package     Curl
+ * @version     2.0
+ * @author      Jonas Stendahl
+ * @license     MIT License
+ * @copyright   2013 Jonas Stendahl
+ * @link        http://github.com/jyggen/curl
  */
 
 namespace jyggen;
@@ -21,8 +21,8 @@ class Curl
 	/**
 	 * Static helper to do DELETE requests.
 	 *
-	 * @param	mixed	$url
-	 * @return	array
+	 * @param  mixed $url
+	 * @return array
 	 */
 	public static function delete($url)
 	{
@@ -48,8 +48,8 @@ class Curl
 	/**
 	 * Static helper to do GET requests.
 	 *
-	 * @param	mixed	$url
-	 * @return	array
+	 * @param  mixed $url
+	 * @return array
 	 */
 	public static function get($url)
 	{
@@ -75,9 +75,9 @@ class Curl
 	/**
 	 * Static helper to do POST requests.
 	 *
-	 * @param	mixed	$url
-	 * @param	array	$data
-	 * @return	array
+	 * @param  mixed $url
+	 * @param  array $data
+	 * @return array
 	 */
 	public static function post($urls, array $data = null)
 	{
@@ -95,9 +95,9 @@ class Curl
 	/**
 	 * Static helper to do PUT requests.
 	 *
-	 * @param	mixed	$urls
-	 * @param	array	$data
-	 * @return	array
+	 * @param  mixed $urls
+	 * @param  array $data
+	 * @return array
 	 */
 	public static function put($urls, array $data = null)
 	{
@@ -115,9 +115,9 @@ class Curl
 	/**
 	 * Setup and execute a HTTP request.
 	 *
-	 * @param	string	$method
-	 * @param	array	$urls
-	 * @return	array
+	 * @param  string $method
+	 * @param  array  $urls
+	 * @return array
 	 */
 	protected static function makeRequest($method, $urls)
 	{
@@ -172,24 +172,12 @@ class Curl
 			}
 
 			// Add the session to the dispatcher.
-			$dispatcher->addSession($session);
+			$dispatcher->add($session);
 
 		}
 
 		// Execute the request(s).
-		$responses = $dispatcher->execute()->getResponses();
-
-		// If more than one URL was requested:
-		if(count($urls) > 1) {
-
-			return $responses;
-
-		// Else:
-		} else {
-
-			return $responses[0];
-
-		}
+		$dispatcher->execute();
 
 	}
 
