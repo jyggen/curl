@@ -12,11 +12,11 @@
 
 namespace jyggen;
 
-use jyggen\Curl\Dispatcher;
-use jyggen\Curl\Session;
-
 class Curl
 {
+
+	protected static $dispatcher = 'jyggen\\Curl\\Dispatcher';
+	protected static $session    = 'jyggen\\Curl\\Session';
 
 	/**
 	 * Static helper to do DELETE requests.
@@ -113,6 +113,41 @@ class Curl
 	}
 
 	/**
+	 * Change the default dispatcher class used by the class.
+	 * @param string $classname
+	 */
+	public static function setDispatcher($classname)
+	{
+
+		$implements = class_implements($classname);
+
+		if (in_array('jyggen\\Curl\\DispatcherInterface', $implements)) {
+
+			static::$dispatcher = $classname;
+
+		} else throw new UnexpectedValueException(sprintf('Dispatcher "%s" must implement "jyggen\\Curl\\DispatcherInterface"', $classname));
+
+
+	}
+
+	/**
+	 * Change the default session class used by the class.
+	 * @param string $classname
+	 */
+	public static function setSession($classname)
+	{
+
+		$implements = class_implements($classname);
+
+		if (in_array('jyggen\\Curl\\SessionInterface', $implements)) {
+
+			static::$dispatcher = $classname;
+
+		} else throw new UnexpectedValueException(sprintf('Session "%s" must implement "jyggen\\Curl\\SessionInterface"', $classname));
+
+	}
+
+	/**
 	 * Setup and execute a HTTP request.
 	 *
 	 * @param  string $method
@@ -178,6 +213,15 @@ class Curl
 
 		// Execute the request(s).
 		$dispatcher->execute();
+
+		$responses = array();
+		foreach($dispatcher->get() as $session) {
+
+			$responses[] = $session->getResponse();
+
+		}
+
+		return (count($urls) === 1) ? $responses[0] : $responses;
 
 	}
 
