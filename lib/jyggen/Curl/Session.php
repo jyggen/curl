@@ -157,7 +157,7 @@ class Session implements SessionInterface
 	 *
 	 * @param  mixed $option
 	 * @param  mixed $value  null
-	 * @return jyggen\Curl\Session
+	 * @return jyggen\Curl\SessionInterface
 	 */
 	public function setOption($option, $value = null)
 	{
