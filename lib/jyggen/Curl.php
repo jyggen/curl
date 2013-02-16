@@ -158,7 +158,7 @@ class Curl
 	{
 
 		// Create a new Dispatcher.
-		$dispatcher = new static::$dispatcher;
+		$dispatcher = new static::$dispatcher();
 
 		// Foreach $urls:
 		foreach ($urls as $url => $data) {
@@ -218,9 +218,9 @@ class Curl
 
 		foreach ($sessions as $session) {
 
-
 			$responses[] = $session->getResponse();
 
+		}
 
 		return (count($urls) === 1) ? $responses[0] : $responses;
 
