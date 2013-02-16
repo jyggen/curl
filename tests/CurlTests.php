@@ -15,10 +15,22 @@ use jyggen\Curl;
 class CurlTests extends PHPUnit_Framework_TestCase
 {
 
-	public function testGet()
+	public function testSetDispatcher()
 	{
 
-		Curl::get('http://example.com/');
+		Curl::setDispatcher('jyggen\\Curl\\Dispatcher');
+
+	}
+
+	public function testSetSession()
+	{
+
+		Curl::setSession('jyggen\\Curl\\Session');
+
+	}
+
+	public function testGet()
+	{
 
 	}
 

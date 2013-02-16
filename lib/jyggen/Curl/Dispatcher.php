@@ -12,10 +12,9 @@
 
 namespace jyggen\Curl;
 
-use jyggen\Curl\Session;
-use jyggen\Curl\Session_Interface;
+use jyggen\Curl\SessionInterface;
 
-class Dispatcher
+class Dispatcher implements DispatcherInterface
 {
 
 	/**
