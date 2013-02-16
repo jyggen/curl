@@ -121,7 +121,7 @@ class Curl
 
 		$implements = class_implements($classname);
 
-		if (in_array('jyggen\\Curl\\DispatcherInterface', $implements)) {
+		if ($implements !== false and in_array('jyggen\\Curl\\DispatcherInterface', $implements)) {
 
 			static::$dispatcher = $classname;
 
@@ -139,7 +139,7 @@ class Curl
 
 		$implements = class_implements($classname);
 
-		if (in_array('jyggen\\Curl\\SessionInterface', $implements)) {
+		if ($implements !== false and in_array('jyggen\\Curl\\SessionInterface', $implements)) {
 
 			static::$dispatcher = $classname;
 
@@ -158,7 +158,7 @@ class Curl
 	{
 
 		// Create a new Dispatcher.
-		$dispatcher = new Dispatcher;
+		$dispatcher = new static::$dispatcher;
 
 		// Foreach $urls:
 		foreach ($urls as $url => $data) {
@@ -170,7 +170,7 @@ class Curl
 			}
 
 			// Create a new Session.
-			$session = new Session($url);
+			$session = new static::$session($url);
 
 			// Follow any 3xx HTTP status code.
 			$session->setOption(CURLOPT_FOLLOWLOCATION, true);
