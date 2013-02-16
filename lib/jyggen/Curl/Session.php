@@ -191,7 +191,7 @@ class Session implements SessionInterface
 
 		}
 
-		$this->response = new Response;
+		$this->response = Response::forge($this, $content);
 
 	}
 

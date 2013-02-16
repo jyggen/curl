@@ -15,4 +15,11 @@ namespace jyggen\Curl;
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
 
+	public static function forge(Session $session, $content)
+	{
+
+		return new Response($content);
+
+	}
+
 }

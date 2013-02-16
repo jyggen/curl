@@ -169,7 +169,6 @@ class Curl
 
 			}
 
-
 			// Create a new Session.
 			$session = new Session($url);
 
@@ -214,12 +213,14 @@ class Curl
 		// Execute the request(s).
 		$dispatcher->execute();
 
+		$sessions  = $dispatcher->get();
 		$responses = array();
-		foreach($dispatcher->get() as $session) {
+
+		foreach ($sessions as $session) {
+
 
 			$responses[] = $session->getResponse();
 
-		}
 
 		return (count($urls) === 1) ? $responses[0] : $responses;
 
