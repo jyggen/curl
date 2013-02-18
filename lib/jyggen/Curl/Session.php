@@ -18,6 +18,13 @@ class Session implements SessionInterface
 {
 
 	/**
+	 * Content returned from an execute.
+	 *
+	 * @var  string
+	 */
+	protected $content;
+
+	/**
 	 * A list of defaults options that can't be overwritten.
 	 *
 	 * @var array
@@ -119,6 +126,12 @@ class Session implements SessionInterface
 	public function getResponse()
 	{
 
+		if ($this->response === null) {
+
+			$this->response = Response::forge($this, $this->content);
+
+		}
+
 		return $this->response;
 
 	}
@@ -183,15 +196,13 @@ class Session implements SessionInterface
 
 		if ($this->isMulti) {
 
-			$content = curl_multi_getcontent($this->handle);
+			$this->content = curl_multi_getcontent($this->handle);
 
 		} else {
 
-			$content = curl_exec($this->handle);
+			$this->content = curl_exec($this->handle);
 
 		}
-
-		$this->response = Response::forge($this, $content);
 
 	}
 
