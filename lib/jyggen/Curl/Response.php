@@ -18,7 +18,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 	public static function forge(SessionInterface $session, $content)
 	{
 
-		return new Response($content);
+        return new Response($content);
 
 	}
 
