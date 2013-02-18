@@ -80,6 +80,13 @@ class Session implements SessionInterface
 
 	}
 
+	public function __destruct()
+	{
+
+		curl_close($this->handle);
+
+	}
+
 	/**
 	 * Retrieve the latest error.
 	 *
