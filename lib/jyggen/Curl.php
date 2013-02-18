@@ -147,8 +147,11 @@ class Curl
 
 			static::$dispatcher = $classname;
 
-		} else throw new UnexpectedValueException(sprintf('Dispatcher "%s" must implement "jyggen\\Curl\\DispatcherInterface"', $classname));
+		} else {
 
+			throw new UnexpectedValueException(sprintf('Dispatcher "%s" must implement "jyggen\\Curl\\DispatcherInterface"', $classname));
+
+		}
 
 	}
 
@@ -164,7 +167,11 @@ class Curl
 
 			static::$session = $classname;
 
-		} else throw new UnexpectedValueException(sprintf('Session "%s" must implement "jyggen\\Curl\\SessionInterface"', $classname));
+		} else {
+
+			throw new UnexpectedValueException(sprintf('Session "%s" must implement "jyggen\\Curl\\SessionInterface"', $classname));
+
+		}
 
 	}
 
