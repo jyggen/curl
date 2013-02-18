@@ -29,7 +29,10 @@ class Session implements SessionInterface
 	 *
 	 * @var array
 	 */
-	protected $defaults = array(CURLOPT_RETURNTRANSFER => true);
+	protected $defaults = array(
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_HEADER         => true,
+	);
 
 	/**
 	 * If the session has been executed.
@@ -124,6 +127,13 @@ class Session implements SessionInterface
 
 	}
 
+	public function getRawResponse()
+	{
+
+		return $this->content;
+
+	}
+
 	/**
 	 * Get this session's response.
 	 *
@@ -134,7 +144,7 @@ class Session implements SessionInterface
 
 		if ($this->response === null && $this->isExecuted()) {
 
-			$this->response = Response::forge($this, $this->content);
+			$this->response = Response::forge($this);
 
 		}
 
@@ -210,7 +220,15 @@ class Session implements SessionInterface
 
 		}
 
-		$this->executed = true;
+		if ($this->isSuccessful()) {
+
+			$this->executed = true;
+
+		} else {
+
+			throw new CurlErrorException($this->getErrorMessage());
+
+		}
 
 	}
 
