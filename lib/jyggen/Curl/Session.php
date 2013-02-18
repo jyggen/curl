@@ -126,7 +126,7 @@ class Session implements SessionInterface
 	public function getResponse()
 	{
 
-		if ($this->response === null) {
+		if ($this->response === null and $this->content !== null) {
 
 			$this->response = Response::forge($this, $this->content);
 
