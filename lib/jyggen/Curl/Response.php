@@ -15,10 +15,28 @@ namespace jyggen\Curl;
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
 
-	public static function forge(SessionInterface $session, $content)
+	public static function forge(SessionInterface $session)
 	{
 
-        return new Response($content);
+        list($headers, $content) = explode("\r\n\r\n", $session->getRawResponse());
+
+        $headers     = explode("\r\n", $headers);
+        $headerBag   = array();
+        $info        = $session->getInfo();
+
+        unset($headers[0]);
+
+        foreach ($headers as $header) {
+
+            $header = explode(': ', $header);
+
+            $headerBag[trim($header[0])] = trim($header[1]);
+
+        }
+
+        $response = new Response($content, $info['http_code'], $headerBag);
+
+        return $response;
 
 	}
 
