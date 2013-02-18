@@ -130,16 +130,7 @@ class Dispatcher implements DispatcherInterface
 
 		foreach ($this->sessions as $key => $session) {
 
-			if ($session->isSuccessful()) {
-
-				$session->execute();
-
-			} else {
-
-				throw new \jyggen\CurlErrorException($session->getErrorMessage());
-
-			}
-
+			$session->execute();
 			$session->removeMultiHandle($this->handle);
 
 		}
