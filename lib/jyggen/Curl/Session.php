@@ -32,11 +32,10 @@ class Session implements SessionInterface
 	protected $defaults = array(CURLOPT_RETURNTRANSFER => true);
 
 	/**
-	 * If the session is attached to a cURL multi handle.
-	 *
+	 * If the session has been executed.
 	 * @var boolean
 	 */
-	protected $isMulti  = false;
+	protected $executed = false;
 
 	/**
 	 * The cURL handle.
@@ -44,6 +43,13 @@ class Session implements SessionInterface
 	 * @var curl
 	 */
 	protected $handle;
+
+	/**
+	 * Number of cURL multi handles attached to the session.
+	 *
+	 * @var int
+	 */
+	protected $multiNo = 0;
 
 	/**
 	 * The Response object.
@@ -126,7 +132,7 @@ class Session implements SessionInterface
 	public function getResponse()
 	{
 
-		if ($this->response === null and is_string($this->content)) {
+		if ($this->response === null && $this->isExecuted()) {
 
 			$this->response = Response::forge($this, $this->content);
 
@@ -180,7 +186,7 @@ class Session implements SessionInterface
 	public function addMultiHandle($multiHandle)
 	{
 
-		$this->isMulti = true;
+		$this->multiNo++;
 
 		return curl_multi_add_handle($multiHandle, $this->handle);
 
@@ -194,7 +200,7 @@ class Session implements SessionInterface
 	public function execute()
 	{
 
-		if ($this->isMulti) {
+		if ($this->hasMulti()) {
 
 			$this->content = curl_multi_getcontent($this->handle);
 
@@ -204,10 +210,35 @@ class Session implements SessionInterface
 
 		}
 
+		$this->executed = true;
+
 	}
 
 	/**
-	 * If the request was successful or not.
+	 * If the session is attached to one or more cURL multi handles.
+	 * @return boolean
+	 */
+	public function hasMulti()
+	{
+
+		return ($this->multiNo > 0) ? true : false;
+
+	}
+
+	/**
+	 * If the request has been executed.
+	 *
+	 * @return boolean
+	 */
+	public function isExecuted()
+	{
+
+		return ($this->executed) ? true : false;
+
+	}
+
+	/**
+	 * If the request was successful.
 	 *
 	 * @return boolean
 	 */
@@ -227,7 +258,7 @@ class Session implements SessionInterface
 	public function removeMultiHandle($multiHandle)
 	{
 
-		$this->isMulti = false;
+		$this->multiNo--;
 
 		return curl_multi_remove_handle($multiHandle, $this->handle);
 
