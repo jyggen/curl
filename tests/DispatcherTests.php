@@ -102,7 +102,6 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 		$session->shouldReceive('removeMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
 			return curl_multi_remove_handle($handle, $curl);
 		});
-		$session->shouldReceive('isSuccessful')->andReturn(true);
 		$session->shouldReceive('execute');
 
 		$dispatcher->add($session);
@@ -128,8 +127,7 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 		$session->shouldReceive('removeMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
 			return curl_multi_remove_handle($handle, $curl);
 		});
-		$session->shouldReceive('isSuccessful')->andReturn(false);
-		$session->shouldReceive('getErrorMessage')->andReturn('fake message');
+		$session->shouldReceive('execute')->andThrow('jyggen\\CurlErrorException', 'fake message');
 
 		$dispatcher->add($session);
 		$dispatcher->execute();
