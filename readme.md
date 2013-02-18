@@ -8,9 +8,7 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ### 2.0
 
-* Added `Dispatcher::clearSessions()`.
-* Added `Dispatcher::removeSession()`.
-* Minor code cleanup and restructuring.
+* Huge code refactor. Check documentation for usage.
 
 ### 1.0.2
 
