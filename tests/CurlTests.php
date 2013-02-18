@@ -16,6 +16,20 @@ use Mockery as m;
 class CurlTests extends PHPUnit_Framework_TestCase
 {
 
+	protected $dispatcher;
+	protected $session;
+
+	public function setup()
+	{
+
+		$this->dispatcher = m::mock('jyggen\\Curl\\DispatcherInterface');
+		$this->session    = m::mock('jyggen\\Curl\\SessionInterface');
+
+		Curl::setDispatcher(get_class($this->dispatcher));
+		Curl::setSession(get_class($this->session));
+
+	}
+
 	public function teardown()
 	{
 
@@ -26,11 +40,7 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	public function testSetDispatcherAndGetDispatcher()
 	{
 
-		$dispatcher = m::mock('jyggen\\Curl\\DispatcherInterface');
-
-		Curl::setDispatcher(get_class($dispatcher));
-
-		$this->assertEquals(get_class($dispatcher), Curl::getDispatcher());
+		$this->assertEquals(get_class($this->dispatcher), Curl::getDispatcher());
 
 	}
 
@@ -49,11 +59,7 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	public function testSetSessionAndGetSession()
 	{
 
-		$session = m::mock('jyggen\\Curl\\SessionInterface');
-
-		Curl::setSession(get_class($session));
-
-		$this->assertEquals(get_class($session), Curl::getSession());
+		$this->assertEquals(get_class($this->session), Curl::getSession());
 
 	}
 
@@ -65,6 +71,34 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	{
 
 		Curl::setSession('foobar');
+
+	}
+
+	public function testDelete()
+	{
+
+		//Curl::delete('http://example.com/');
+
+	}
+
+	public function testGet()
+	{
+
+		//Curl::get('http://example.com/');
+
+	}
+
+	public function testPost()
+	{
+
+		//Curl::post('http://example.com/');
+
+	}
+
+	public function testPut()
+	{
+
+		//Curl::put('http://example.com/');
 
 	}
 
