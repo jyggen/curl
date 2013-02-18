@@ -113,8 +113,32 @@ class Curl
 	}
 
 	/**
-	 * Change the default dispatcher class used by the class.
-	 * @param string $classname
+	 * Get the dispatcher class used by the helper.
+	 * @return  jyggen\Curl\DispatcherInterface
+	 */
+	public static function getDispatcher()
+	{
+
+		return static::$dispatcher;
+
+	}
+
+
+	/**
+	 * Get the session class used by the helper.
+	 * @return  jyggen\Curl\SessionInterface
+	 */
+	public static function getSession()
+	{
+
+		return static::$session;
+
+	}
+
+	/**
+	 * Set the dispatcher class used by the helper.
+	 * @param  string $classname
+	 * @return null
 	 */
 	public static function setDispatcher($classname)
 	{
@@ -131,8 +155,9 @@ class Curl
 	}
 
 	/**
-	 * Change the default session class used by the class.
-	 * @param string $classname
+	 * Set the session class used by the helper.
+	 * @param  string $classname
+	 * @return null
 	 */
 	public static function setSession($classname)
 	{
