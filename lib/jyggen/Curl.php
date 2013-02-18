@@ -143,9 +143,7 @@ class Curl
 	public static function setDispatcher($classname)
 	{
 
-		$implements = class_implements($classname);
-
-		if ($implements !== false and in_array('jyggen\\Curl\\DispatcherInterface', $implements)) {
+		if (class_exists($classname) and in_array('jyggen\\Curl\\DispatcherInterface', class_implements($classname))) {
 
 			static::$dispatcher = $classname;
 
@@ -162,11 +160,9 @@ class Curl
 	public static function setSession($classname)
 	{
 
-		$implements = class_implements($classname);
+		if (class_exists($classname) and in_array('jyggen\\Curl\\SessionInterface', class_implements($classname))) {
 
-		if ($implements !== false and in_array('jyggen\\Curl\\SessionInterface', $implements)) {
-
-			static::$dispatcher = $classname;
+			static::$session = $classname;
 
 		} else throw new UnexpectedValueException(sprintf('Session "%s" must implement "jyggen\\Curl\\SessionInterface"', $classname));
 
