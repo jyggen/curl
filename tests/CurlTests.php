@@ -11,26 +11,60 @@
  */
 
 use jyggen\Curl;
+use Mockery as m;
 
 class CurlTests extends PHPUnit_Framework_TestCase
 {
 
-	public function testSetDispatcher()
+	public function teardown()
 	{
 
-		Curl::setDispatcher('jyggen\\Curl\\Dispatcher');
+		m::close();
 
 	}
 
-	public function testSetSession()
+	public function testSetDispatcherAndGetDispatcher()
 	{
 
-		Curl::setSession('jyggen\\Curl\\Session');
+		$dispatcher = m::mock('jyggen\\Curl\\DispatcherInterface');
+
+		Curl::setDispatcher(get_class($dispatcher));
+
+		$this->assertEquals(get_class($dispatcher), Curl::getDispatcher());
 
 	}
 
-	public function testGet()
+	/**
+     * @expectedException        jyggen\UnexpectedValueException
+     * @expectedExceptionMessage must implement
+     */
+	public function testSetDispatcherWithError()
 	{
+
+		Curl::setDispatcher('foobar');
+
+	}
+
+
+	public function testSetSessionAndGetSession()
+	{
+
+		$session = m::mock('jyggen\\Curl\\SessionInterface');
+
+		Curl::setSession(get_class($session));
+
+		$this->assertEquals(get_class($session), Curl::getSession());
+
+	}
+
+	/**
+     * @expectedException        jyggen\UnexpectedValueException
+     * @expectedExceptionMessage must implement
+     */
+	public function testSetSessionWithError()
+	{
+
+		Curl::setSession('foobar');
 
 	}
 
