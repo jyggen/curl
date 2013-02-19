@@ -235,7 +235,7 @@ class Session implements SessionInterface
 
 		} else {
 
-			throw new CurlErrorException($this->getErrorMessage());
+			throw new \jyggen\CurlErrorException($this->getErrorMessage());
 
 		}
 
