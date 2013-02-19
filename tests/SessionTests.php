@@ -15,166 +15,166 @@ use jyggen\Curl\Session;
 class SessionTests extends PHPUnit_Framework_TestCase
 {
 
-	public function testConstruct()
-	{
+    public function testConstruct()
+    {
 
-		$this->assertInstanceof('jyggen\\Curl\\SessionInterface', $this->forgeSession());
+        $this->assertInstanceof('jyggen\\Curl\\SessionInterface', $this->forgeSession());
 
-	}
+    }
 
-	public function testGetErrorMessage()
-	{
+    public function testGetErrorMessage()
+    {
 
-		$this->assertSame(null, $this->forgeSession()->getErrorMessage());
+        $this->assertSame(null, $this->forgeSession()->getErrorMessage());
 
-	}
+    }
 
-	public function testGetHandle()
-	{
+    public function testGetHandle()
+    {
 
-		$session = $this->forgeSession();
-		$this->assertInternalType('resource', $session->getHandle());
-		$this->assertSame('curl', get_resource_type($session->getHandle()));
+        $session = $this->forgeSession();
+        $this->assertInternalType('resource', $session->getHandle());
+        $this->assertSame('curl', get_resource_type($session->getHandle()));
 
-	}
+    }
 
-	public function testGetInfo()
-	{
+    public function testGetInfo()
+    {
 
-		$this->assertInternalType('array', $this->forgeSession()->getInfo());
+        $this->assertInternalType('array', $this->forgeSession()->getInfo());
 
-	}
+    }
 
-	public function testGetInfoWithKey()
-	{
+    public function testGetInfoWithKey()
+    {
 
-		$this->assertSame('http://example.com/', $this->forgeSession()->getInfo(CURLINFO_EFFECTIVE_URL));
+        $this->assertSame('http://example.com/', $this->forgeSession()->getInfo(CURLINFO_EFFECTIVE_URL));
 
-	}
+    }
 
-	public function testGetResponse()
-	{
+    public function testGetResponse()
+    {
 
-		$this->assertSame(null, $this->forgeSession()->getResponse());
+        $this->assertSame(null, $this->forgeSession()->getResponse());
 
-	}
+    }
 
-	public function testSetOption()
-	{
+    public function testSetOption()
+    {
 
-		$session = $this->forgeSession();
-		$session->setOption(CURLOPT_URL, 'http://example.org/');
-		$this->assertSame('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+        $session = $this->forgeSession();
+        $session->setOption(CURLOPT_URL, 'http://example.org/');
+        $this->assertSame('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
-	}
+    }
 
-	public function testSetOptionArray()
-	{
+    public function testSetOptionArray()
+    {
 
-		$session = $this->forgeSession();
-		$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
-		$this->assertSame ('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+        $session = $this->forgeSession();
+        $session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
+        $this->assertSame ('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
-	}
+    }
 
-	/**
+    /**
      * @expectedException        jyggen\CurlErrorException
      * @expectedExceptionMessage Couldn't set option
      */
-	public function testSetOptionError()
-	{
+    public function testSetOptionError()
+    {
 
-		$session = new Session('http://example.com/');
-		@$session->setOption(CURLOPT_FILE, 'nope');
+        $session = new Session('http://example.com/');
+        @$session->setOption(CURLOPT_FILE, 'nope');
 
-	}
+    }
 
-	/**
+    /**
      * @expectedException        jyggen\CurlErrorException
      * @expectedExceptionMessage Couldn't set option
      */
-	public function testSetOptionArrayError()
-	{
+    public function testSetOptionArrayError()
+    {
 
-		$session = new Session('http://example.com/');
-		@$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
+        $session = new Session('http://example.com/');
+        @$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
 
-	}
+    }
 
-	/**
+    /**
      * @expectedException        jyggen\ProtectedOptionException
      * @expectedExceptionMessage not allowed to change
      */
-	public function testSetProtectedOption()
-	{
+    public function testSetProtectedOption()
+    {
 
-		$session = new Session('http://example.com/');
-		$session->setOption(CURLOPT_RETURNTRANSFER, true);
+        $session = new Session('http://example.com/');
+        $session->setOption(CURLOPT_RETURNTRANSFER, true);
 
-	}
+    }
 
-	public function testAddMultiHandle()
-	{
+    public function testAddMultiHandle()
+    {
 
-		$session = new Session('http://example.com/');
-		$multi   = curl_multi_init();
-		$this->assertEquals(0, $session->addMultiHandle($multi));
+        $session = new Session('http://example.com/');
+        $multi   = curl_multi_init();
+        $this->assertEquals(0, $session->addMultiHandle($multi));
 
-	}
+    }
 
-	public function testIsExecuted()
-	{
+    public function testIsExecuted()
+    {
 
-		$this->assertFalse($this->forgeSession()->isExecuted());
+        $this->assertFalse($this->forgeSession()->isExecuted());
 
-	}
+    }
 
-	public function testExecute()
-	{
+    public function testExecute()
+    {
 
-		$session = $this->forgeSession();
-		$session->execute();
-		$this->assertTrue($session->isExecuted());
+        $session = $this->forgeSession();
+        $session->execute();
+        $this->assertTrue($session->isExecuted());
 
-	}
+    }
 
-	/**
+    /**
      * @expectedException        jyggen\CurlErrorException
      * @expectedExceptionMessage not resolve host
      */
-	public function testExecuteWithError()
-	{
+    public function testExecuteWithError()
+    {
 
-		$session = $this->forgeSession('foobar');
-		$session->execute();
+        $session = $this->forgeSession('foobar');
+        $session->execute();
 
-	}
+    }
 
-	public function testIsSuccessful()
-	{
+    public function testIsSuccessful()
+    {
 
-		$session = new Session('http://example.com/');
-		$this->assertTrue($session->isSuccessful());
+        $session = new Session('http://example.com/');
+        $this->assertTrue($session->isSuccessful());
 
-	}
+    }
 
-	public function testRemoveMultiHandle()
-	{
+    public function testRemoveMultiHandle()
+    {
 
-		$session = new Session('http://example.com/');
-		$multi   = curl_multi_init();
-		$session->addMultiHandle($multi);
-		$this->assertEquals(0, $session->removeMultiHandle($multi));
+        $session = new Session('http://example.com/');
+        $multi   = curl_multi_init();
+        $session->addMultiHandle($multi);
+        $this->assertEquals(0, $session->removeMultiHandle($multi));
 
-	}
+    }
 
-	protected function forgeSession($url = null)
-	{
+    protected function forgeSession($url = null)
+    {
 
-		$url or $url = 'http://example.com/';
+        $url or $url = 'http://example.com/';
 
-		return new Session($url);
+        return new Session($url);
 
-	}
+    }
 
 }
