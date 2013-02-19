@@ -140,7 +140,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        jyggen\CurlErrorException
-     * @expectedExceptionMessage not resolve host
+     * @expectedExceptionMessage resolve host
      */
     public function testExecuteWithError()
     {
