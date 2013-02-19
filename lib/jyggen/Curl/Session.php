@@ -80,6 +80,11 @@ class Session implements SessionInterface
 
 	}
 
+	/**
+	 * Shutdown sequence.
+	 *
+	 * @return void
+	 */
 	public function __destruct()
 	{
 

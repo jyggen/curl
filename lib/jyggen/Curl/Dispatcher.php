@@ -42,6 +42,7 @@ class Dispatcher implements DispatcherInterface
 		$this->handle = curl_multi_init();
 
 	}
+
 	/**
 	 * Shutdown sequence.
 	 *
