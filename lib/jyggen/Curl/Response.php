@@ -39,6 +39,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 
         $response = new Response($content, $info['http_code'], $headerBag);
         $response->setProtocolVersion($version);
+        $response->setCharset(substr(strstr($response->headers->get('Content-Type'), '='), 1));
 
         return $response;
 
