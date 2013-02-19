@@ -4,11 +4,44 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 [Find Curl on Packagist/Composer](https://packagist.org/packages/jyggen/curl)
 
+## Documentation
+
+The documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl).
+
 ## Changelog
 
-### 2.0
+### 2.0.0-BETA2
 
-* Huge code refactor. Check documentation for usage.
+* `Session` will now close the cURL resource during shutdown.
+* Added more unit tests.
+* Overall cleaner and better code.
+
+### 2.0.0-BETA1
+
+Version 2.0 introduces a new library flow which changes the way `Dispatcher` and `Session` interacts with each other. If you've only used the static helper `Curl` in the past these changes shouldn't affect you that much. `Dispatcher` is stripped down to only be a wrapper around `curl_multi_init()` while `Session` continues to wrap around `curl_init()` but with more functionality previously located in `Dispatcher`.
+
+* Moved the library from `classes/` to `lib/`.
+* `Dispatcher` now implements `DispatcherInterface`.
+* `Session` now implements `SessionInterface`.
+* Added new dependency to Composer: `symfony/http-foundation`.
+* Added new class `Response` which extends `Symfony\Component\HttpFoundation\Response`.
+* Added `Session::getErrorMessage()`.
+* Added `Session::getRawResponse()`.
+* Added `Session::addMultiHandle()`.
+* Added `Session::execute()`.
+* Added `Session::hasMulti()`.
+* Added `Session::isExecuted()`.
+* Added `Session::isSuccessful()`.
+* Added `Session::removeMultiHandle()`.
+* Renamed `Dispatcher::addSession()` to `Dispatcher::add()`.
+* Renamed `Dispatcher::removeSession()` to `Dispatcher::remove()`.
+* Removed `Dispatcher::getResponses()`.
+* Added `Dispatcher::clear()`.
+* Added `Curl::getDispatcher()`.
+* Added `Curl::getSession()`.
+* Added `Curl::setDispatcher()`.
+* Added `Curl::setSession()`.
+* A lot of refactoring, optimizations, unit tests and code cleanup.
 
 ### 1.0.2
 
@@ -19,10 +52,6 @@ A lightweight cURL library with support for multiple requests in parallel.
 ### 1.0.1
 * Fixed an issue with `Session::setOption()` no recursing arrays correctly.
 * Added 100% test coverage for `Session`.
-
-## Documentation
-
-The documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl).
 
 ### Static Helpers
 
