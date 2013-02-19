@@ -13,6 +13,10 @@ The documentation for this library is available at [docs.jyggen.com](http://docs
 ### 2.0.0-BETA2
 
 * `Session` will now close the cURL resource during shutdown.
+* Removed `Curl::getDispatcher()`.
+* Removed `Curl::getSession()`.
+* Removed `Curl::setDispatcher()`.
+* Removed `Curl::setSession()`.
 * Added more unit tests.
 * Overall cleaner and better code.
 
