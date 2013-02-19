@@ -118,7 +118,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
         $session = new Session('http://example.com/');
         $multi   = curl_multi_init();
-        $this->assertEquals(0, $session->addMultiHandle($multi));
+        $this->assertEquals(true, $session->addMultiHandle($multi));
 
     }
 
