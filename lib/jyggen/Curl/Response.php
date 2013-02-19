@@ -20,9 +20,12 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 
         list($headers, $content) = explode("\r\n\r\n", $session->getRawResponse());
 
-        $headers     = explode("\r\n", $headers);
-        $headerBag   = array();
-        $info        = $session->getInfo();
+        $headers   = explode("\r\n", $headers);
+        $headerBag = array();
+        $info      = $session->getInfo();
+        $status    = explode(' ', $headers[0]);
+
+        list($protocol, $version) = explode('/', $status[0]);
 
         unset($headers[0]);
 
@@ -35,6 +38,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         }
 
         $response = new Response($content, $info['http_code'], $headerBag);
+        $response->setProtocolVersion($version);
 
         return $response;
 
