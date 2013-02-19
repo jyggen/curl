@@ -12,11 +12,11 @@
 
 namespace jyggen;
 
+use jyggen\Curl\Dispatcher;
+use jyggen\Curl\Session;
+
 class Curl
 {
-
-	protected static $dispatcher = 'jyggen\\Curl\\Dispatcher';
-	protected static $session    = 'jyggen\\Curl\\Session';
 
 	/**
 	 * Static helper to do DELETE requests.
@@ -113,69 +113,6 @@ class Curl
 	}
 
 	/**
-	 * Get the dispatcher class used by the helper.
-	 * @return  jyggen\Curl\DispatcherInterface
-	 */
-	public static function getDispatcher()
-	{
-
-		return static::$dispatcher;
-
-	}
-
-
-	/**
-	 * Get the session class used by the helper.
-	 * @return  jyggen\Curl\SessionInterface
-	 */
-	public static function getSession()
-	{
-
-		return static::$session;
-
-	}
-
-	/**
-	 * Set the dispatcher class used by the helper.
-	 * @param  string $classname
-	 * @return null
-	 */
-	public static function setDispatcher($classname)
-	{
-
-		if (class_exists($classname) and in_array('jyggen\\Curl\\DispatcherInterface', class_implements($classname))) {
-
-			static::$dispatcher = $classname;
-
-		} else {
-
-			throw new UnexpectedValueException(sprintf('Dispatcher "%s" must implement "jyggen\\Curl\\DispatcherInterface"', $classname));
-
-		}
-
-	}
-
-	/**
-	 * Set the session class used by the helper.
-	 * @param  string $classname
-	 * @return null
-	 */
-	public static function setSession($classname)
-	{
-
-		if (class_exists($classname) and in_array('jyggen\\Curl\\SessionInterface', class_implements($classname))) {
-
-			static::$session = $classname;
-
-		} else {
-
-			throw new UnexpectedValueException(sprintf('Session "%s" must implement "jyggen\\Curl\\SessionInterface"', $classname));
-
-		}
-
-	}
-
-	/**
 	 * Setup and execute a HTTP request.
 	 *
 	 * @param  string $method
@@ -186,7 +123,7 @@ class Curl
 	{
 
 		// Create a new Dispatcher.
-		$dispatcher = new static::$dispatcher();
+		$dispatcher = new Dispatcher();
 
 		// Foreach $urls:
 		foreach ($urls as $url => $data) {
@@ -198,7 +135,7 @@ class Curl
 			}
 
 			// Create a new Session.
-			$session = new static::$session($url);
+			$session = new Session($url);
 
 			// Follow any 3xx HTTP status code.
 			$session->setOption(CURLOPT_FOLLOWLOCATION, true);
