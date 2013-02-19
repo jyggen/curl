@@ -20,7 +20,9 @@ A lightweight cURL library with support for multiple requests in parallel.
 * Fixed an issue with `Session::setOption()` no recursing arrays correctly.
 * Added 100% test coverage for `Session`.
 
-## Usage
+## Documentation
+
+The documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl).
 
 ### Static Helpers
 
