@@ -18,7 +18,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	public function testConstruct()
 	{
 
-		$this->assertInstanceof('jyggen\\Curl\\Session', new Session('http://example.com/'));
+		$this->assertInstanceof('jyggen\\Curl\\SessionInterface', new Session('http://example.com/'));
 
 	}
 
