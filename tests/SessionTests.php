@@ -26,7 +26,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	{
 
 		$session = new Session('http://example.com/');
-		$this->assertEquals('', $session->getErrorMessage());
+		$this->assertSame(null, $session->getErrorMessage());
 
 	}
 
@@ -35,7 +35,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
 		$session = new Session('http://example.com/');
 		$this->assertInternalType('resource', $session->getHandle());
-		$this->assertEquals('curl', get_resource_type($session->getHandle()));
+		$this->assertSame('curl', get_resource_type($session->getHandle()));
 
 	}
 
@@ -51,7 +51,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	{
 
 		$session = new Session('http://example.com/');
-		$this->assertEquals('http://example.com/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+		$this->assertSame('http://example.com/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
 

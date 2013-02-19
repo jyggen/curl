@@ -95,7 +95,9 @@ class Session implements SessionInterface
 	public function getErrorMessage()
 	{
 
-		return curl_error($this->handle);
+		$error = curl_error($this->handle);
+
+		return ($error === '') ? null : $error;
 
 	}
 
@@ -270,7 +272,7 @@ class Session implements SessionInterface
 	public function isSuccessful()
 	{
 
-		return ($this->getErrorMessage() === '') ? true : false;
+		return ($this->getErrorMessage() === null) ? true : false;
 
 	}
 
