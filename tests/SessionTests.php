@@ -18,22 +18,21 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	public function testConstruct()
 	{
 
-		$this->assertInstanceof('jyggen\\Curl\\SessionInterface', new Session('http://example.com/'));
+		$this->assertInstanceof('jyggen\\Curl\\SessionInterface', $this->forgeSession());
 
 	}
 
 	public function testGetErrorMessage()
 	{
 
-		$session = new Session('http://example.com/');
-		$this->assertSame(null, $session->getErrorMessage());
+		$this->assertSame(null, $this->forgeSession()->getErrorMessage());
 
 	}
 
 	public function testGetHandle()
 	{
 
-		$session = new Session('http://example.com/');
+		$session = $this->forgeSession();
 		$this->assertInternalType('resource', $session->getHandle());
 		$this->assertSame('curl', get_resource_type($session->getHandle()));
 
@@ -42,42 +41,39 @@ class SessionTests extends PHPUnit_Framework_TestCase
 	public function testGetInfo()
 	{
 
-		$session = new Session('http://example.com/');
-		$this->assertInternalType('array', $session->getInfo());
+		$this->assertInternalType('array', $this->forgeSession()->getInfo());
 
 	}
 
 	public function testGetInfoWithKey()
 	{
 
-		$session = new Session('http://example.com/');
-		$this->assertSame('http://example.com/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+		$this->assertSame('http://example.com/', $this->forgeSession()->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
 
 	public function testGetResponse()
 	{
 
-		$session = new Session('http://example.com/');
-		$this->assertEquals(null, $session->getResponse());
+		$this->assertSame(null, $this->forgeSession()->getResponse());
 
 	}
 
 	public function testSetOption()
 	{
 
-		$session = new Session('http://example.com/');
+		$session = $this->forgeSession();
 		$session->setOption(CURLOPT_URL, 'http://example.org/');
-		$this->assertEquals('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+		$this->assertSame('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
 
 	public function testSetOptionArray()
 	{
 
-		$session = new Session('http://example.com/');
+		$session = $this->forgeSession();
 		$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
-		$this->assertEquals('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+		$this->assertSame ('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
 	}
 
@@ -126,10 +122,31 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
 	}
 
+	public function testIsExecuted()
+	{
+
+		$this->assertFalse($this->forgeSession()->isExecuted());
+
+	}
+
 	public function testExecute()
 	{
 
-		$session = new Session('http://example.com/');
+		$session = $this->forgeSession();
+		$session->execute();
+		$this->assertTrue($session->isExecuted());
+
+	}
+
+	/**
+     * @expectedException        jyggen\CurlErrorException
+     * @expectedExceptionMessage not resolve host
+     */
+	public function testExecuteWithError()
+	{
+
+		$session = $this->forgeSession('foobar');
+		$session->execute();
 
 	}
 
@@ -148,6 +165,15 @@ class SessionTests extends PHPUnit_Framework_TestCase
 		$multi   = curl_multi_init();
 		$session->addMultiHandle($multi);
 		$this->assertEquals(0, $session->removeMultiHandle($multi));
+
+	}
+
+	protected function forgeSession($url = null)
+	{
+
+		$url or $url = 'http://example.com/';
+
+		return new Session($url);
 
 	}
 
