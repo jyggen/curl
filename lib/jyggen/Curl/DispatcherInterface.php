@@ -12,13 +12,15 @@
 
 namespace jyggen\Curl;
 
+use jyggen\Curl\SessionInterface;
+
 interface DispatcherInterface {
 
 	/**
 	 * Add a Session.
 	 *
-	 * @param  jyggen\Curl\SessionInterface $session
-	 * @return void
+	 * @param  SessionInterface $session
+	 * @return int
 	 */
 	public function add(SessionInterface $session);
 
@@ -39,7 +41,7 @@ interface DispatcherInterface {
 	/**
 	 * Retrieve all or a specific session.
 	 *
-	 * @param  int $key null
+	 * @param  int   $key null
 	 * @return mixed
 	 */
 	public function get($key = null);
@@ -47,8 +49,8 @@ interface DispatcherInterface {
 	/**
 	 * Remove a specific session.
 	 *
-	 * @param  int $key
-	 * @return jyggen\Curl\Dispatcher
+	 * @param  int  $key
+	 * @return void
 	 */
 	public function remove($key);
 

@@ -35,7 +35,7 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 
 		$dispatcher = new Dispatcher;
 		$this->assertEquals(array(), $dispatcher->get());
-		$this->assertFalse($dispatcher->get(1));
+		$this->assertNull($dispatcher->get(1));
 
 	}
 

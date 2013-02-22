@@ -59,7 +59,7 @@ class Dispatcher implements DispatcherInterface {
 	/**
 	 * Add a Session.
 	 *
-	 * @param  jyggen\Curl\SessionInterface $session
+	 * @param  SessionInterface $session
 	 * @return int
 	 */
 	public function add(SessionInterface $session)
@@ -105,65 +105,56 @@ class Dispatcher implements DispatcherInterface {
 	public function execute()
 	{
 
-		do {
+		// Start the request cycle.
+		do { $mrc = curl_multi_exec($this->handle, $active); } while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
-			$mrc = curl_multi_exec($this->handle, $active);
-
-		} while ($mrc === CURLM_CALL_MULTI_PERFORM);
-
+		// Keep processing requests until we're done.
 		while ($active and $mrc === CURLM_OK) {
 
 			// Workaround for PHP Bug #61141.
-			if (curl_multi_select($this->handle) === CURLM_CALL_MULTI_PERFORM) { usleep(100); }
+			if (curl_multi_select($this->handle) === -1) { usleep(100); }
 
-			do {
-
-				$mrc = curl_multi_exec($this->handle, $active);
-
-			} while ($mrc === CURLM_CALL_MULTI_PERFORM);
+			// Retrieve execution status.
+			do { $mrc = curl_multi_exec($this->handle, $active); } while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
 		}
 
+		// If everything went okay, retrieve the data from each session.
 		if ($mrc === CURLM_OK) {
 
 			foreach ($this->sessions as $key => $session) {
-
 				$session->execute();
 				$session->removeMultiHandle($this->handle);
-
 			}
 
-		} else {
-
-			throw new CurlErrorException('cURL read error #'.$mrc);
-
-		}
+		// Otherwise, throw an exception!
+		} else { throw new CurlErrorException('cURL read error #'.$mrc); }
 
 	}
 
 	/**
 	 * Retrieve all or a specific session.
 	 *
-	 * @param  int $key null
+	 * @param  int   $key null
 	 * @return mixed
 	 */
 	public function get($key = null)
 	{
 
-		// Return all sessions.
+		// Return all sessions if no key is specified.
 		if (is_null($key)) {
 
 			return $this->sessions;
 
-		// Return a specific session if it exists.
+		// Otherwise check if the key exists and return that session.
 		} elseif (array_key_exists($key, $this->sessions)) {
 
 			return $this->sessions[$key];
 
-		// Return false.
+		// Else return null.
 		} else {
 
-			return false;
+			return null;
 
 		}
 
@@ -172,8 +163,8 @@ class Dispatcher implements DispatcherInterface {
 	/**
 	 * Remove a specific session.
 	 *
-	 * @param  int $key
-	 * @return jyggen\Curl\Dispatcher
+	 * @param  int  $key
+	 * @return void
 	 */
 	public function remove($key)
 	{
