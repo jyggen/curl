@@ -12,7 +12,6 @@ The documentation for this library is available at [docs.jyggen.com](http://docs
 
 ### 2.0.0-BETA2
 
-* Moved interfaces to the `jyggen\Curl\Interface` namespace.
 * Made exceptions autoloadable and moved them to the `jyggen\Curl\Exception` namespace.
 * `Session` will now close the cURL resource during shutdown.
 * Removed `Curl::getDispatcher()`.

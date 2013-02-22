@@ -12,8 +12,7 @@
 
 namespace jyggen\Curl;
 
-interface DispatcherInterface
-{
+interface DispatcherInterface {
 
 	/**
 	 * Add a Session.

@@ -12,8 +12,7 @@
 
 namespace jyggen\Curl;
 
-interface SessionInterface
-{
+interface SessionInterface {
 
 	/**
 	 * Retrieve the latest error.
