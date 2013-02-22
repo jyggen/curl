@@ -18,6 +18,7 @@ The documentation for this library is available at [docs.jyggen.com](http://docs
 * Removed `Curl::getSession()`.
 * Removed `Curl::setDispatcher()`.
 * Removed `Curl::setSession()`.
+* Fixed the workaround for [PHP Bug #61141](https://bugs.php.net/bug.php?id=61141).
 * Added more unit tests.
 * Overall cleaner and better code.
 
