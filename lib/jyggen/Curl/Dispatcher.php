@@ -26,7 +26,7 @@ class Dispatcher implements DispatcherInterface {
 	protected $handle;
 
 	/**
-	 * All of the added sessions.
+	 * All added sessions.
 	 *
 	 * @var array
 	 */
@@ -60,17 +60,18 @@ class Dispatcher implements DispatcherInterface {
 	 * Add a Session.
 	 *
 	 * @param  jyggen\Curl\SessionInterface $session
-	 * @return void
+	 * @return int
 	 */
 	public function add(SessionInterface $session)
 	{
 
-		// Tell the session to use our handle.
+		// Tell the $session to use this handle.
 		$session->addMultiHandle($this->handle);
 
 		// Store the session.
 		$this->sessions[] = $session;
 
+		// Return the session's key.
 		return (count($this->sessions) - 1);
 
 	}
@@ -113,7 +114,7 @@ class Dispatcher implements DispatcherInterface {
 		while ($active and $mrc === CURLM_OK) {
 
 			// Workaround for PHP Bug #61141.
-			if (curl_multi_select($this->handle) !== -1) { usleep(100); }
+			if (curl_multi_select($this->handle) === CURLM_CALL_MULTI_PERFORM) { usleep(100); }
 
 			do {
 
@@ -123,17 +124,18 @@ class Dispatcher implements DispatcherInterface {
 
 		}
 
+		if ($mrc === CURLM_OK) {
 
-		if ($mrc !== CURLM_OK) {
+			foreach ($this->sessions as $key => $session) {
+
+				$session->execute();
+				$session->removeMultiHandle($this->handle);
+
+			}
+
+		} else {
 
 			throw new CurlErrorException('cURL read error #'.$mrc);
-
-		}
-
-		foreach ($this->sessions as $key => $session) {
-
-			$session->execute();
-			$session->removeMultiHandle($this->handle);
 
 		}
 
