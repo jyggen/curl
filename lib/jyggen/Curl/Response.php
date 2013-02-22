@@ -12,6 +12,8 @@
 
 namespace jyggen\Curl;
 
+use jyggen\Curl\SessionInterface;
+
 class Response extends \Symfony\Component\HttpFoundation\Response {
 
 	public static function forge(SessionInterface $session)
@@ -25,18 +27,16 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
         $status    = explode(' ', $headers[0]);
 
         list($protocol, $version) = explode('/', $status[0]);
-
         unset($headers[0]);
 
         foreach ($headers as $header) {
 
-            $header = explode(': ', $header);
-
-            $headerBag[trim($header[0])] = trim($header[1]);
+            list($key, $value)     = explode(': ', $header);
+            $headerBag[trim($key)] = trim($value);
 
         }
 
-        $response = new Response($content, $info['http_code'], $headerBag);
+        $response = new static($content, $info['http_code'], $headerBag);
         $response->setProtocolVersion($version);
         $response->setCharset(substr(strstr($response->headers->get('Content-Type'), '='), 1));
 

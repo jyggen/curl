@@ -11,20 +11,22 @@
  */
 
 namespace jyggen\Curl;
-
+use jyggen\Curl\Exception\CurlErrorException;
+use jyggen\Curl\Exception\ProtectedOptionException;
 use jyggen\Curl\Response;
+use jyggen\Curl\SessionInterface;
 
 class Session implements SessionInterface {
 
 	/**
-	 * Content returned from an execute.
+	 * Content returned from an execution.
 	 *
 	 * @var  string
 	 */
 	protected $content;
 
 	/**
-	 * A list of defaults options that can't be overwritten.
+	 * Defaults options that can't be overwritten.
 	 *
 	 * @var array
 	 */
@@ -56,7 +58,7 @@ class Session implements SessionInterface {
 	/**
 	 * The Response object.
 	 *
-	 * @var jyggen\Curl\Response
+	 * @var Response
 	 */
 	protected $response;
 
@@ -120,18 +122,18 @@ class Session implements SessionInterface {
 	/**
 	 * Get information regarding the session.
 	 *
-	 * @param  int $key null
+	 * @param  int   $key null
 	 * @return mixed
 	 */
 	public function getInfo($key = null)
 	{
 
-		// If $key is null:
+		// If no key is supplied return all available information.
 		if ($key === null) {
 
 			return curl_getinfo($this->handle);
 
-		// Else:
+		// Otherwise retrieve information for the specified key.
 		} else {
 
 			return curl_getinfo($this->handle, $key);
@@ -140,6 +142,11 @@ class Session implements SessionInterface {
 
 	}
 
+	/**
+	 * Get the raw response.
+	 *
+	 * @return string
+	 */
 	public function getRawResponse()
 	{
 
@@ -148,7 +155,7 @@ class Session implements SessionInterface {
 	}
 
 	/**
-	 * Get this session's response.
+	 * Get the response.
 	 *
 	 * @return array
 	 */
@@ -168,40 +175,32 @@ class Session implements SessionInterface {
 	/**
 	 * Set an option for the session.
 	 *
-	 * @param  mixed $option
-	 * @param  mixed $value  null
-	 * @return jyggen\Curl\SessionInterface
+	 * @param  mixed            $option
+	 * @param  mixed            $value  null
+	 * @return SessionInterface
 	 */
 	public function setOption($option, $value = null)
 	{
 
-		// $option is an array, loop through each option and call this method recursively.
+		// If it's an array, loop through each option and call this method recursively.
 		if (is_array($option)) {
-
 			foreach ($option as $opt => $val) {
 				$this->setOption($opt, $val);
 			}
-
-		// $option isn't a default value, call curl_setopt and throw an exception on false.
+		// Else if it isn't a default value, call curl_setopt and throw an exception on failure.
 		} elseif (!array_key_exists($option, $this->defaults)) {
-
 			if (curl_setopt($this->handle, $option, $value) === false) {
-
-				throw new \jyggen\Curl\Exception\CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
-
+				throw new CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
 			}
-
-		// $option is a protected default value and shouldn't be overwritten, throw an exception!
+		// Else it's a protected default value and shouldn't be overwritten, throw an exception!
 		} else {
-
-			throw new \jyggen\Curl\Exception\ProtectedOptionException('To prevent unexpected behavior you are not allowed to change option #'.$option);
-
+			throw new ProtectedOptionException(sprintf('Unable to set protected option #%u', $option));
 		}
 
 	}
 
 	/**
-	 * Add the session to a cURL multi handle.
+	 * Add this session to the supplied cURL multi handle.
 	 *
 	 * @param  curl_multi $multiHandle
 	 * @return int
@@ -209,18 +208,25 @@ class Session implements SessionInterface {
 	public function addMultiHandle($multiHandle)
 	{
 
-		if (!is_resource($multiHandle) or get_resource_type($multiHandle) !== 'curl_multi') {
+		// If it's a curl_multi resource add this session to it and throw an exception on failure.
+		if (is_resource($multiHandle) and get_resource_type($multiHandle) === 'curl_multi') {
 
-			throw new \jyggen\Curl\Exception\CurlErrorException(sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle)));
+			$status = curl_multi_add_handle($multiHandle, $this->handle);
 
-		} elseif (($msg = curl_multi_add_handle($multiHandle, $this->handle)) == CURLM_OK) {
+			if ($status === CURLM_OK) {
 
-			$this->multiNo++;
-			return true;
+				$this->multiNo++;
+				return true;
 
+			} else {
+
+				throw new CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $msg));
+
+			}
+		// Otherwise throw an exception!
 		} else {
 
-			throw new \jyggen\Curl\Exception\CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $msg));
+			throw new CurlErrorException(sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle)));
 
 		}
 
@@ -234,23 +240,28 @@ class Session implements SessionInterface {
 	public function execute()
 	{
 
+		// If the session is attached to a multi handle it has already been
+		// executed so all we have to do is to retrieve the response.
 		if ($this->hasMulti()) {
 
 			$this->content = curl_multi_getcontent($this->handle);
 
+		// Otherwise we execute the request now and retrieve the response.
 		} else {
 
 			$this->content = curl_exec($this->handle);
 
 		}
 
+		// If the execution was successful flag it as executed.
 		if ($this->isSuccessful()) {
 
 			$this->executed = true;
 
+		// Otherwise throw an exception.
 		} else {
 
-			throw new \jyggen\Curl\Exception\CurlErrorException($this->getErrorMessage());
+			throw CurlErrorException($this->getErrorMessage());
 
 		}
 
