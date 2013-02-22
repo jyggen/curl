@@ -78,7 +78,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\CurlErrorException
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage Couldn't set option
      */
     public function testSetOptionError()
@@ -90,7 +90,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\CurlErrorException
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage Couldn't set option
      */
     public function testSetOptionArrayError()
@@ -102,7 +102,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\ProtectedOptionException
+     * @expectedException        jyggen\Curl\Exception\ProtectedOptionException
      * @expectedExceptionMessage not allowed to change
      */
     public function testSetProtectedOption()
@@ -139,7 +139,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\CurlErrorException
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage resolve host
      */
     public function testExecuteWithError()

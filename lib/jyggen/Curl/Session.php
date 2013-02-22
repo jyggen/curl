@@ -14,8 +14,7 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\Response;
 
-class Session implements SessionInterface
-{
+class Session implements SessionInterface {
 
 	/**
 	 * Content returned from an execute.
@@ -188,14 +187,14 @@ class Session implements SessionInterface
 
 			if (curl_setopt($this->handle, $option, $value) === false) {
 
-				throw new \jyggen\CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
+				throw new \jyggen\Curl\Exception\CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
 
 			}
 
 		// $option is a protected default value and shouldn't be overwritten, throw an exception!
 		} else {
 
-			throw new \jyggen\ProtectedOptionException('To prevent unexpected behavior you are not allowed to change option #'.$option);
+			throw new \jyggen\Curl\Exception\ProtectedOptionException('To prevent unexpected behavior you are not allowed to change option #'.$option);
 
 		}
 
@@ -212,7 +211,7 @@ class Session implements SessionInterface
 
 		if (!is_resource($multiHandle) or get_resource_type($multiHandle) !== 'curl_multi') {
 
-			throw new \jyggen\CurlErrorException(sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle)));
+			throw new \jyggen\Curl\Exception\CurlErrorException(sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle)));
 
 		} elseif (($msg = curl_multi_add_handle($multiHandle, $this->handle)) == CURLM_OK) {
 
@@ -221,7 +220,7 @@ class Session implements SessionInterface
 
 		} else {
 
-			throw new \jyggen\CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $msg));
+			throw new \jyggen\Curl\Exception\CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $msg));
 
 		}
 
@@ -251,7 +250,7 @@ class Session implements SessionInterface
 
 		} else {
 
-			throw new \jyggen\CurlErrorException($this->getErrorMessage());
+			throw new \jyggen\Curl\Exception\CurlErrorException($this->getErrorMessage());
 
 		}
 

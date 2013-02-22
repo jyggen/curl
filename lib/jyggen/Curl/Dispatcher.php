@@ -12,10 +12,11 @@
 
 namespace jyggen\Curl;
 
+use jyggen\Curl\DispatcherInterface;
+use jyggen\Curl\Exception\CurlErrorException;
 use jyggen\Curl\SessionInterface;
 
-class Dispatcher implements DispatcherInterface
-{
+class Dispatcher implements DispatcherInterface {
 
 	/**
 	 * The cURL multi handle.
@@ -125,7 +126,7 @@ class Dispatcher implements DispatcherInterface
 
 		if ($mrc !== CURLM_OK) {
 
-			throw new \jyggen\CurlErrorException('cURL read error #'.$mrc);
+			throw new CurlErrorException('cURL read error #'.$mrc);
 
 		}
 

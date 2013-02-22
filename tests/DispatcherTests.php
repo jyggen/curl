@@ -110,7 +110,7 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-     * @expectedException        jyggen\CurlErrorException
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage fake message
      */
 	public function testExecuteWithError()
@@ -127,7 +127,7 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 		$session->shouldReceive('removeMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
 			return curl_multi_remove_handle($handle, $curl);
 		});
-		$session->shouldReceive('execute')->andThrow('jyggen\\CurlErrorException', 'fake message');
+		$session->shouldReceive('execute')->andThrow('jyggen\Curl\Exception\CurlErrorException', 'fake message');
 
 		$dispatcher->add($session);
 		$dispatcher->execute();
