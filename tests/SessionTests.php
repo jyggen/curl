@@ -103,7 +103,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        jyggen\Curl\Exception\ProtectedOptionException
-     * @expectedExceptionMessage not allowed to change
+     * @expectedExceptionMessage protected option
      */
     public function testSetProtectedOption()
     {

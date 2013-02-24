@@ -261,7 +261,7 @@ class Session implements SessionInterface {
 		// Otherwise throw an exception.
 		} else {
 
-			throw CurlErrorException($this->getErrorMessage());
+			throw new CurlErrorException($this->getErrorMessage());
 
 		}
 
