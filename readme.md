@@ -6,7 +6,30 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ## Documentation
 
-The documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl).
+Documentation for this library will be available at [docs.jyggen.com](http://docs.jyggen.com/curl) when version 2.0 is fully released. Check below for old pre-2.0 docs.
+
+## About
+
+### Requirements
+
+* PHP 5.3 or above.
+* PHPUnit to execute the test suite (optional).
+
+### Bugs and Feature Requests
+
+Please create an issue or pull request on [GitHub](https://github.com/jyggen/curl).
+
+### Author
+
+Jonas Stendahl ([@jyggen](http://twitter.com/jyggen)) 
+jonas.stendahl@gmail.com 
+
+[See the list of contributors here](https://github.com/jyggen/curl/contributors).
+
+### License
+
+This library is licensed under the MIT license.
+
 
 ## Changelog
 
@@ -64,6 +87,10 @@ Version 2.0 introduces a new library flow which changes the way `Dispatcher` and
 * Fixed an issue with `Session::setOption()` no recursing arrays correctly.
 * Added 100% test coverage for `Session`.
 
+## Legacy Documentation
+
+*This documentation is for releases prior to 2.0 and may not be accurate.*
+
 ### Static Helpers
 
 This library was created with simplicity in mind, so in most cases you can use the static helpers in the `Curl` class. Each helper will return an array with two indexes: `data` and `info`. `data` will contain the response from your request and `info` anything that can normally be retrieved by `curl_getinfo()`. If multiple URLs are requested the helpers will return an array with a response array for each URL.
@@ -111,8 +138,6 @@ To make a PUT request you'd use `Curl::put()`. See `Curl::post()` for usage.
 
 ### Session and Dispatcher
 
-*The documentation is still work-in-progress, check the code!*
-
 For more advanced usage you'll have to go for the classes underneath the helpers. First we have `Session`, which could be referred to as your URL, and then there's `Dispatcher` which keeps track of your sessions and executes your requests.
 
 #### Session
@@ -145,26 +170,3 @@ Execute all or a specific request.
 Retrieve the response of all sessions attached to the dispatcher.
 * __getSessions()__  
 Retrieve all sessions attached to the dispatcher.
-
-## About
-
-### Requirements
-
-* PHP 5.3 or above.
-* PHPUnit to execute the test suite (optional).
-
-### Bugs and Feature Requests
-
-Please create an issue or pull request on [GitHub](https://github.com/jyggen/curl).
-
-### Author
-
-Jonas Stendahl  
-jonas.stendahl@gmail.com  
-http://twitter.com/jyggen
-
-[See the list of contributors here](https://github.com/jyggen/curl/contributors).
-
-### License
-
-This library is licensed under the MIT license.
