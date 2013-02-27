@@ -10,6 +10,10 @@ The documentation for this library is available at [docs.jyggen.com](http://docs
 
 ## Changelog
 
+### 2.0.0-BETA3
+
+* `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
+
 ### 2.0.0-BETA2
 
 * Made exceptions autoloadable and moved them to the `jyggen\Curl\Exception` namespace.

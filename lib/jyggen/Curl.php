@@ -160,7 +160,7 @@ class Curl
 
 				// Add the PUT data to the session.
 				$session->setOption(CURLOPT_INFILE, $fh);
-				$session->setOption(CURLOPT_INFILESIZE, mb_strlen($data, 'UTF-8'));
+				$session->setOption(CURLOPT_INFILESIZE, strlen($data));
 				$session->setOption(CURLOPT_PUT, true);
 
 			} else {
