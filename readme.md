@@ -36,6 +36,7 @@ This library is licensed under the MIT license.
 ### 2.0.0-BETA3
 
 * `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
+* The library now requires `ext-curl`, if that wasn't obvious enough.
 
 ### 2.0.0-BETA2
 
@@ -53,29 +54,6 @@ This library is licensed under the MIT license.
 ### 2.0.0-BETA1
 
 Version 2.0 introduces a new library flow which changes the way `Dispatcher` and `Session` interacts with each other. If you've only used the static helper `Curl` in the past these changes shouldn't affect you that much. `Dispatcher` is stripped down to only be a wrapper around `curl_multi_init()` while `Session` continues to wrap around `curl_init()` but with more functionality previously located in `Dispatcher`.
-
-* Moved the library from `classes/` to `lib/`.
-* `Dispatcher` now implements `DispatcherInterface`.
-* `Session` now implements `SessionInterface`.
-* Added new dependency to Composer: `symfony/http-foundation`.
-* Added new class `Response` which extends `Symfony\Component\HttpFoundation\Response`.
-* Added `Session::getErrorMessage()`.
-* Added `Session::getRawResponse()`.
-* Added `Session::addMultiHandle()`.
-* Added `Session::execute()`.
-* Added `Session::hasMulti()`.
-* Added `Session::isExecuted()`.
-* Added `Session::isSuccessful()`.
-* Added `Session::removeMultiHandle()`.
-* Renamed `Dispatcher::addSession()` to `Dispatcher::add()`.
-* Renamed `Dispatcher::removeSession()` to `Dispatcher::remove()`.
-* Removed `Dispatcher::getResponses()`.
-* Added `Dispatcher::clear()`.
-* Added `Curl::getDispatcher()`.
-* Added `Curl::getSession()`.
-* Added `Curl::setDispatcher()`.
-* Added `Curl::setSession()`.
-* A lot of refactoring, optimizations, unit tests and code cleanup.
 
 ### 1.0.2
 
