@@ -79,9 +79,7 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 		$session->shouldReceive('addMultiHandle')->andReturn(0);
 		$session->shouldReceive('removeMultiHandle')->andReturn(0);
 
-		$this->assertEquals(0, $dispatcher->add($session));
-		$this->assertInstanceof('jyggen\\Curl\SessionInterface', $dispatcher->get(0));
-
+		$dispatcher->add($session);
 		$dispatcher->remove(0);
 
 		$this->assertEquals(array(), $dispatcher->get());
@@ -92,45 +90,23 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	{
 
 		$dispatcher = new Dispatcher;
+		$session1   = m::mock('jyggen\\Curl\\Session', array('http://example.com/'))->shouldDeferMissing();
+		$session2   = m::mock('jyggen\\Curl\\Session', array('http://example.org/'))->shouldDeferMissing();
 
-		$session = m::mock('jyggen\\Curl\\SessionInterface');
-		$curl    = curl_init('http://example.com/');
+		$session1->shouldReceive('execute')->andReturn(true);
+		$session2->shouldReceive('execute')->andReturn(true);
+		$session1->shouldReceive('getRawResponse')->andReturnUsing(function() use ($session1) { return curl_multi_getcontent($session1->getHandle()); });
+		$session2->shouldReceive('getRawResponse')->andReturnUsing(function() use ($session2) { return curl_multi_getcontent($session2->getHandle()); });
 
-		$session->shouldReceive('addMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
-			return curl_multi_add_handle($handle, $curl);
-		});
-		$session->shouldReceive('removeMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
-			return curl_multi_remove_handle($handle, $curl);
-		});
-		$session->shouldReceive('execute');
-
-		$dispatcher->add($session);
+		$dispatcher->add($session1);
+		$dispatcher->add($session2);
 		$dispatcher->execute();
 
-	}
+		$response1 = $session1->getRawResponse();
+		$response2 = $session2->getRawResponse();
 
-	/**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
-     * @expectedExceptionMessage fake message
-     */
-	public function testExecuteWithError()
-	{
-
-		$dispatcher = new Dispatcher;
-
-		$session = m::mock('jyggen\\Curl\\SessionInterface');
-		$curl    = curl_init('invalid://example.com/');
-
-		$session->shouldReceive('addMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
-			return curl_multi_add_handle($handle, $curl);
-		});
-		$session->shouldReceive('removeMultiHandle')->with(m::type('resource'))->andReturn(function($handle) use ($curl) {
-			return curl_multi_remove_handle($handle, $curl);
-		});
-		$session->shouldReceive('execute')->andThrow('jyggen\Curl\Exception\CurlErrorException', 'fake message');
-
-		$dispatcher->add($session);
-		$dispatcher->execute();
+		$this->assertStringStartsWith('HTTP/1.0 302 Found', $response1);
+		$this->assertStringStartsWith('HTTP/1.0 302 Found', $response2);
 
 	}
 

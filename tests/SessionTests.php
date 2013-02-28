@@ -73,7 +73,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
         $session = $this->forgeSession();
         $session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
-        $this->assertSame ('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+        $this->assertSame('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
 
     }
 
@@ -118,7 +118,19 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
         $session = new Session('http://example.com/');
         $multi   = curl_multi_init();
-        $this->assertEquals(true, $session->addMultiHandle($multi));
+        $this->assertTrue($session->addMultiHandle($multi));
+
+    }
+
+    /**
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedExceptionMessage curl_multi
+     */
+    public function testAddMultiHandleWithError()
+    {
+
+        $session = new Session('http://example.com/');
+        $this->assertTrue($session->addMultiHandle('lolnope'));
 
     }
 
@@ -153,7 +165,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testIsSuccessful()
     {
 
-        $session = new Session('http://example.com/');
+        $session = $this->forgeSession();
         $this->assertTrue($session->isSuccessful());
 
     }
@@ -161,10 +173,18 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testRemoveMultiHandle()
     {
 
-        $session = new Session('http://example.com/');
+        $session = $this->forgeSession();
         $multi   = curl_multi_init();
         $session->addMultiHandle($multi);
-        $this->assertEquals(0, $session->removeMultiHandle($multi));
+        $this->assertSame(0, $session->removeMultiHandle($multi));
+
+    }
+
+    public function testRawResponse()
+    {
+
+        $session = $this->forgeSession();
+        $this->assertSame(null, $session->getRawResponse());
 
     }
 
