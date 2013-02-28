@@ -105,30 +105,27 @@ class Dispatcher implements DispatcherInterface {
 	public function execute()
 	{
 
-		// Start the request cycle.
-		do { $mrc = curl_multi_exec($this->handle, $active); } while ($mrc === CURLM_CALL_MULTI_PERFORM);
+		// Start processing the requests.
+		list($mrc, $active) = $this->process();
 
 		// Keep processing requests until we're done.
 		while ($active and $mrc === CURLM_OK) {
 
-			// Workaround for PHP Bug #61141.
-			if (curl_multi_select($this->handle) === -1) { usleep(100); }
-
-			// Retrieve execution status.
-			do { $mrc = curl_multi_exec($this->handle, $active); } while ($mrc === CURLM_CALL_MULTI_PERFORM);
+			// Process the next request.
+			list($mrc, $active) = $this->process();
 
 		}
 
-		// If everything went okay, retrieve the data from each session.
-		if ($mrc === CURLM_OK) {
+		// Throw an exception if something went wrong.
+		if ($mrc !== CURLM_OK) {
+			throw new CurlErrorException('cURL read error #'.$mrc);
+		}
 
-			foreach ($this->sessions as $key => $session) {
-				$session->execute();
-				$session->removeMultiHandle($this->handle);
-			}
-
-		// Otherwise, throw an exception!
-		} else { throw new CurlErrorException('cURL read error #'.$mrc); }
+		// Otherwise everything went okay, retrieve the data from each session.
+		foreach ($this->sessions as $key => $session) {
+			$session->execute();
+			$session->removeMultiHandle($this->handle);
+		}
 
 	}
 
@@ -142,19 +139,14 @@ class Dispatcher implements DispatcherInterface {
 	{
 
 		// Return all sessions if no key is specified.
-		if (is_null($key)) {
+		if ($key === null) {
 
 			return $this->sessions;
 
-		// Otherwise check if the key exists and return that session.
-		} elseif (array_key_exists($key, $this->sessions)) {
-
-			return $this->sessions[$key];
-
-		// Else return null.
+		// Otherwise, if the key exists; return that session, else return null.
 		} else {
 
-			return null;
+			return (isset($this->sessions[$key])) ? $this->sessions[$key] : null;
 
 		}
 
@@ -176,6 +168,26 @@ class Dispatcher implements DispatcherInterface {
 			unset($this->sessions[$key]);
 
 		}
+
+	}
+
+	/**
+	 * Process requests.
+	 * @return array
+	 */
+	protected function process()
+	{
+
+		// Workaround for PHP Bug #61141.
+		if (curl_multi_select($this->handle) === -1) {
+			usleep(100);
+		}
+
+		do {
+			$mrc = curl_multi_exec($this->handle, $active);
+		} while ($mrc === CURLM_CALL_MULTI_PERFORM);
+
+		return array($mrc, $active);
 
 	}
 
