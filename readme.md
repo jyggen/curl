@@ -38,6 +38,9 @@ This library is licensed under the MIT license.
 * `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
 * The library now requires `ext-curl`, if that wasn't obvious enough.
 * Removed a lot of unnecessary methods from `DispatcherInterface` and `SessionInterface`.
+* Refactored `Dispatcher::execute()` into using `Dispatcher::process()` internally.
+* Added more unit tests (94.06% coverage).
+* Overall cleaner and better code.
 
 ### 2.0.0-BETA2
 
