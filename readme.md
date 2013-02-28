@@ -37,6 +37,7 @@ This library is licensed under the MIT license.
 
 * `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
 * The library now requires `ext-curl`, if that wasn't obvious enough.
+* Removed a lot of unnecessary methods from `SessionInterface`.
 
 ### 2.0.0-BETA2
 
