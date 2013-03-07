@@ -12,4 +12,4 @@
 
 namespace jyggen\Curl\Exception;
 
-class UnexpectedValueException extends \UnexpectedValueException { }
+class BadMethodCallException extends \BadMethodCallException { }

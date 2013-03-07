@@ -13,102 +13,48 @@
 namespace jyggen;
 
 use jyggen\Curl\Dispatcher;
+use jyggen\Curl\Exception\BadMethodCallException;
+use jyggen\Curl\Exception\InvalidArgumentException;
 use jyggen\Curl\Session;
 
 class Curl
 {
 
 	/**
-	 * Static helper to do DELETE requests.
-	 *
-	 * @param  mixed $url
-	 * @return array
+	 * Handle all static helpers.
+	 * @param  mixed $name
+	 * @param  array $arguments
+	 * @return mixed
 	 */
-	public static function delete($url)
+	public static function __callStatic($name, $arguments)
 	{
 
-		if (!is_array($url)) {
+		$allowedVerbs = array('delete', 'get', 'post', 'put');
 
-			$urls = array($url => null);
+		if (in_array($name, $allowedVerbs)) {
 
-		} else {
-
-			foreach ($url as $value) {
-
-				$urls[$value] = null;
-
+			// We require at least one URL.
+			if (!isset($arguments[0])) {
+				throw new InvalidArgumentException(sprintf('Missing argument 1 for %s::%s()', get_called_class(), $name));
 			}
 
-		}
+			$urls = $arguments[0];
+			$data = (isset($arguments[1])) ? $arguments[1] : null;
 
-		return static::makeRequest('DELETE', $urls);
-
-	}
-
-	/**
-	 * Static helper to do GET requests.
-	 *
-	 * @param  mixed $url
-	 * @return array
-	 */
-	public static function get($url)
-	{
-
-		if (!is_array($url)) {
-
-			$urls = array($url => null);
-
-		} else {
-
-			foreach ($url as $value) {
-
-				$urls[$value] = null;
-
+			if (!is_array($urls)) {
+				$urls = array($urls => $data);
+			} elseif (!(bool)count(array_filter(array_keys($urls), 'is_string'))) {
+				foreach ($urls as $key => $url) {
+					$urls[$url] = null;
+					unset($urls[$key]);
+				}
 			}
 
+			return static::makeRequest(strtoupper($name), $urls, $data);
+
+		} else {
+			throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $name));
 		}
-
-		return static::makeRequest('GET', $urls);
-
-	}
-
-	/**
-	 * Static helper to do POST requests.
-	 *
-	 * @param  mixed $url
-	 * @param  array $data
-	 * @return array
-	 */
-	public static function post($urls, array $data = null)
-	{
-
-		if (!is_array($urls)) {
-
-			$urls = array($urls => $data);
-
-		}
-
-		return static::makeRequest('POST', $urls);
-
-	}
-
-	/**
-	 * Static helper to do PUT requests.
-	 *
-	 * @param  mixed $urls
-	 * @param  array $data
-	 * @return array
-	 */
-	public static function put($urls, array $data = null)
-	{
-
-		if (!is_array($urls)) {
-
-			$urls = array($urls => $data);
-
-		}
-
-		return static::makeRequest('PUT', $urls);
 
 	}
 
@@ -140,33 +86,35 @@ class Curl
 			// Follow any 3xx HTTP status code.
 			$session->setOption(CURLOPT_FOLLOWLOCATION, true);
 
-			if ($method === 'DELETE') {
+			switch ($method) {
 
-				// Set request method to DELETE.
-				$session->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
+				case 'DELETE':
+					// Set request method to DELETE.
+					$session->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
+					break;
 
-			} elseif ($method === 'POST') {
+				case 'GET':
+					// Redundant, but reset the method to GET.
+					$session->setOption(CURLOPT_HTTPGET, true);
+					break;
 
-				// Add the POST data to the session.
-				$session->setOption(CURLOPT_POST, true);
-				$session->setOption(CURLOPT_POSTFIELDS, $data);
+				case 'POST':
+					// Add the POST data to the session.
+					$session->setOption(CURLOPT_POST, true);
+					$session->setOption(CURLOPT_POSTFIELDS, $data);
+					break;
 
-			} elseif ($method === 'PUT') {
+				case 'PUT':
+					// Write the PUT data to memory.
+					$fh = fopen('php://memory', 'rw');
+					fwrite($fh, $data);
+					rewind($fh);
 
-				// Write the PUT data to memory.
-				$fh = fopen('php://memory', 'rw');
-				fwrite($fh, $data);
-				rewind($fh);
-
-				// Add the PUT data to the session.
-				$session->setOption(CURLOPT_INFILE, $fh);
-				$session->setOption(CURLOPT_INFILESIZE, strlen($data));
-				$session->setOption(CURLOPT_PUT, true);
-
-			} else {
-
-				// Redundant, but reset the method to GET.
-				$session->setOption(CURLOPT_HTTPGET, true);
+					// Add the PUT data to the session.
+					$session->setOption(CURLOPT_INFILE, $fh);
+					$session->setOption(CURLOPT_INFILESIZE, strlen($data));
+					$session->setOption(CURLOPT_PUT, true);
+					break;
 
 			}
 

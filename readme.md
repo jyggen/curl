@@ -13,7 +13,7 @@ Documentation for this library will be available at [docs.jyggen.com](http://doc
 ### Requirements
 
 * PHP 5.3 or above.
-* PHPUnit to execute the test suite (optional).
+* Curl extension (obviously).
 
 ### Bugs and Feature Requests
 
@@ -39,6 +39,8 @@ This library is licensed under the MIT license.
 * The library now requires `ext-curl`, if that wasn't obvious enough.
 * Removed a lot of unnecessary methods from `DispatcherInterface` and `SessionInterface`.
 * Refactored `Dispatcher::execute()` into using `Dispatcher::process()` internally.
+* Refactored all `Curl` public methods into `__callStatic`.
+* `InvalidArgumentException` now extends the native SPL extension with the same name.
 * Added more unit tests (94.06% coverage).
 * Overall cleaner and better code.
 
