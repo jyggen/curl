@@ -126,7 +126,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
      * @expectedException        jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage curl_multi
      */
-    public function testAddMultiHandleWithError()
+    public function testAddMultiHandleWithInvalidHandle()
     {
 
         $session = new Session('http://example.com/');
