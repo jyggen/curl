@@ -3,7 +3,7 @@
     "type": "library",
     "description": "A simple and lightweight cURL library with support for multiple requests in parallel.",
     "keywords": ["cURL", "HTTP", "Multi-thread", "parallel", "spider", "bot", "laravel"],
-    "homepage": "https://github.com/jyggen/curl",
+    "homepage": "http://docs.jyggen.com/curl",
     "license": "MIT",
     "authors": [
         {
