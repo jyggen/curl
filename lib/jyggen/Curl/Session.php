@@ -78,18 +78,6 @@ class Session implements SessionInterface {
 	}
 
 	/**
-	 * Shutdown sequence.
-	 *
-	 * @return void
-	 */
-	public function __destruct()
-	{
-
-		curl_close($this->handle);
-
-	}
-
-	/**
 	 * Retrieve the latest error.
 	 *
 	 * @return string

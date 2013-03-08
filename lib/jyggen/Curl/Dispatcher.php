@@ -45,18 +45,6 @@ class Dispatcher implements DispatcherInterface {
 	}
 
 	/**
-	 * Shutdown sequence.
-	 *
-	 * @return void
-	 */
-	public function __destruct()
-	{
-
-		curl_multi_close($this->handle);
-
-	}
-
-	/**
 	 * Add a Session.
 	 *
 	 * @param  SessionInterface $session
