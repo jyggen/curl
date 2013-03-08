@@ -33,7 +33,7 @@ This library is licensed under the MIT license.
 
 ## Changelog
 
-### 2.0.0-BETA3
+### 2.0.0-RC1
 
 * Added support for headers to `Session`.
 * The library now requires `ext-curl`, if that wasn't obvious enough.
