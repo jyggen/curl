@@ -19,7 +19,11 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 	public static function forge(SessionInterface $session)
 	{
 
-        list($headers, $content) = explode("\r\n\r\n", $session->getRawResponse());
+        $response = explode("\r\n\r\n", $session->getRawResponse());
+        end($response);
+        $content = $response[key($response)];
+        prev($response);
+        $headers = $response[key($response)];
 
         $headers   = explode("\r\n", $headers);
         $headerBag = array();
