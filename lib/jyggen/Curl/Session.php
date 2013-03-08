@@ -13,21 +13,23 @@
 namespace jyggen\Curl;
 use jyggen\Curl\Exception\CurlErrorException;
 use jyggen\Curl\Exception\ProtectedOptionException;
+use jyggen\Curl\HeaderBag;
 use jyggen\Curl\Response;
 use jyggen\Curl\SessionInterface;
 
 class Session implements SessionInterface {
 
 	/**
-	 * Content returned from an execution.
-	 *
-	 * @var  string
+	 * @var \jyggen\Curl\HeaderBag
+	 */
+	public $headers;
+
+	/**
+	 * @var string
 	 */
 	protected $content;
 
 	/**
-	 * Defaults options that can't be overwritten.
-	 *
 	 * @var array
 	 */
 	protected $defaults = array(
@@ -36,29 +38,22 @@ class Session implements SessionInterface {
 	);
 
 	/**
-	 * If the session has been executed.
 	 * @var boolean
 	 */
 	protected $executed = false;
 
 	/**
-	 * The cURL handle.
-	 *
 	 * @var curl
 	 */
 	protected $handle;
 
 	/**
-	 * Number of cURL multi handles attached to the session.
-	 *
 	 * @var int
 	 */
 	protected $multiNo = 0;
 
 	/**
-	 * The Response object.
-	 *
-	 * @var Response
+	 * @var \jyggen\Curl\Response
 	 */
 	protected $response;
 
@@ -71,7 +66,8 @@ class Session implements SessionInterface {
 	public function __construct($url)
 	{
 
-		$this->handle = curl_init($url);
+		$this->handle  = curl_init($url);
+		$this->headers = new HeaderBag(array(), $this);
 
 		foreach ($this->defaults as $option => $value) {
 
