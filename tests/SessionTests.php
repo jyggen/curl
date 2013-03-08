@@ -48,7 +48,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testGetInfoWithKey()
     {
 
-        $this->assertSame('http://example.com/', $this->forgeSession()->getInfo(CURLINFO_EFFECTIVE_URL));
+        $this->assertSame('http://httpbin.org/get', $this->forgeSession()->getInfo(CURLINFO_EFFECTIVE_URL));
 
     }
 
@@ -84,7 +84,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testSetOptionError()
     {
 
-        $session = new Session('http://example.com/');
+        $session = $this->forgeSession();
         @$session->setOption(CURLOPT_FILE, 'nope');
 
     }
@@ -96,7 +96,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testSetOptionArrayError()
     {
 
-        $session = new Session('http://example.com/');
+        $session = $this->forgeSession();
         @$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
 
     }
@@ -108,7 +108,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testSetProtectedOption()
     {
 
-        $session = new Session('http://example.com/');
+        $session = $this->forgeSession();
         $session->setOption(CURLOPT_RETURNTRANSFER, true);
 
     }
@@ -116,7 +116,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testAddMultiHandle()
     {
 
-        $session = new Session('http://example.com/');
+        $session = $this->forgeSession();
         $multi   = curl_multi_init();
         $this->assertTrue($session->addMultiHandle($multi));
 
@@ -191,7 +191,7 @@ class SessionTests extends PHPUnit_Framework_TestCase
     protected function forgeSession($url = null)
     {
 
-        $url or $url = 'http://example.com/';
+        $url or $url = 'http://httpbin.org/get';
 
         return new Session($url);
 
