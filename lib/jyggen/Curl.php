@@ -74,10 +74,8 @@ class Curl
 		// Foreach $urls:
 		foreach ($urls as $url => $data) {
 
-			if($data !== null) {
-
+			if ($data !== null) {
 				$data = http_build_query($data);
-
 			}
 
 			// Create a new Session.
@@ -99,21 +97,29 @@ class Curl
 					break;
 
 				case 'POST':
-					// Add the POST data to the session.
-					$session->setOption(CURLOPT_POST, true);
-					$session->setOption(CURLOPT_POSTFIELDS, $data);
+					if ($data !== null) {
+						// Add the POST data to the session.
+						$session->setOption(CURLOPT_POST, true);
+						$session->setOption(CURLOPT_POSTFIELDS, $data);
+					} else {
+						$session->setOption(CURLOPT_CUSTOMREQUEST, 'POST');
+					}
 					break;
 
 				case 'PUT':
-					// Write the PUT data to memory.
-					$fh = fopen('php://memory', 'rw');
-					fwrite($fh, $data);
-					rewind($fh);
+					if ($data !== null) {
+						// Write the PUT data to memory.
+						$fh = fopen('php://temp', 'rw+');
+						fwrite($fh, $data);
+						rewind($fh);
 
-					// Add the PUT data to the session.
-					$session->setOption(CURLOPT_INFILE, $fh);
-					$session->setOption(CURLOPT_INFILESIZE, strlen($data));
-					$session->setOption(CURLOPT_PUT, true);
+						// Add the PUT data to the session.
+						$session->setOption(CURLOPT_INFILE, $fh);
+						$session->setOption(CURLOPT_INFILESIZE, strlen($data));
+						$session->setOption(CURLOPT_PUT, true);
+					} else {
+						$session->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
+					}
 					break;
 
 			}
@@ -130,12 +136,14 @@ class Curl
 		$responses = array();
 
 		foreach ($sessions as $session) {
-
 			$responses[] = $session->getResponse();
-
 		}
 
-		return (count($urls) === 1) ? $responses[0] : $responses;
+		if (count($urls) === 1) {
+			return $responses[0];
+		} else {
+			return $responses;
+		}
 
 	}
 
