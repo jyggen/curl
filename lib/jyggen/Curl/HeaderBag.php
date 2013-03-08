@@ -17,7 +17,7 @@ use jyggen\Curl\SessionInterface;
 class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag {
 
     /**
-     * @var \jyggen\Curl\Session
+     * @var \jyggen\Curl\SessionInterface
      */
     protected $session;
 
@@ -26,7 +26,7 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag {
      *
      * @param array $headers
      */
-    public function __construct(array $headers, Session $session)
+    public function __construct(array $headers, SessionInterface $session)
     {
 
         $this->session = $session;
