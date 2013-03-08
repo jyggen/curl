@@ -35,13 +35,17 @@ This library is licensed under the MIT license.
 
 ### 2.0.0-BETA3
 
-* `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
+* Added support for headers to `Session`.
 * The library now requires `ext-curl`, if that wasn't obvious enough.
-* Removed a lot of unnecessary methods from `DispatcherInterface` and `SessionInterface`.
 * Refactored `Dispatcher::execute()` into using `Dispatcher::process()` internally.
 * Refactored all `Curl` public methods into `__callStatic`.
 * `InvalidArgumentException` now extends the native SPL extension with the same name.
-* Added more unit tests (94.06% coverage).
+* `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
+* Fixed various issues with  POST/PUT data in `Curl::makeRequest()`.
+* Fixed an issue in `Response::forge()` where headers would be treated as content..
+* Removed a lot of unnecessary methods from `DispatcherInterface` and `SessionInterface`.
+* Removed destructors from `Dispatcher` and `Session`.
+* Added more unit tests (98.87% coverage).
 * Overall cleaner and better code.
 
 ### 2.0.0-BETA2
