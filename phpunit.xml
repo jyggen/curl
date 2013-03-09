@@ -11,7 +11,7 @@
          bootstrap="./vendor/autoload.php">
    <testsuites>
       <testsuite name="Curl Test Suite">
-         <directory>./tests/</directory>
+         <directory suffix=".php">./tests/</directory>
       </testsuite>
    </testsuites>
    <filter>
