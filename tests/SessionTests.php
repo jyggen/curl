@@ -11,9 +11,17 @@
  */
 
 use jyggen\Curl\Session;
+use Mockery as m;
 
 class SessionTests extends PHPUnit_Framework_TestCase
 {
+
+    public function teardown()
+    {
+
+        m::close();
+
+    }
 
     public function testConstruct()
     {
@@ -131,6 +139,24 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
         $session = new Session('http://example.com/');
         $this->assertTrue($session->addMultiHandle('lolnope'));
+
+    }
+
+    /**
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedExceptionMessage code
+     */
+    public function testAddMultiHandleWithErrorCode()
+    {
+
+        /**
+         * @todo Write proper test(s):
+         */
+
+        // $resource = tmpfile();
+        // $session  = m::mock('jyggen\\Curl\\Session[isValidMultiHandle]');
+        // $session->shouldReceive('isValidMultiHandle')->andReturn(true);
+        // $return = @$session->addMultiHandle($resource);
 
     }
 
