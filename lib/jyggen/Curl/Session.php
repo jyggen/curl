@@ -193,20 +193,19 @@ class Session implements SessionInterface {
 	{
 
 		// If it's a curl_multi resource add this session to it and throw an exception on failure.
-		if (is_resource($multiHandle) and get_resource_type($multiHandle) === 'curl_multi') {
+		if ($this->isValidMultiHandle($multiHandle)) {
 
 			$status = curl_multi_add_handle($multiHandle, $this->handle);
 
-			if ($status === CURLM_OK) {
+			if ($status !== CURLM_OK) {
 
-				$this->multiNo++;
-				return true;
-
-			} else {
-
-				throw new CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $msg));
+				throw new CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $status));
 
 			}
+
+			$this->multiNo++;
+			return true;
+
 		// Otherwise throw an exception!
 		} else {
 
@@ -298,6 +297,13 @@ class Session implements SessionInterface {
 		$this->multiNo--;
 
 		return curl_multi_remove_handle($multiHandle, $this->handle);
+
+	}
+
+	protected function isValidMultiHandle($multiHandle)
+	{
+
+		return (is_resource($multiHandle) and get_resource_type($multiHandle) === 'curl_multi');
 
 	}
 
