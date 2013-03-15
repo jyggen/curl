@@ -110,17 +110,13 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 
 	}
 
-	/**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
-     * @expectedExceptionMessage read error
-     */
 	public function testExecuteWithError()
 	{
 
 		/**
          * @todo Write proper test(s):
          */
-		
+
 		// $dispatcher = m::mock('jyggen\\Curl\\Dispatcher')->shouldDeferMissing();
 		// $dispatcher->shouldReceive('process')->andReturn(array(1, false));
 		// $dispatcher->execute();

@@ -142,10 +142,6 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
-     * @expectedExceptionMessage code
-     */
     public function testAddMultiHandleWithErrorCode()
     {
 
