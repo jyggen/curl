@@ -12,4 +12,6 @@
 
 namespace jyggen\Curl\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException { }
+class InvalidArgumentException extends \InvalidArgumentException
+{
+}

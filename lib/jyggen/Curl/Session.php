@@ -11,300 +11,294 @@
  */
 
 namespace jyggen\Curl;
+
 use jyggen\Curl\Exception\CurlErrorException;
 use jyggen\Curl\Exception\ProtectedOptionException;
 use jyggen\Curl\HeaderBag;
 use jyggen\Curl\Response;
 use jyggen\Curl\SessionInterface;
 
-class Session implements SessionInterface {
-
-	/**
-	 * @var \jyggen\Curl\HeaderBag
-	 */
-	public $headers;
-
-	/**
-	 * @var string
-	 */
-	protected $content;
+class Session implements SessionInterface
+{
+
+    /**
+     * @var \jyggen\Curl\HeaderBag
+     */
+    public $headers;
 
-	/**
-	 * @var array
-	 */
-	protected $defaults = array(
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_HEADER         => true,
-	);
+    /**
+     * @var string
+     */
+    protected $content;
 
-	/**
-	 * @var boolean
-	 */
-	protected $executed = false;
+    /**
+     * @var array
+     */
+    protected $defaults = array(
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HEADER         => true,
+    );
 
-	/**
-	 * @var curl
-	 */
-	protected $handle;
-
-	/**
-	 * @var int
-	 */
-	protected $multiNo = 0;
+    /**
+     * @var boolean
+     */
+    protected $executed = false;
+
+    /**
+     * @var curl
+     */
+    protected $handle;
 
-	/**
-	 * @var \jyggen\Curl\Response
-	 */
-	protected $response;
+    /**
+     * @var int
+     */
+    protected $multiNo = 0;
 
-	/**
-	 * Create a new Session instance.
-	 *
-	 * @param  string $url
-	 * @return void
-	 */
-	public function __construct($url)
-	{
+    /**
+     * @var \jyggen\Curl\Response
+     */
+    protected $response;
 
-		$this->handle  = curl_init($url);
-		$this->headers = new HeaderBag(array(), $this);
+    /**
+     * Create a new Session instance.
+     *
+     * @param  string $url
+     * @return void
+     */
+    public function __construct($url)
+    {
 
-		foreach ($this->defaults as $option => $value) {
-
-			curl_setopt($this->handle, $option, $value);
-
-		}
-
-	}
-
-	/**
-	 * Retrieve the latest error.
-	 *
-	 * @return string
-	 */
-	public function getErrorMessage()
-	{
-
-		$error = curl_error($this->handle);
-
-		return ($error === '') ? null : $error;
-
-	}
-
-	/**
-	 * Retrieve the cURL handle.
-	 *
-	 * @return curl
-	 */
-	public function getHandle()
-	{
-
-		return $this->handle;
-
-	}
-
-	/**
-	 * Get information regarding the session.
-	 *
-	 * @param  int   $key null
-	 * @return mixed
-	 */
-	public function getInfo($key = null)
-	{
+        $this->handle  = curl_init($url);
+        $this->headers = new HeaderBag(array(), $this);
 
-		// If no key is supplied return all available information.
-		if ($key === null) {
+        foreach ($this->defaults as $option => $value) {
+
+            curl_setopt($this->handle, $option, $value);
+
+        }
+
+    }
+
+    /**
+     * Retrieve the latest error.
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+
+        $error = curl_error($this->handle);
+
+        return ($error === '') ? null : $error;
+
+    }
+
+    /**
+     * Retrieve the cURL handle.
+     *
+     * @return curl
+     */
+    public function getHandle()
+    {
 
-			return curl_getinfo($this->handle);
+        return $this->handle;
 
-		// Otherwise retrieve information for the specified key.
-		} else {
+    }
 
-			return curl_getinfo($this->handle, $key);
+    /**
+     * Get information regarding the session.
+     *
+     * @param  int   $key null
+     * @return mixed
+     */
+    public function getInfo($key = null)
+    {
 
-		}
+        if ($key === null) { // If no key is supplied return all available information.
 
-	}
+            return curl_getinfo($this->handle);
 
-	/**
-	 * Get the raw response.
-	 *
-	 * @return string
-	 */
-	public function getRawResponse()
-	{
+        } else { // Otherwise retrieve information for the specified key.
 
-		return $this->content;
+            return curl_getinfo($this->handle, $key);
 
-	}
+        }
 
-	/**
-	 * Get the response.
-	 *
-	 * @return array
-	 */
-	public function getResponse()
-	{
+    }
 
-		if ($this->response === null and $this->isExecuted()) {
+    /**
+     * Get the raw response.
+     *
+     * @return string
+     */
+    public function getRawResponse()
+    {
 
-			$this->response = Response::forge($this);
+        return $this->content;
 
-		}
+    }
 
-		return $this->response;
+    /**
+     * Get the response.
+     *
+     * @return array
+     */
+    public function getResponse()
+    {
 
-	}
+        if ($this->response === null and $this->isExecuted()) {
 
-	/**
-	 * Set an option for the session.
-	 *
-	 * @param  mixed            $option
-	 * @param  mixed            $value  null
-	 * @return SessionInterface
-	 */
-	public function setOption($option, $value = null)
-	{
+            $this->response = Response::forge($this);
 
-		// If it's an array, loop through each option and call this method recursively.
-		if (is_array($option)) {
-			foreach ($option as $opt => $val) {
-				$this->setOption($opt, $val);
-			}
-		// Else if it isn't a default value, call curl_setopt and throw an exception on failure.
-		} elseif (!array_key_exists($option, $this->defaults)) {
-			if (curl_setopt($this->handle, $option, $value) === false) {
-				throw new CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
-			}
-		// Else it's a protected default value and shouldn't be overwritten, throw an exception!
-		} else {
-			throw new ProtectedOptionException(sprintf('Unable to set protected option #%u', $option));
-		}
+        }
 
-	}
+        return $this->response;
 
-	/**
-	 * Add this session to the supplied cURL multi handle.
-	 *
-	 * @param  curl_multi $multiHandle
-	 * @return int
-	 */
-	public function addMultiHandle($multiHandle)
-	{
+    }
 
-		// If it's a curl_multi resource add this session to it and throw an exception on failure.
-		if ($this->isValidMultiHandle($multiHandle)) {
+    /**
+     * Set an option for the session.
+     *
+     * @param  mixed            $option
+     * @param  mixed            $value  null
+     * @return SessionInterface
+     */
+    public function setOption($option, $value = null)
+    {
 
-			$status = curl_multi_add_handle($multiHandle, $this->handle);
+        if (is_array($option)) { // If it's an array, loop through each option and call this method recursively.
+            foreach ($option as $opt => $val) {
+                $this->setOption($opt, $val);
+            }
+        } elseif (!array_key_exists($option, $this->defaults)) { // Else if it isn't a default value.
+            if (curl_setopt($this->handle, $option, $value) === false) {
+                throw new CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
+            }
+        } else { // Else it's a protected default value and shouldn't be overwritten, throw an exception!
+            throw new ProtectedOptionException(sprintf('Unable to set protected option #%u', $option));
+        }
 
-			if ($status !== CURLM_OK) {
+    }
 
-				throw new CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $status));
+    /**
+     * Add this session to the supplied cURL multi handle.
+     *
+     * @param  curl_multi $multiHandle
+     * @return int
+     */
+    public function addMultiHandle($multiHandle)
+    {
 
-			}
+        // If it's a curl_multi resource add this session to it and throw an exception on failure.
+        if ($this->isValidMultiHandle($multiHandle)) {
 
-			$this->multiNo++;
-			return true;
+            $status = curl_multi_add_handle($multiHandle, $this->handle);
 
-		// Otherwise throw an exception!
-		} else {
+            if ($status !== CURLM_OK) {
 
-			throw new CurlErrorException(sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle)));
+                throw new CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $status));
 
-		}
+            }
 
-	}
+            $this->multiNo++;
+            return true;
 
-	/**
-	 * Execute the request.
-	 *
-	 * @return void
-	 */
-	public function execute()
-	{
+        } else { // Otherwise throw an exception!
 
-		// If the session is attached to a multi handle it has already been
-		// executed so all we have to do is to retrieve the response.
-		if ($this->hasMulti()) {
+            $message = sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle));
+            throw new CurlErrorException($message);
 
-			$this->content = curl_multi_getcontent($this->handle);
+        }
 
-		// Otherwise we execute the request now and retrieve the response.
-		} else {
+    }
 
-			$this->content = curl_exec($this->handle);
+    /**
+     * Execute the request.
+     *
+     * @return void
+     */
+    public function execute()
+    {
 
-		}
+        // If the session is attached to a multi handle it has already been
+        // executed so all we have to do is to retrieve the response.
+        if ($this->hasMulti()) {
 
-		// If the execution was successful flag it as executed.
-		if ($this->isSuccessful()) {
+            $this->content = curl_multi_getcontent($this->handle);
 
-			$this->executed = true;
+        } else { // Otherwise we execute the request now and retrieve the response.
 
-		// Otherwise throw an exception.
-		} else {
+            $this->content = curl_exec($this->handle);
 
-			throw new CurlErrorException($this->getErrorMessage());
+        }
 
-		}
+        // If the execution was successful flag it as executed.
+        if ($this->isSuccessful()) {
 
-	}
+            $this->executed = true;
 
-	/**
-	 * If the session is attached to one or more cURL multi handles.
-	 * @return boolean
-	 */
-	public function hasMulti()
-	{
+        } else { // Otherwise throw an exception.
 
-		return ($this->multiNo > 0) ? true : false;
+            throw new CurlErrorException($this->getErrorMessage());
 
-	}
+        }
 
-	/**
-	 * If the request has been executed.
-	 *
-	 * @return boolean
-	 */
-	public function isExecuted()
-	{
+    }
 
-		return ($this->executed) ? true : false;
+    /**
+     * If the session is attached to one or more cURL multi handles.
+     * @return boolean
+     */
+    public function hasMulti()
+    {
 
-	}
+        return ($this->multiNo > 0) ? true : false;
 
-	/**
-	 * If the request was successful.
-	 *
-	 * @return boolean
-	 */
-	public function isSuccessful()
-	{
+    }
 
-		return ($this->getErrorMessage() === null) ? true : false;
+    /**
+     * If the request has been executed.
+     *
+     * @return boolean
+     */
+    public function isExecuted()
+    {
 
-	}
+        return ($this->executed) ? true : false;
 
-	/**
-	 * Remove the session from a cURL multi handle.
-	 *
-	 * @param  curl_multi $multiHandle
-	 * @return int
-	 */
-	public function removeMultiHandle($multiHandle)
-	{
+    }
 
-		$this->multiNo--;
+    /**
+     * If the request was successful.
+     *
+     * @return boolean
+     */
+    public function isSuccessful()
+    {
 
-		return curl_multi_remove_handle($multiHandle, $this->handle);
+        return ($this->getErrorMessage() === null) ? true : false;
 
-	}
+    }
 
-	protected function isValidMultiHandle($multiHandle)
-	{
+    /**
+     * Remove the session from a cURL multi handle.
+     *
+     * @param  curl_multi $multiHandle
+     * @return int
+     */
+    public function removeMultiHandle($multiHandle)
+    {
 
-		return (is_resource($multiHandle) and get_resource_type($multiHandle) === 'curl_multi');
+        $this->multiNo--;
 
-	}
+        return curl_multi_remove_handle($multiHandle, $this->handle);
 
+    }
+
+    protected function isValidMultiHandle($multiHandle)
+    {
+
+        return (is_resource($multiHandle) and get_resource_type($multiHandle) === 'curl_multi');
+
+    }
 }

@@ -12,4 +12,6 @@
 
 namespace jyggen\Curl\Exception;
 
-class ProtectedOptionException extends \Exception { }
+class ProtectedOptionException extends \Exception
+{
+}

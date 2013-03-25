@@ -12,29 +12,29 @@
 
 namespace jyggen\Curl;
 
-interface SessionInterface {
+interface SessionInterface
+{
 
-	/**
-	 * Add the session to a cURL multi handle.
-	 *
-	 * @param  curl_multi $multiHandle
-	 * @return int
-	 */
-	public function addMultiHandle($multiHandle);
+    /**
+     * Add the session to a cURL multi handle.
+     *
+     * @param  curl_multi $multiHandle
+     * @return int
+     */
+    public function addMultiHandle($multiHandle);
 
-	/**
-	 * Execute the request.
-	 *
-	 * @return void
-	 */
-	public function execute();
+    /**
+     * Execute the request.
+     *
+     * @return void
+     */
+    public function execute();
 
-	/**
-	 * Remove the session from a cURL multi handle.
-	 *
-	 * @param  curl_multi $multiHandle
-	 * @return int
-	 */
-	public function removeMultiHandle($multiHandle);
-
+    /**
+     * Remove the session from a cURL multi handle.
+     *
+     * @param  curl_multi $multiHandle
+     * @return int
+     */
+    public function removeMultiHandle($multiHandle);
 }

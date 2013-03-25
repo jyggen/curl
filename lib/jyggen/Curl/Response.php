@@ -14,10 +14,11 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\SessionInterface;
 
-class Response extends \Symfony\Component\HttpFoundation\Response {
+class Response extends \Symfony\Component\HttpFoundation\Response
+{
 
-	public static function forge(SessionInterface $session)
-	{
+    public static function forge(SessionInterface $session)
+    {
 
         $response = explode("\r\n\r\n", $session->getRawResponse());
         end($response);
@@ -46,6 +47,5 @@ class Response extends \Symfony\Component\HttpFoundation\Response {
 
         return $response;
 
-	}
-
+    }
 }

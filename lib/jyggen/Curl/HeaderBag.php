@@ -14,7 +14,8 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\SessionInterface;
 
-class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag {
+class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
+{
 
     /**
      * @var \jyggen\Curl\SessionInterface
@@ -75,5 +76,4 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag {
         $this->session->setOption(CURLOPT_HTTPHEADER, $headers);
 
     }
-
 }

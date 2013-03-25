@@ -12,4 +12,6 @@
 
 namespace jyggen\Curl\Exception;
 
-class InvalidKeyException extends \Exception { }
+class InvalidKeyException extends \Exception
+{
+}

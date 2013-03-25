@@ -12,4 +12,6 @@
 
 namespace jyggen\Curl\Exception;
 
-class BadMethodCallException extends \BadMethodCallException { }
+class BadMethodCallException extends \BadMethodCallException
+{
+}

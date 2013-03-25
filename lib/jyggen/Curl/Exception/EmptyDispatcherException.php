@@ -12,4 +12,6 @@
 
 namespace jyggen\Curl\Exception;
 
-class EmptyDispatcherException extends \Exception { }
+class EmptyDispatcherException extends \Exception
+{
+}

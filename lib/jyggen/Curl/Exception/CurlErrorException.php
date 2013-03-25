@@ -12,4 +12,6 @@
 
 namespace jyggen\Curl\Exception;
 
-class CurlErrorException extends \Exception { }
+class CurlErrorException extends \Exception
+{
+}
