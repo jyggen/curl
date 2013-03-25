@@ -146,13 +146,8 @@ class SessionTests extends PHPUnit_Framework_TestCase
     {
 
         /**
-         * @todo Write proper test(s):
+         * @todo Write test(s) if possible.
          */
-
-        // $resource = tmpfile();
-        // $session  = m::mock('jyggen\\Curl\\Session[isValidMultiHandle]');
-        // $session->shouldReceive('isValidMultiHandle')->andReturn(true);
-        // $return = @$session->addMultiHandle($resource);
 
     }
 

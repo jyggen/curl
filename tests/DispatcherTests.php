@@ -114,12 +114,8 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	{
 
 		/**
-         * @todo Write proper test(s):
+         * @todo Write test(s) if possible.
          */
-
-		// $dispatcher = m::mock('jyggen\\Curl\\Dispatcher')->shouldDeferMissing();
-		// $dispatcher->shouldReceive('process')->andReturn(array(1, false));
-		// $dispatcher->execute();
 
 	}
 
