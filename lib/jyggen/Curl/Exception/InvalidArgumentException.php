@@ -12,6 +12,11 @@
 
 namespace jyggen\Curl\Exception;
 
+/**
+ * InvalidArgumentException
+ *
+ * An exception thrown if an invalid argument is passed to a method.
+ */
 class InvalidArgumentException extends \InvalidArgumentException
 {
 }

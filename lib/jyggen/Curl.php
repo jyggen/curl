@@ -17,6 +17,11 @@ use jyggen\Curl\Exception\BadMethodCallException;
 use jyggen\Curl\Exception\InvalidArgumentException;
 use jyggen\Curl\Session;
 
+/**
+ * Curl
+ *
+ * This class provides static helpers for simplified cURL usage.
+ */
 class Curl
 {
 

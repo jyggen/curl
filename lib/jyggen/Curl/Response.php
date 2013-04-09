@@ -14,9 +14,19 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\SessionInterface;
 
+/**
+ * Response
+ *
+ * Represents an HTTP response.
+ */
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
 
+    /**
+     * Forge a new object based on a session.
+     * @param  SessionInterface $session
+     * @return Response
+     */
     public static function forge(SessionInterface $session)
     {
 

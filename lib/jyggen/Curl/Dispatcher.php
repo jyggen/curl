@@ -16,6 +16,11 @@ use jyggen\Curl\DispatcherInterface;
 use jyggen\Curl\Exception\CurlErrorException;
 use jyggen\Curl\SessionInterface;
 
+/**
+ * Dispatcher
+ *
+ * This class acts as a wrapper around cURL multi functions.
+ */
 class Dispatcher implements DispatcherInterface
 {
 

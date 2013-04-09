@@ -12,6 +12,11 @@
 
 namespace jyggen\Curl\Exception;
 
+/**
+ * CurlErrorException
+ *
+ * An exception thrown if an error occurs in libcurl.
+ */
 class CurlErrorException extends \Exception
 {
 }

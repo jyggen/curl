@@ -18,20 +18,32 @@ use jyggen\Curl\HeaderBag;
 use jyggen\Curl\Response;
 use jyggen\Curl\SessionInterface;
 
+/**
+ * Session
+ *
+ * This class acts as a wrapper around cURL functions.
+ */
 class Session implements SessionInterface
 {
 
     /**
+     * A container of headers.
+     *
      * @var \jyggen\Curl\HeaderBag
      */
     public $headers;
 
     /**
+     * The raw response body.
+     *
      * @var string
      */
     protected $content;
 
     /**
+     * Protected default values that can't be changed.
+     * These are required for this library to work correctly.
+     *
      * @var array
      */
     protected $defaults = array(
@@ -40,21 +52,29 @@ class Session implements SessionInterface
     );
 
     /**
+     * If this request has been executed.
+     *
      * @var boolean
      */
     protected $executed = false;
 
     /**
+     * The cURL resource attached.
+     *
      * @var curl
      */
     protected $handle;
 
     /**
-     * @var int
+     * Number of cURL multi handles attached.
+     *
+     * @var integer
      */
     protected $multiNo = 0;
 
     /**
+     * Response object.
+     *
      * @var \jyggen\Curl\Response
      */
     protected $response;
@@ -295,6 +315,12 @@ class Session implements SessionInterface
 
     }
 
+    /**
+     * Check if the argument is a valid cURL multi handle.
+     *
+     * @param  mixed  $multiHandle
+     * @return boolean
+     */
     protected function isValidMultiHandle($multiHandle)
     {
 

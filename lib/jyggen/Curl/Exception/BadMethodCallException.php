@@ -12,6 +12,11 @@
 
 namespace jyggen\Curl\Exception;
 
+/**
+ * BadMethodCallException
+ *
+ * An exception thrown if an undefined method is called.
+ */
 class BadMethodCallException extends \BadMethodCallException
 {
 }

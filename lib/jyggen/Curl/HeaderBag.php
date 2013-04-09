@@ -14,10 +14,17 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\SessionInterface;
 
+/**
+ * HeaderBag
+ *
+ * This is a container for HTTP headers.
+ */
 class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
 {
 
     /**
+     * Which session the instance belongs to.
+     *
      * @var \jyggen\Curl\SessionInterface
      */
     protected $session;
@@ -25,7 +32,8 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     /**
      * Constructor.
      *
-     * @param array $headers
+     * @param array            $headers
+     * @param SessionInterface $session
      */
     public function __construct(array $headers, SessionInterface $session)
     {
@@ -63,6 +71,10 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
 
     }
 
+    /**
+     * Update the associated session with the values of this container.
+     * @return void
+     */
     protected function updateSession()
     {
 

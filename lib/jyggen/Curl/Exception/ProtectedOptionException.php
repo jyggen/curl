@@ -12,6 +12,11 @@
 
 namespace jyggen\Curl\Exception;
 
+/**
+ * ProtectedOptionException
+ *
+ * An exception thrown when trying to change a protected value or option.
+ */
 class ProtectedOptionException extends \Exception
 {
 }
