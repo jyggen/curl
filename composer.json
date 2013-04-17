@@ -21,5 +21,10 @@
     },
     "require-dev": {
         "mockery/mockery": "dev-master"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
     }
 }
