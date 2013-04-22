@@ -14,7 +14,7 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\DispatcherInterface;
 use jyggen\Curl\Exception\CurlErrorException;
-use jyggen\Curl\SessionInterface;
+use jyggen\Curl\RequestnInterface;
 
 /**
  * Dispatcher
@@ -32,11 +32,11 @@ class Dispatcher implements DispatcherInterface
     protected $handle;
 
     /**
-     * All added sessions.
+     * All added requests.
      *
      * @var array
      */
-    protected $sessions = array();
+    protected $requests = array();
 
     /**
      * Create a new Dispatcher instance.
@@ -51,48 +51,48 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Add a Session.
+     * Add a REquest.
      *
-     * @param  SessionInterface $session
+     * @param  RequestInterface $request
      * @return int
      */
-    public function add(SessionInterface $session)
+    public function add(RequestInterface $request)
     {
 
-        // Tell the $session to use this handle.
-        $session->addMultiHandle($this->handle);
+        // Tell the $request to use this handle.
+        $request->addMultiHandle($this->handle);
 
-        // Store the session.
-        $this->sessions[] = $session;
+        // Store the request.
+        $this->requests[] = $request;
 
-        // Return the session's key.
-        return (count($this->sessions) - 1);
+        // Return the request's key.
+        return (count($this->requests) - 1);
 
     }
 
     /**
-     * Remove all sessions.
+     * Remove all requests.
      *
      * @return void
      */
     public function clear()
     {
 
-        // Loop through all sessions and remove
+        // Loop through all requests and remove
         // their relationship to our handle.
-        foreach ($this->sessions as $session) {
+        foreach ($this->requests as $request) {
 
-            $session->removeMultiHandle($this->handle);
+            $request->removeMultiHandle($this->handle);
 
         }
 
-        // Reset the sessions array.
-        $this->sessions = array();
+        // Reset the requests array.
+        $this->requests = array();
 
     }
 
     /**
-     * Execute all added sessions.
+     * Execute all added requests.
      *
      * @return void
      */
@@ -115,16 +115,16 @@ class Dispatcher implements DispatcherInterface
             throw new CurlErrorException('cURL read error #'.$mrc);
         }
 
-        // Otherwise everything went okay, retrieve the data from each session.
-        foreach ($this->sessions as $key => $session) {
-            $session->execute();
-            $session->removeMultiHandle($this->handle);
+        // Otherwise everything went okay, retrieve the data from each request.
+        foreach ($this->requests as $key => $request) {
+            $request->execute();
+            $request->removeMultiHandle($this->handle);
         }
 
     }
 
     /**
-     * Retrieve all or a specific session.
+     * Retrieve all or a specific request.
      *
      * @param  int   $key null
      * @return mixed
@@ -132,21 +132,21 @@ class Dispatcher implements DispatcherInterface
     public function get($key = null)
     {
 
-        // Return all sessions if no key is specified.
+        // Return all requests if no key is specified.
         if ($key === null) {
 
-            return $this->sessions;
+            return $this->requests;
 
-        } else { // Otherwise, if the key exists; return that session, else return null.
+        } else { // Otherwise, if the key exists; return that request, else return null.
 
-            return (isset($this->sessions[$key])) ? $this->sessions[$key] : null;
+            return (isset($this->requests[$key])) ? $this->requests[$key] : null;
 
         }
 
     }
 
     /**
-     * Remove a specific session.
+     * Remove a specific request.
      *
      * @param  int  $key
      * @return void
@@ -154,11 +154,11 @@ class Dispatcher implements DispatcherInterface
     public function remove($key)
     {
 
-        // Make sure the session exists before we try to remove it.
-        if (array_key_exists($key, $this->sessions)) {
+        // Make sure the request exists before we try to remove it.
+        if (array_key_exists($key, $this->requests)) {
 
-            $this->sessions[$key]->removeMultiHandle($this->handle);
-            unset($this->sessions[$key]);
+            $this->requests[$key]->removeMultiHandle($this->handle);
+            unset($this->requests[$key]);
 
         }
 

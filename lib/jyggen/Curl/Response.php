@@ -12,7 +12,7 @@
 
 namespace jyggen\Curl;
 
-use jyggen\Curl\SessionInterface;
+use jyggen\Curl\RequestInterface;
 
 /**
  * Response
@@ -23,15 +23,15 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 {
 
     /**
-     * Forge a new object based on a session.
-     * @param  SessionInterface $session
+     * Forge a new object based on a request.
+     * @param  RequestInterface $request
      * @return Response
      */
-    public static function forge(SessionInterface $session)
+    public static function forge(RequestInterface $request)
     {
 
-        $headerSize = $session->getInfo(CURLINFO_HEADER_SIZE);
-        $response   = $session->getRawResponse();
+        $headerSize = $request->getInfo(CURLINFO_HEADER_SIZE);
+        $response   = $request->getRawResponse();
         $content    = substr($response, $headerSize);
         $rawHeaders = rtrim(substr($response, 0, $headerSize));
         $headers    = array();
@@ -45,7 +45,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         }
 
         $headerBag = array();
-        $info      = $session->getInfo();
+        $info      = $request->getInfo();
         $status    = explode(' ', $headers[0]);
 
         list($protocol, $version) = explode('/', $status[0]);

@@ -33,6 +33,10 @@ This library is licensed under the MIT license.
 
 ## Changelog
 
+### 3.0.0
+
+* Renamed `Session` to `Request` (and `SessionInterface` to `RequestInterface`).
+
 ### 2.0.1
 
 * Fixed many issues with `Response::forge()` by using `CURLINFO_HEADER_SIZE`.

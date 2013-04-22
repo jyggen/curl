@@ -16,14 +16,14 @@ use jyggen\Curl\Exception\CurlErrorException;
 use jyggen\Curl\Exception\ProtectedOptionException;
 use jyggen\Curl\HeaderBag;
 use jyggen\Curl\Response;
-use jyggen\Curl\SessionInterface;
+use jyggen\Curl\RequestInterface;
 
 /**
- * Session
+ * Request
  *
  * This class acts as a wrapper around cURL functions.
  */
-class Session implements SessionInterface
+class Request implements RequestInterface
 {
 
     /**
@@ -80,7 +80,7 @@ class Session implements SessionInterface
     protected $response;
 
     /**
-     * Create a new Session instance.
+     * Create a new Request instance.
      *
      * @param  string $url
      * @return void
@@ -126,7 +126,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * Get information regarding the session.
+     * Get information regarding the request.
      *
      * @param  int   $key null
      * @return mixed
@@ -177,11 +177,11 @@ class Session implements SessionInterface
     }
 
     /**
-     * Set an option for the session.
+     * Set an option for the request.
      *
      * @param  mixed            $option
      * @param  mixed            $value  null
-     * @return SessionInterface
+     * @return RequestInterface
      */
     public function setOption($option, $value = null)
     {
@@ -201,7 +201,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * Add this session to the supplied cURL multi handle.
+     * Add this request to the supplied cURL multi handle.
      *
      * @param  curl_multi $multiHandle
      * @return int
@@ -209,14 +209,14 @@ class Session implements SessionInterface
     public function addMultiHandle($multiHandle)
     {
 
-        // If it's a curl_multi resource add this session to it and throw an exception on failure.
+        // If it's a curl_multi resource add this request to it and throw an exception on failure.
         if ($this->isValidMultiHandle($multiHandle)) {
 
             $status = curl_multi_add_handle($multiHandle, $this->handle);
 
             if ($status !== CURLM_OK) {
 
-                throw new CurlErrorException(sprintf('Unable to add session to cURL multi handle (code #%u)', $status));
+                throw new CurlErrorException(sprintf('Unable to add request to cURL multi handle (code #%u)', $status));
 
             }
 
@@ -240,7 +240,7 @@ class Session implements SessionInterface
     public function execute()
     {
 
-        // If the session is attached to a multi handle it has already been
+        // If the request is attached to a multi handle it has already been
         // executed so all we have to do is to retrieve the response.
         if ($this->hasMulti()) {
 
@@ -266,7 +266,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * If the session is attached to one or more cURL multi handles.
+     * If the request is attached to one or more cURL multi handles.
      * @return boolean
      */
     public function hasMulti()
@@ -301,7 +301,7 @@ class Session implements SessionInterface
     }
 
     /**
-     * Remove the session from a cURL multi handle.
+     * Remove the request from a cURL multi handle.
      *
      * @param  curl_multi $multiHandle
      * @return int

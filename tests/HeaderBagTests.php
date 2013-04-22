@@ -26,8 +26,8 @@ class HeaderBagTests extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
 
-        $session   = m::mock('jyggen\\Curl\\SessionInterface');
-        $headerbag = new HeaderBag(array(), $session);
+        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $headerbag = new HeaderBag(array(), $request);
         $this->assertInstanceof('jyggen\\Curl\\HeaderBag', $headerbag);
 
     }
@@ -36,9 +36,9 @@ class HeaderBagTests extends PHPUnit_Framework_TestCase
     {
 
         $phpunit   = $this;
-        $session   = m::mock('jyggen\\Curl\\SessionInterface');
-        $headerbag = new HeaderBag(array(), $session);
-        $session->shouldReceive('setOption')->times(1)->with(m::mustBe(CURLOPT_HTTPHEADER), m::type('array'));
+        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $headerbag = new HeaderBag(array(), $request);
+        $request->shouldReceive('setOption')->times(1)->with(m::mustBe(CURLOPT_HTTPHEADER), m::type('array'));
         $headerbag->set('foo', 'bar');
 
     }
@@ -47,9 +47,9 @@ class HeaderBagTests extends PHPUnit_Framework_TestCase
     {
 
         $phpunit   = $this;
-        $session   = m::mock('jyggen\\Curl\\SessionInterface');
-        $headerbag = new HeaderBag(array(), $session);
-        $session->shouldReceive('setOption')->times(1)->with(m::mustBe(CURLOPT_HTTPHEADER), m::type('array'));
+        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $headerbag = new HeaderBag(array(), $request);
+        $request->shouldReceive('setOption')->times(1)->with(m::mustBe(CURLOPT_HTTPHEADER), m::type('array'));
         $headerbag->remove('foo');
 
     }

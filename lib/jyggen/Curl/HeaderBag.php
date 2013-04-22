@@ -12,7 +12,7 @@
 
 namespace jyggen\Curl;
 
-use jyggen\Curl\SessionInterface;
+use jyggen\Curl\RequestInterface;
 
 /**
  * HeaderBag
@@ -23,22 +23,22 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
 {
 
     /**
-     * Which session the instance belongs to.
+     * Which request the instance belongs to.
      *
-     * @var \jyggen\Curl\SessionInterface
+     * @var \jyggen\Curl\RequestInterface
      */
-    protected $session;
+    protected $request;
 
     /**
      * Constructor.
      *
      * @param array            $headers
-     * @param SessionInterface $session
+     * @param RequestInterface $request
      */
-    public function __construct(array $headers, SessionInterface $session)
+    public function __construct(array $headers, RequestInterface $request)
     {
 
-        $this->session = $session;
+        $this->request = $request;
         parent::__construct($headers);
 
     }
@@ -52,7 +52,7 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     {
 
         parent::remove($key);
-        $this->updateSession();
+        $this->updateRequest();
 
     }
 
@@ -67,15 +67,15 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     {
 
         parent::set($key, $values, $replace);
-        $this->updateSession();
+        $this->updateRequest();
 
     }
 
     /**
-     * Update the associated session with the values of this container.
+     * Update the associated request with the values of this container.
      * @return void
      */
-    protected function updateSession()
+    protected function updateRequest()
     {
 
         $headers = array();
@@ -85,7 +85,7 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
             }
         }
 
-        $this->session->setOption(CURLOPT_HTTPHEADER, $headers);
+        $this->request->setOption(CURLOPT_HTTPHEADER, $headers);
 
     }
 }

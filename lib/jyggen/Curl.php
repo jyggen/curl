@@ -15,7 +15,7 @@ namespace jyggen;
 use jyggen\Curl\Dispatcher;
 use jyggen\Curl\Exception\BadMethodCallException;
 use jyggen\Curl\Exception\InvalidArgumentException;
-use jyggen\Curl\Session;
+use jyggen\Curl\Request;
 
 /**
  * Curl
@@ -84,28 +84,28 @@ class Curl
                 $data = http_build_query($data);
             }
 
-            // Create a new Session.
-            $session = new Session($url);
+            // Create a new Request.
+            $request = new Request($url);
 
             // Follow any 3xx HTTP status code.
-            $session->setOption(CURLOPT_FOLLOWLOCATION, true);
+            $request->setOption(CURLOPT_FOLLOWLOCATION, true);
 
             switch ($method) {
                 case 'DELETE':
                     // Set request method to DELETE.
-                    $session->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    $request->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
                     break;
                 case 'GET':
                     // Redundant, but reset the method to GET.
-                    $session->setOption(CURLOPT_HTTPGET, true);
+                    $request->setOption(CURLOPT_HTTPGET, true);
                     break;
                 case 'POST':
                     if ($data !== null) {
-                        // Add the POST data to the session.
-                        $session->setOption(CURLOPT_POST, true);
-                        $session->setOption(CURLOPT_POSTFIELDS, $data);
+                        // Add the POST data to the request.
+                        $request->setOption(CURLOPT_POST, true);
+                        $request->setOption(CURLOPT_POSTFIELDS, $data);
                     } else {
-                        $session->setOption(CURLOPT_CUSTOMREQUEST, 'POST');
+                        $request->setOption(CURLOPT_CUSTOMREQUEST, 'POST');
                     }
                     break;
                 case 'PUT':
@@ -115,29 +115,29 @@ class Curl
                         fwrite($fh, $data);
                         rewind($fh);
 
-                        // Add the PUT data to the session.
-                        $session->setOption(CURLOPT_INFILE, $fh);
-                        $session->setOption(CURLOPT_INFILESIZE, strlen($data));
-                        $session->setOption(CURLOPT_PUT, true);
+                        // Add the PUT data to the request.
+                        $request->setOption(CURLOPT_INFILE, $fh);
+                        $request->setOption(CURLOPT_INFILESIZE, strlen($data));
+                        $request->setOption(CURLOPT_PUT, true);
                     } else {
-                        $session->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
+                        $request->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
                     }
                     break;
             }
 
-            // Add the session to the dispatcher.
-            $dispatcher->add($session);
+            // Add the request to the dispatcher.
+            $dispatcher->add($request);
 
         }
 
         // Execute the request(s).
         $dispatcher->execute();
 
-        $sessions  = $dispatcher->get();
+        $requests  = $dispatcher->get();
         $responses = array();
 
-        foreach ($sessions as $session) {
-            $responses[] = $session->getResponse();
+        foreach ($requests as $request) {
+            $responses[] = $request->getResponse();
         }
 
         if (count($urls) === 1) {

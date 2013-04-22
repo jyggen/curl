@@ -26,7 +26,7 @@ class ResponseTests extends PHPUnit_Framework_TestCase
     public function testForge()
     {
 
-        $session   = m::mock('jyggen\\Curl\\SessionInterface');
+        $request   = m::mock('jyggen\\Curl\\RequestInterface');
         $response  = 'HTTP/1.1 503 Service Temporarily Unavailable'."\r\n";
         $response .= 'Server: nginx'."\r\n";
         $response .= 'Date: Tue, 19 Feb 2013 12:59:40 GMT'."\r\n";
@@ -35,11 +35,11 @@ class ResponseTests extends PHPUnit_Framework_TestCase
         $response .= "\r\n";
         $response .= 'supermegafoxyawesomehot';
 
-        $session->shouldReceive('getRawResponse')->andReturn($response);
-        $session->shouldReceive('getInfo')->with(CURLINFO_HEADER_SIZE)->andReturn(226);
-        $session->shouldReceive('getInfo')->andReturn(array('http_code' => 503));
+        $request->shouldReceive('getRawResponse')->andReturn($response);
+        $request->shouldReceive('getInfo')->with(CURLINFO_HEADER_SIZE)->andReturn(226);
+        $request->shouldReceive('getInfo')->andReturn(array('http_code' => 503));
 
-        $response = Response::forge($session);
+        $response = Response::forge($request);
 
         $this->assertSame('supermegafoxyawesomehot', $response->getContent());
         $this->assertSame('1.1', $response->getProtocolVersion());

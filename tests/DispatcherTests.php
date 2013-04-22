@@ -43,12 +43,12 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	{
 
 		$dispatcher = new Dispatcher;
-		$session    = m::mock('jyggen\\Curl\\SessionInterface');
+		$request    = m::mock('jyggen\\Curl\\RequestInterface');
 
-		$session->shouldReceive('addMultiHandle')->andReturn(0);
+		$request->shouldReceive('addMultiHandle')->andReturn(0);
 
-		$this->assertEquals(0, $dispatcher->add($session));
-		$this->assertInstanceof('jyggen\\Curl\SessionInterface', $dispatcher->get(0));
+		$this->assertEquals(0, $dispatcher->add($request));
+		$this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
 
 	}
 
@@ -56,13 +56,13 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	{
 
 		$dispatcher = new Dispatcher;
-		$session    = m::mock('jyggen\\Curl\\SessionInterface');
+		$request    = m::mock('jyggen\\Curl\\RequestInterface');
 
-		$session->shouldReceive('addMultiHandle')->andReturn(0);
-		$session->shouldReceive('removeMultiHandle')->andReturn(0);
+		$request->shouldReceive('addMultiHandle')->andReturn(0);
+		$request->shouldReceive('removeMultiHandle')->andReturn(0);
 
-		$this->assertEquals(0, $dispatcher->add($session));
-		$this->assertInstanceof('jyggen\\Curl\SessionInterface', $dispatcher->get(0));
+		$this->assertEquals(0, $dispatcher->add($request));
+		$this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
 
 		$dispatcher->clear();
 
@@ -74,12 +74,12 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	{
 
 		$dispatcher = new Dispatcher;
-		$session    = m::mock('jyggen\\Curl\\SessionInterface');
+		$request    = m::mock('jyggen\\Curl\\RequestInterface');
 
-		$session->shouldReceive('addMultiHandle')->andReturn(0);
-		$session->shouldReceive('removeMultiHandle')->andReturn(0);
+		$request->shouldReceive('addMultiHandle')->andReturn(0);
+		$request->shouldReceive('removeMultiHandle')->andReturn(0);
 
-		$dispatcher->add($session);
+		$dispatcher->add($request);
 		$dispatcher->remove(0);
 
 		$this->assertEquals(array(), $dispatcher->get());
@@ -90,20 +90,20 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 	{
 
 		$dispatcher = new Dispatcher;
-		$session1   = m::mock('jyggen\\Curl\\Session', array('http://example.com/'))->shouldDeferMissing();
-		$session2   = m::mock('jyggen\\Curl\\Session', array('http://example.org/'))->shouldDeferMissing();
+		$request1   = m::mock('jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
+		$request2   = m::mock('jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
 
-		$session1->shouldReceive('execute')->andReturn(true);
-		$session2->shouldReceive('execute')->andReturn(true);
-		$session1->shouldReceive('getRawResponse')->andReturnUsing(function() use ($session1) { return curl_multi_getcontent($session1->getHandle()); });
-		$session2->shouldReceive('getRawResponse')->andReturnUsing(function() use ($session2) { return curl_multi_getcontent($session2->getHandle()); });
+		$request1->shouldReceive('execute')->andReturn(true);
+		$request2->shouldReceive('execute')->andReturn(true);
+		$request1->shouldReceive('getRawResponse')->andReturnUsing(function() use ($request1) { return curl_multi_getcontent($request1->getHandle()); });
+		$request2->shouldReceive('getRawResponse')->andReturnUsing(function() use ($request2) { return curl_multi_getcontent($request2->getHandle()); });
 
-		$dispatcher->add($session1);
-		$dispatcher->add($session2);
+		$dispatcher->add($request1);
+		$dispatcher->add($request2);
 		$dispatcher->execute();
 
-		$response1 = $session1->getRawResponse();
-		$response2 = $session2->getRawResponse();
+		$response1 = $request1->getRawResponse();
+		$response2 = $request2->getRawResponse();
 
 		$this->assertStringStartsWith('HTTP/1.0 302 Found', $response1);
 		$this->assertStringStartsWith('HTTP/1.0 302 Found', $response2);

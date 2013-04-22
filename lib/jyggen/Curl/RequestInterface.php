@@ -12,11 +12,11 @@
 
 namespace jyggen\Curl;
 
-interface SessionInterface
+interface RequestInterface
 {
 
     /**
-     * Add the session to a cURL multi handle.
+     * Add the request to a cURL multi handle.
      *
      * @param  curl_multi $multiHandle
      * @return int
@@ -31,7 +31,7 @@ interface SessionInterface
     public function execute();
 
     /**
-     * Remove the session from a cURL multi handle.
+     * Remove the request from a cURL multi handle.
      *
      * @param  curl_multi $multiHandle
      * @return int

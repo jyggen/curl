@@ -10,10 +10,10 @@
  * @link        http://github.com/jyggen/curl
  */
 
-use jyggen\Curl\Session;
+use jyggen\Curl\Request;
 use Mockery as m;
 
-class SessionTests extends PHPUnit_Framework_TestCase
+class RequestTests extends PHPUnit_Framework_TestCase
 {
 
     public function teardown()
@@ -26,62 +26,62 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
 
-        $this->assertInstanceof('jyggen\\Curl\\SessionInterface', $this->forgeSession());
+        $this->assertInstanceof('jyggen\\Curl\\RequestInterface', $this->forgeRequest());
 
     }
 
     public function testGetErrorMessage()
     {
 
-        $this->assertSame(null, $this->forgeSession()->getErrorMessage());
+        $this->assertSame(null, $this->forgeRequest()->getErrorMessage());
 
     }
 
     public function testGetHandle()
     {
 
-        $session = $this->forgeSession();
-        $this->assertInternalType('resource', $session->getHandle());
-        $this->assertSame('curl', get_resource_type($session->getHandle()));
+        $request = $this->forgeRequest();
+        $this->assertInternalType('resource', $request->getHandle());
+        $this->assertSame('curl', get_resource_type($request->getHandle()));
 
     }
 
     public function testGetInfo()
     {
 
-        $this->assertInternalType('array', $this->forgeSession()->getInfo());
+        $this->assertInternalType('array', $this->forgeRequest()->getInfo());
 
     }
 
     public function testGetInfoWithKey()
     {
 
-        $this->assertSame('http://httpbin.org/get', $this->forgeSession()->getInfo(CURLINFO_EFFECTIVE_URL));
+        $this->assertSame('http://httpbin.org/get', $this->forgeRequest()->getInfo(CURLINFO_EFFECTIVE_URL));
 
     }
 
     public function testGetResponse()
     {
 
-        $this->assertSame(null, $this->forgeSession()->getResponse());
+        $this->assertSame(null, $this->forgeRequest()->getResponse());
 
     }
 
     public function testSetOption()
     {
 
-        $session = $this->forgeSession();
-        $session->setOption(CURLOPT_URL, 'http://example.org/');
-        $this->assertSame('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+        $request = $this->forgeRequest();
+        $request->setOption(CURLOPT_URL, 'http://example.org/');
+        $this->assertSame('http://example.org/', $request->getInfo(CURLINFO_EFFECTIVE_URL));
 
     }
 
     public function testSetOptionArray()
     {
 
-        $session = $this->forgeSession();
-        $session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
-        $this->assertSame('http://example.org/', $session->getInfo(CURLINFO_EFFECTIVE_URL));
+        $request = $this->forgeRequest();
+        $request->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
+        $this->assertSame('http://example.org/', $request->getInfo(CURLINFO_EFFECTIVE_URL));
 
     }
 
@@ -92,8 +92,8 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testSetOptionError()
     {
 
-        $session = $this->forgeSession();
-        @$session->setOption(CURLOPT_FILE, 'nope');
+        $request = $this->forgeRequest();
+        @$request->setOption(CURLOPT_FILE, 'nope');
 
     }
 
@@ -104,8 +104,8 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testSetOptionArrayError()
     {
 
-        $session = $this->forgeSession();
-        @$session->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
+        $request = $this->forgeRequest();
+        @$request->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
 
     }
 
@@ -116,17 +116,17 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testSetProtectedOption()
     {
 
-        $session = $this->forgeSession();
-        $session->setOption(CURLOPT_RETURNTRANSFER, true);
+        $request = $this->forgeRequest();
+        $request->setOption(CURLOPT_RETURNTRANSFER, true);
 
     }
 
     public function testAddMultiHandle()
     {
 
-        $session = $this->forgeSession();
+        $request = $this->forgeRequest();
         $multi   = curl_multi_init();
-        $this->assertTrue($session->addMultiHandle($multi));
+        $this->assertTrue($request->addMultiHandle($multi));
 
     }
 
@@ -137,8 +137,8 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testAddMultiHandleWithInvalidHandle()
     {
 
-        $session = new Session('http://example.com/');
-        $this->assertTrue($session->addMultiHandle('lolnope'));
+        $request = new Request('http://example.com/');
+        $this->assertTrue($request->addMultiHandle('lolnope'));
 
     }
 
@@ -154,16 +154,16 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testIsExecuted()
     {
 
-        $this->assertFalse($this->forgeSession()->isExecuted());
+        $this->assertFalse($this->forgeRequest()->isExecuted());
 
     }
 
     public function testExecute()
     {
 
-        $session = $this->forgeSession();
-        $session->execute();
-        $this->assertTrue($session->isExecuted());
+        $request = $this->forgeRequest();
+        $request->execute();
+        $this->assertTrue($request->isExecuted());
 
     }
 
@@ -174,43 +174,43 @@ class SessionTests extends PHPUnit_Framework_TestCase
     public function testExecuteWithError()
     {
 
-        $session = $this->forgeSession('foobar');
-        $session->execute();
+        $request = $this->forgeRequest('foobar');
+        $request->execute();
 
     }
 
     public function testIsSuccessful()
     {
 
-        $session = $this->forgeSession();
-        $this->assertTrue($session->isSuccessful());
+        $request = $this->forgeRequest();
+        $this->assertTrue($request->isSuccessful());
 
     }
 
     public function testRemoveMultiHandle()
     {
 
-        $session = $this->forgeSession();
+        $request = $this->forgeRequest();
         $multi   = curl_multi_init();
-        $session->addMultiHandle($multi);
-        $this->assertSame(0, $session->removeMultiHandle($multi));
+        $request->addMultiHandle($multi);
+        $this->assertSame(0, $request->removeMultiHandle($multi));
 
     }
 
     public function testRawResponse()
     {
 
-        $session = $this->forgeSession();
-        $this->assertSame(null, $session->getRawResponse());
+        $request = $this->forgeRequest();
+        $this->assertSame(null, $request->getRawResponse());
 
     }
 
-    protected function forgeSession($url = null)
+    protected function forgeRequest($url = null)
     {
 
         $url or $url = 'http://httpbin.org/get';
 
-        return new Session($url);
+        return new Request($url);
 
     }
 

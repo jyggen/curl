@@ -12,8 +12,6 @@
 
 namespace jyggen\Curl;
 
-use jyggen\Curl\SessionInterface;
-
 interface DispatcherInterface
 {
 }
