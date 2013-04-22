@@ -30,13 +30,20 @@ class Response extends \Symfony\Component\HttpFoundation\Response
     public static function forge(SessionInterface $session)
     {
 
-        $response = explode("\r\n\r\n", $session->getRawResponse());
-        end($response);
-        $content = $response[key($response)];
-        prev($response);
-        $headers = $response[key($response)];
+        $headerSize = $session->getInfo(CURLINFO_HEADER_SIZE);
+        $response   = $session->getRawResponse();
+        $content    = substr($response, $headerSize);
+        $rawHeaders = rtrim(substr($response, 0, $headerSize));
+        $headers    = array();
 
-        $headers   = explode("\r\n", $headers);
+        foreach (preg_split('/(\\r?\\n)/', $rawHeaders) as $header) {
+            if ($header) {
+                $headers[] = $header;
+            } else {
+                $headers = array();
+            }
+        }
+
         $headerBag = array();
         $info      = $session->getInfo();
         $status    = explode(' ', $headers[0]);
