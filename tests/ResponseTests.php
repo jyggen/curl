@@ -36,6 +36,7 @@ class ResponseTests extends PHPUnit_Framework_TestCase
         $response .= 'supermegafoxyawesomehot';
 
         $session->shouldReceive('getRawResponse')->andReturn($response);
+        $session->shouldReceive('getInfo')->with(CURLINFO_HEADER_SIZE)->andReturn(226);
         $session->shouldReceive('getInfo')->andReturn(array('http_code' => 503));
 
         $response = Response::forge($session);
