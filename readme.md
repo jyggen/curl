@@ -33,34 +33,13 @@ This library is licensed under the MIT license.
 
 ## Changelog
 
-### 2.0.0-RC1
+### 2.0.1
 
-* Added support for headers to `Session`.
-* The library now requires `ext-curl`, if that wasn't obvious enough.
-* Refactored `Dispatcher::execute()` into using `Dispatcher::process()` internally.
-* Refactored all `Curl` public methods into `__callStatic`.
-* `InvalidArgumentException` now extends the native SPL extension with the same name.
-* `Curl::makeRequest()` should set `CURLOPT_INFILESIZE` to number of bytes (thanks [alixaxel](https://github.com/alixaxel)).
-* Fixed various issues with  POST/PUT data in `Curl::makeRequest()`.
-* Fixed an issue in `Response::forge()` where headers would be treated as content..
-* Removed a lot of unnecessary methods from `DispatcherInterface` and `SessionInterface`.
-* Removed destructors from `Dispatcher` and `Session`.
-* Added more unit tests (99% coverage).
-* Overall cleaner and better code.
+* Fixed many issues with `Response::forge()` by using `CURLINFO_HEADER_SIZE`.
+* Changed dependency of `symfony/http-foundation` from `2.2.*` to `~2.2`.
+* Removed unused excepetions.
+* Improved documentation of the code.
 
-### 2.0.0-BETA2
-
-* Made exceptions autoloadable and moved them to the `jyggen\Curl\Exception` namespace.
-* `Session` will now close the cURL resource during shutdown.
-* Removed `Curl::getDispatcher()`.
-* Removed `Curl::getSession()`.
-* Removed `Curl::setDispatcher()`.
-* Removed `Curl::setSession()`.
-* `Dispatcher::get()` with an unknown key now returns `null`.
-* Fixed the workaround for [PHP Bug #61141](https://bugs.php.net/bug.php?id=61141).
-* Added more unit tests.
-* Overall cleaner and better code.
-
-### 2.0.0-BETA1
+### 2.0.0
 
 Version 2.0 introduces a new library flow which changes the way `Dispatcher` and `Session` interacts with each other. If you've only used the static helper `Curl` in the past these changes shouldn't affect you that much. `Dispatcher` is stripped down to only be a wrapper around `curl_multi_init()` while `Session` continues to wrap around `curl_init()` but with more functionality previously located in `Dispatcher`.
