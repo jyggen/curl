@@ -32,7 +32,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 
         $headerSize = $session->getInfo(CURLINFO_HEADER_SIZE);
         $response   = $session->getRawResponse();
-        $content    = substr($response, $headerSize);
+        $content    = (strlen($response) === $headerSize) ? '' : substr($response, $headerSize);
         $rawHeaders = rtrim(substr($response, 0, $headerSize));
         $headers    = array();
 
