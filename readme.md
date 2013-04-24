@@ -33,6 +33,10 @@ This library is licensed under the MIT license.
 
 ## Changelog
 
+### 2.0.2
+
+* Fixed an issue with empty responses.
+
 ### 2.0.1
 
 * Fixed many issues with `Response::forge()` by using `CURLINFO_HEADER_SIZE`.
