@@ -142,12 +142,17 @@ class SessionTests extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedExceptionMessage Unable to add session
+     */
     public function testAddMultiHandleWithErrorCode()
     {
 
-        /**
-         * @todo Write test(s) if possible.
-         */
+        $session = $this->forgeSession();
+        $multi   = curl_multi_init();
+        $this->assertTrue($session->addMultiHandle($multi));
+        $session->addMultiHandle($multi);
 
     }
 
