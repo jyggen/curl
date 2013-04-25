@@ -160,6 +160,18 @@ class CurlTests extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * @expectedException        jyggen\Curl\Exception\InvalidArgumentException
+     * @expectedExceptionMessage implement SessionInterface
+     */
+    public function testConstructException()
+    {
+
+        $dispatcher = new \jyggen\Curl\Dispatcher;
+        new Curl('GET', $dispatcher, array('session'), array());
+
+    }
+
     public function testGithubIssueNoFive()
     {
 
