@@ -28,6 +28,34 @@ class Curl
 {
 
     /**
+     * An array of data used by the sessions.
+     *
+     * @var array
+     */
+    protected $data;
+
+    /**
+     * Instance of Dispatcher to use.
+     *
+     * @var DispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
+     * Which HTTP verb to use.
+     *
+     * @var string
+     */
+    protected $method;
+
+    /**
+     * Array of sessions to execute.
+     *
+     * @var array
+     */
+    protected $sessions;
+
+    /**
      * Handle all static helpers.
      * @param  mixed $name
      * @param  array $arguments
@@ -82,34 +110,6 @@ class Curl
         }
 
     }
-
-    /**
-     * An array of data used by the sessions.
-     *
-     * @var array
-     */
-    protected $data;
-
-    /**
-     * Instance of Dispatcher to use.
-     *
-     * @var DispatcherInterface
-     */
-    protected $dispatcher;
-
-    /**
-     * Which HTTP verb to use.
-     *
-     * @var string
-     */
-    protected $method;
-
-    /**
-     * Array of sessions to execute.
-     *
-     * @var array
-     */
-    protected $sessions;
 
     /**
      * Create a new Curl instance.
