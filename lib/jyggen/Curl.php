@@ -120,7 +120,7 @@ class Curl
      * @param  array               $data
      * @return void
      */
-    public function __construct($method, DispatcherInterface &$dispatcher, array $sessions, array $data)
+    public function __construct($method, DispatcherInterface $dispatcher, array $sessions, array $data)
     {
 
         $this->dispatcher = $dispatcher;
