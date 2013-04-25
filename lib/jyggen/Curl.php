@@ -13,9 +13,11 @@
 namespace jyggen;
 
 use jyggen\Curl\Dispatcher;
+use jyggen\Curl\DispatcherInterface;
 use jyggen\Curl\Exception\BadMethodCallException;
 use jyggen\Curl\Exception\InvalidArgumentException;
 use jyggen\Curl\Session;
+use jyggen\Curl\SessionInterface;
 
 /**
  * Curl
@@ -56,7 +58,24 @@ class Curl
                 }
             }
 
-            return static::makeRequest(strtoupper($name), $urls, $data);
+            $dispatcher = new Dispatcher;
+            $sessions   = array();
+            $dataStore  = array();
+
+            foreach ($urls as $url => $data) {
+                $sessions[]  = new Session($url);
+                $dataStore[] = $data;
+            }
+
+            $curl      = new static($name, $dispatcher, $sessions, $dataStore);
+            $sessions  = $dispatcher->get();
+            $responses = array();
+
+            foreach ($sessions as $session) {
+                $responses[] = $session->getResponse();
+            }
+
+            return (count($sessions) === 1) ? $responses[0] : $responses;
 
         } else {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $name));
@@ -65,32 +84,83 @@ class Curl
     }
 
     /**
-     * Setup and execute a HTTP request.
+     * An array of data used by the sessions.
      *
-     * @param  string $method
-     * @param  array  $urls
-     * @return array
+     * @var array
      */
-    protected static function makeRequest($method, $urls)
+    protected $data;
+
+    /**
+     * Instance of Dispatcher to use.
+     *
+     * @var DispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
+     * Which HTTP verb to use.
+     *
+     * @var string
+     */
+    protected $method;
+
+    /**
+     * Array of sessions to execute.
+     *
+     * @var array
+     */
+    protected $sessions;
+
+    /**
+     * Create a new Curl instance.
+     *
+     * @param  string              $method
+     * @param  DispatcherInterface $dispatcher
+     * @param  array               $sessions
+     * @param  array               $data
+     * @return void
+     */
+    public function __construct($method, DispatcherInterface &$dispatcher, array $sessions, array $data)
     {
 
-        // Create a new Dispatcher.
-        $dispatcher = new Dispatcher();
+        $this->dispatcher = $dispatcher;
+        $this->method     = strtoupper($method);
 
-        // Foreach $urls:
-        foreach ($urls as $url => $data) {
-
-            if ($data !== null) {
-                $data = http_build_query($data);
+        foreach ($sessions as $key => $session) {
+            if ($session instanceof SessionInterface) {
+                $this->sessions[] = $session;
+                $this->data[$key] = $data[$key];
+            } else {
+                $msg = 'Session #%u must implement SessionInterface';
+                throw new InvalidArgumentException(sprintf($msg, $key, gettype($session)));
             }
+        }
 
-            // Create a new Session.
-            $session = new Session($url);
+        $this->makeRequest();
+
+    }
+
+    /**
+     * Setup and execute a HTTP request.
+     *
+     * @return void
+     */
+    protected function makeRequest()
+    {
+
+         // Foreach session:
+        foreach ($this->sessions as $key => $session) {
+
+            if (isset($this->data[$key]) and $this->data[$key] !== null) {
+                $data = http_build_query($this->data[$key]);
+            } else {
+                $data = null;
+            }
 
             // Follow any 3xx HTTP status code.
             $session->setOption(CURLOPT_FOLLOWLOCATION, true);
 
-            switch ($method) {
+            switch ($this->method) {
                 case 'DELETE':
                     // Set request method to DELETE.
                     $session->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
@@ -126,25 +196,12 @@ class Curl
             }
 
             // Add the session to the dispatcher.
-            $dispatcher->add($session);
+            $this->dispatcher->add($session);
 
         }
 
         // Execute the request(s).
-        $dispatcher->execute();
-
-        $sessions  = $dispatcher->get();
-        $responses = array();
-
-        foreach ($sessions as $session) {
-            $responses[] = $session->getResponse();
-        }
-
-        if (count($urls) === 1) {
-            return $responses[0];
-        } else {
-            return $responses;
-        }
+        $this->dispatcher->execute();
 
     }
 }
