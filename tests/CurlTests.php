@@ -162,13 +162,13 @@ class CurlTests extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        jyggen\Curl\Exception\InvalidArgumentException
-     * @expectedExceptionMessage implement SessionInterface
+     * @expectedExceptionMessage implement RequestInterface
      */
     public function testConstructException()
     {
 
         $dispatcher = new \jyggen\Curl\Dispatcher;
-        new Curl('GET', $dispatcher, array('session'), array());
+        new Curl('GET', $dispatcher, array('request'), array());
 
     }
 
@@ -180,18 +180,18 @@ class CurlTests extends PHPUnit_Framework_TestCase
          */
 
         $dispatcher = new \jyggen\Curl\Dispatcher;
-        $session    = m::mock('jyggen\\Curl\\Session', array('http://httpbin.org/get'))->makePartial();
+        $request    = m::mock('jyggen\\Curl\\Request', array('http://httpbin.org/get'))->makePartial();
 
-        $session->shouldReceive('setOption')->andReturnUsing(function($arg1, $arg2) {
+        $request->shouldReceive('setOption')->andReturnUsing(function($arg1, $arg2) {
             if ($arg1 === 14 and $arg2 !== 74) {
                 throw new Exception('Invalid size of multi-byte string!');
             }
         });
 
-        $curl     = new Curl('PUT', $dispatcher, array($session), array(array('マルチバイト文字')));
-        $sessions = $dispatcher->get();
+        $curl     = new Curl('PUT', $dispatcher, array($request), array(array('マルチバイト文字')));
+        $requests = $dispatcher->get();
 
-        $this->assertSame($sessions[0]->getResponse()->getStatusCode(), 200);
+        $this->assertSame($requests[0]->getResponse()->getStatusCode(), 200);
 
     }
 

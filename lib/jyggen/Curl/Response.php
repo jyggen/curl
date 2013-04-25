@@ -30,8 +30,8 @@ class Response extends \Symfony\Component\HttpFoundation\Response
     public static function forge(RequestInterface $request)
     {
 
-        $headerSize = $session->getInfo(CURLINFO_HEADER_SIZE);
-        $response   = $session->getRawResponse();
+        $headerSize = $request->getInfo(CURLINFO_HEADER_SIZE);
+        $response   = $request->getRawResponse();
         $content    = (strlen($response) === $headerSize) ? '' : substr($response, $headerSize);
         $rawHeaders = rtrim(substr($response, 0, $headerSize));
         $headers    = array();

@@ -16,7 +16,8 @@ use jyggen\Curl\Dispatcher;
 use jyggen\Curl\DispatcherInterface;
 use jyggen\Curl\Exception\BadMethodCallException;
 use jyggen\Curl\Exception\InvalidArgumentException;
-use jyggen\Curl\SessionInterface;
+use jyggen\Curl\Request;
+use jyggen\Curl\RequestInterface;
 
 /**
  * Curl
@@ -27,7 +28,7 @@ class Curl
 {
 
     /**
-     * An array of data used by the sessions.
+     * An array of data used by the requests.
      *
      * @var array
      */
@@ -48,11 +49,11 @@ class Curl
     protected $method;
 
     /**
-     * Array of sessions to execute.
+     * Array of requests to execute.
      *
      * @var array
      */
-    protected $sessions;
+    protected $requests;
 
     /**
      * Handle all static helpers.
@@ -86,23 +87,23 @@ class Curl
             }
 
             $dispatcher = new Dispatcher;
-            $sessions   = array();
+            $requests   = array();
             $dataStore  = array();
 
             foreach ($urls as $url => $data) {
-                $sessions[]  = new Session($url);
+                $requests[]  = new Request($url);
                 $dataStore[] = $data;
             }
 
-            $curl      = new static($name, $dispatcher, $sessions, $dataStore);
-            $sessions  = $dispatcher->get();
+            $curl      = new static($name, $dispatcher, $requests, $dataStore);
+            $requests  = $dispatcher->get();
             $responses = array();
 
-            foreach ($sessions as $session) {
-                $responses[] = $session->getResponse();
+            foreach ($requests as $request) {
+                $responses[] = $request->getResponse();
             }
 
-            return (count($sessions) === 1) ? $responses[0] : $responses;
+            return (count($requests) === 1) ? $responses[0] : $responses;
 
         } else {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $name));
@@ -115,23 +116,23 @@ class Curl
      *
      * @param  string              $method
      * @param  DispatcherInterface $dispatcher
-     * @param  array               $sessions
+     * @param  array               $requests
      * @param  array               $data
      * @return void
      */
-    public function __construct($method, DispatcherInterface $dispatcher, array $sessions, array $data)
+    public function __construct($method, DispatcherInterface $dispatcher, array $requests, array $data)
     {
 
         $this->dispatcher = $dispatcher;
         $this->method     = strtoupper($method);
 
-        foreach ($sessions as $key => $session) {
-            if ($session instanceof SessionInterface) {
-                $this->sessions[] = $session;
+        foreach ($requests as $key => $request) {
+            if ($request instanceof RequestInterface) {
+                $this->requests[] = $request;
                 $this->data[$key] = $data[$key];
             } else {
-                $msg = 'Session #%u must implement SessionInterface';
-                throw new InvalidArgumentException(sprintf($msg, $key, gettype($session)));
+                $msg = 'Request #%u must implement RequestInterface';
+                throw new InvalidArgumentException(sprintf($msg, $key, gettype($request)));
             }
         }
 
@@ -147,8 +148,8 @@ class Curl
     protected function makeRequest()
     {
 
-         // Foreach session:
-        foreach ($this->sessions as $key => $session) {
+         // Foreach request:
+        foreach ($this->requests as $key => $request) {
 
             if (isset($this->data[$key]) and $this->data[$key] !== null) {
                 $data = http_build_query($this->data[$key]);
@@ -194,8 +195,8 @@ class Curl
                     break;
             }
 
-            // Add the session to the dispatcher.
-            $this->dispatcher->add($session);
+            // Add the request to the dispatcher.
+            $this->dispatcher->add($request);
 
         }
 
