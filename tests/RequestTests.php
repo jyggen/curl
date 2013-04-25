@@ -3,7 +3,7 @@
  * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
  * @package     Curl
- * @version     2.0
+ * @version     2.1
  * @author      Jonas Stendahl
  * @license     MIT License
  * @copyright   2013 Jonas Stendahl
@@ -142,12 +142,17 @@ class RequestTests extends PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedExceptionMessage Unable to add session
+     */
     public function testAddMultiHandleWithErrorCode()
     {
 
-        /**
-         * @todo Write test(s) if possible.
-         */
+        $session = $this->forgeSession();
+        $multi   = curl_multi_init();
+        $this->assertTrue($session->addMultiHandle($multi));
+        $session->addMultiHandle($multi);
 
     }
 

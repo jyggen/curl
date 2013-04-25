@@ -37,6 +37,11 @@ This library is licensed under the MIT license.
 
 * Renamed `Session` to `Request` (and `SessionInterface` to `RequestInterface`).
 
+### 2.1
+
+* Refactored Curl to be more testable.
+* Added more tests to improve coverage.
+
 ### 2.0.2
 
 * Fixed an issue with empty responses.

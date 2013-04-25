@@ -3,7 +3,7 @@
  * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
  * @package     Curl
- * @version     2.0
+ * @version     2.1
  * @author      Jonas Stendahl
  * @license     MIT License
  * @copyright   2013 Jonas Stendahl

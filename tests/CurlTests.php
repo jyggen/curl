@@ -3,7 +3,7 @@
  * A simple and lightweight cURL library with support for multiple requests in parallel.
  *
  * @package     Curl
- * @version     2.0
+ * @version     2.1
  * @author      Jonas Stendahl
  * @license     MIT License
  * @copyright   2013 Jonas Stendahl
@@ -11,9 +11,17 @@
  */
 
 use jyggen\Curl;
+use Mockery as m;
 
 class CurlTests extends PHPUnit_Framework_TestCase
 {
+
+    public function teardown()
+    {
+
+        m::close();
+
+    }
 
 	/**
      * @expectedException        jyggen\Curl\Exception\BadMethodCallException
@@ -149,6 +157,41 @@ class CurlTests extends PHPUnit_Framework_TestCase
         $content = json_decode($response->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('foo=bar&bar=foo', $content->data);
+
+    }
+
+    /**
+     * @expectedException        jyggen\Curl\Exception\InvalidArgumentException
+     * @expectedExceptionMessage implement SessionInterface
+     */
+    public function testConstructException()
+    {
+
+        $dispatcher = new \jyggen\Curl\Dispatcher;
+        new Curl('GET', $dispatcher, array('session'), array());
+
+    }
+
+    public function testGithubIssueNoFive()
+    {
+
+        /**
+         * @todo This is dark magic. Will have to rewrite it properly someday.
+         */
+
+        $dispatcher = new \jyggen\Curl\Dispatcher;
+        $session    = m::mock('jyggen\\Curl\\Session', array('http://httpbin.org/get'))->makePartial();
+
+        $session->shouldReceive('setOption')->andReturnUsing(function($arg1, $arg2) {
+            if ($arg1 === 14 and $arg2 !== 74) {
+                throw new Exception('Invalid size of multi-byte string!');
+            }
+        });
+
+        $curl     = new Curl('PUT', $dispatcher, array($session), array(array('マルチバイト文字')));
+        $sessions = $dispatcher->get();
+
+        $this->assertSame($sessions[0]->getResponse()->getStatusCode(), 200);
 
     }
 
