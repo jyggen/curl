@@ -103,7 +103,7 @@ class Curl
                 $responses[] = $request->getResponse();
             }
 
-            return (count($requests) === 1) ? $responses[0] : $responses;
+            return $responses;
 
         } else {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $name));

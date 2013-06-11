@@ -81,9 +81,9 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	public function testDelete()
 	{
 
-        $response = Curl::delete('http://httpbin.org/delete');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $response);
-        $content = json_decode($response->getContent());
+        $responses = Curl::delete('http://httpbin.org/delete');
+        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/delete', $content->url);
 
@@ -92,9 +92,9 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	public function testGet()
 	{
 
-        $response = Curl::get('http://httpbin.org/get');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $response);
-        $content = json_decode($response->getContent());
+        $responses = Curl::get('http://httpbin.org/get');
+        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/get', $content->url);
 
@@ -103,9 +103,9 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	public function testPost()
 	{
 
-        $response = Curl::post('http://httpbin.org/post');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $response);
-        $content = json_decode($response->getContent());
+        $responses = Curl::post('http://httpbin.org/post');
+        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/post', $content->url);
 
@@ -114,9 +114,9 @@ class CurlTests extends PHPUnit_Framework_TestCase
 	public function testPut()
 	{
 
-        $response = Curl::put('http://httpbin.org/put');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $response);
-        $content = json_decode($response->getContent());
+        $responses = Curl::put('http://httpbin.org/put');
+        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/put', $content->url);
 
@@ -140,9 +140,9 @@ class CurlTests extends PHPUnit_Framework_TestCase
     public function testPostWithData()
     {
 
-        $response = Curl::post('http://httpbin.org/post', array('foo' => 'bar', 'bar' => 'foo'));
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $response);
-        $content = json_decode($response->getContent());
+        $responses = Curl::post('http://httpbin.org/post', array('foo' => 'bar', 'bar' => 'foo'));
+        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('bar', $content->form->foo);
         $this->assertSame('foo', $content->form->bar);
@@ -152,9 +152,9 @@ class CurlTests extends PHPUnit_Framework_TestCase
     public function testPutWithData()
     {
 
-        $response = Curl::put('http://httpbin.org/put', array('foo' => 'bar', 'bar' => 'foo'));
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $response);
-        $content = json_decode($response->getContent());
+        $responses = Curl::put('http://httpbin.org/put', array('foo' => 'bar', 'bar' => 'foo'));
+        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('foo=bar&bar=foo', $content->data);
 

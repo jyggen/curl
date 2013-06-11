@@ -36,6 +36,7 @@ This library is licensed under the MIT license.
 ### 3.0.0
 
 * Renamed `Session` to `Request` (and `SessionInterface` to `RequestInterface`).
+* `Curl` will now always return an array with instances of `Response`.
 
 ### 2.1
 
