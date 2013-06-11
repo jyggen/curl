@@ -39,6 +39,7 @@ This library is licensed under the MIT license.
 
 * Renamed `Session` to `Request` (and `SessionInterface` to `RequestInterface`).
 * `Curl` will now always return an array with instances of `Response`.
+* Changed dependency of `symfony/http-foundation` to `~2.3`.
 
 #### 2.1
 
