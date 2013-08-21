@@ -35,6 +35,11 @@ This library is licensed under the MIT license.
 
 ### Changelog
 
+### 3.0.1
+
+* Fixed broken test.
+* Code cleanup.
+
 #### 3.0.0
 
 * Renamed `Session` to `Request` (and `SessionInterface` to `RequestInterface`).
