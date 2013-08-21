@@ -14,7 +14,6 @@ namespace jyggen\Curl;
 
 interface RequestInterface
 {
-
     /**
      * Add the request to a cURL multi handle.
      *

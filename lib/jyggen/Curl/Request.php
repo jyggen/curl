@@ -25,7 +25,6 @@ use jyggen\Curl\RequestInterface;
  */
 class Request implements RequestInterface
 {
-
     /**
      * A container of headers.
      *

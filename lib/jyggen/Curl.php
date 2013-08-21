@@ -26,7 +26,6 @@ use jyggen\Curl\RequestInterface;
  */
 class Curl
 {
-
     /**
      * An array of data used by the requests.
      *
@@ -95,7 +94,8 @@ class Curl
                 $dataStore[] = $data;
             }
 
-            $curl      = new static($name, $dispatcher, $requests, $dataStore);
+            new static($name, $dispatcher, $requests, $dataStore);
+
             $requests  = $dispatcher->get();
             $responses = array();
 
@@ -151,47 +151,23 @@ class Curl
          // Foreach request:
         foreach ($this->requests as $key => $request) {
 
-            if (isset($this->data[$key]) and $this->data[$key] !== null) {
-                $data = http_build_query($this->data[$key]);
-            } else {
-                $data = null;
-            }
+            $data = (isset($this->data[$key]) and $this->data[$key] !== null) ? http_build_query($this->data[$key]) : null;
 
             // Follow any 3xx HTTP status code.
             $request->setOption(CURLOPT_FOLLOWLOCATION, true);
 
             switch ($this->method) {
                 case 'DELETE':
-                    // Set request method to DELETE.
-                    $request->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE');
+                    $this->prepareDeleteRequest($request);
                     break;
                 case 'GET':
-                    // Redundant, but reset the method to GET.
-                    $request->setOption(CURLOPT_HTTPGET, true);
+                    $this->prepareGetRequest($request);
                     break;
                 case 'POST':
-                    if ($data !== null) {
-                        // Add the POST data to the request.
-                        $request->setOption(CURLOPT_POST, true);
-                        $request->setOption(CURLOPT_POSTFIELDS, $data);
-                    } else {
-                        $request->setOption(CURLOPT_CUSTOMREQUEST, 'POST');
-                    }
+                    $this->preparePostRequest($request, $data);
                     break;
                 case 'PUT':
-                    if ($data !== null) {
-                        // Write the PUT data to memory.
-                        $fh = fopen('php://temp', 'rw+');
-                        fwrite($fh, $data);
-                        rewind($fh);
-
-                        // Add the PUT data to the request.
-                        $request->setOption(CURLOPT_INFILE, $fh);
-                        $request->setOption(CURLOPT_INFILESIZE, strlen($data));
-                        $request->setOption(CURLOPT_PUT, true);
-                    } else {
-                        $request->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
-                    }
+                    $this->preparePutRequest($request, $data);
                     break;
             }
 
@@ -203,5 +179,43 @@ class Curl
         // Execute the request(s).
         $this->dispatcher->execute();
 
+    }
+
+    protected function prepareDeleteRequest(RequestInterface $request)
+    {
+        $request->setOption(CURLOPT_CUSTOMREQUEST, 'DELETE'); // Set request method to DELETE.
+    }
+
+    protected function prepareGetRequest(RequestInterface $request)
+    {
+        $request->setOption(CURLOPT_HTTPGET, true); // Redundant, but reset the method to GET.
+    }
+
+    protected function preparePostRequest(RequestInterface $request, $data)
+    {
+        if ($data !== null) {
+            // Add the POST data to the request.
+            $request->setOption(CURLOPT_POST, true);
+            $request->setOption(CURLOPT_POSTFIELDS, $data);
+        } else {
+            $request->setOption(CURLOPT_CUSTOMREQUEST, 'POST');
+        }
+    }
+
+    protected function preparePutRequest(RequestInterface $request, $data)
+    {
+        if ($data !== null) {
+            // Write the PUT data to memory.
+            $file = fopen('php://temp', 'rw+');
+            fwrite($file, $data);
+            rewind($file);
+
+            // Add the PUT data to the request.
+            $request->setOption(CURLOPT_INFILE, $file);
+            $request->setOption(CURLOPT_INFILESIZE, strlen($data));
+            $request->setOption(CURLOPT_PUT, true);
+        } else {
+            $request->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
+        }
     }
 }

@@ -23,7 +23,6 @@ use jyggen\Curl\RequestnInterface;
  */
 class Dispatcher implements DispatcherInterface
 {
-
     /**
      * The cURL multi handle.
      *
@@ -116,7 +115,7 @@ class Dispatcher implements DispatcherInterface
         }
 
         // Otherwise everything went okay, retrieve the data from each request.
-        foreach ($this->requests as $key => $request) {
+        foreach ($this->requests as $request) {
             $request->execute();
             $request->removeMultiHandle($this->handle);
         }

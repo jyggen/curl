@@ -21,7 +21,6 @@ use jyggen\Curl\RequestInterface;
  */
 class Response extends \Symfony\Component\HttpFoundation\Response
 {
-
     /**
      * Forge a new object based on a request.
      * @param  RequestInterface $request
@@ -47,8 +46,8 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $headerBag = array();
         $info      = $request->getInfo();
         $status    = explode(' ', $headers[0]);
+        $status    = explode('/', $status[0]);
 
-        list($protocol, $version) = explode('/', $status[0]);
         unset($headers[0]);
 
         foreach ($headers as $header) {
@@ -59,7 +58,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         }
 
         $response = new static($content, $info['http_code'], $headerBag);
-        $response->setProtocolVersion($version);
+        $response->setProtocolVersion($status[1]);
         $response->setCharset(substr(strstr($response->headers->get('Content-Type'), '='), 1));
 
         return $response;

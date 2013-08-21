@@ -105,8 +105,8 @@ class DispatcherTests extends PHPUnit_Framework_TestCase
 		$response1 = $request1->getRawResponse();
 		$response2 = $request2->getRawResponse();
 
-		$this->assertStringStartsWith('HTTP/1.0 302 Found', $response1);
-		$this->assertStringStartsWith('HTTP/1.0 302 Found', $response2);
+		$this->assertStringStartsWith('HTTP/1.1 200 OK', $response1);
+		$this->assertStringStartsWith('HTTP/1.1 200 OK', $response2);
 
 	}
 

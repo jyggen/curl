@@ -21,7 +21,6 @@ use jyggen\Curl\RequestInterface;
  */
 class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
 {
-
     /**
      * Which request the instance belongs to.
      *
