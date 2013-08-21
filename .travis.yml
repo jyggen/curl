@@ -7,7 +7,6 @@ php:
 
 before_script:
   - composer require symfony/http-foundation:${SYMFONY_VERSION}
-  - composer install --prefer-source --dev
   - pear install pear/PHP_CodeSniffer
   - phpenv rehash
 

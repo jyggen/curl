@@ -151,7 +151,11 @@ class Curl
          // Foreach request:
         foreach ($this->requests as $key => $request) {
 
-            $data = (isset($this->data[$key]) and $this->data[$key] !== null) ? http_build_query($this->data[$key]) : null;
+            if (isset($this->data[$key]) and $this->data[$key] !== null) {
+                $data = http_build_query($this->data[$key]);
+            } else {
+                $data = null;
+            }
 
             // Follow any 3xx HTTP status code.
             $request->setOption(CURLOPT_FOLLOWLOCATION, true);
