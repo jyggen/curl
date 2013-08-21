@@ -37,6 +37,8 @@ This library is licensed under the MIT license.
 
 ### 3.0.1
 
+* Improved Travis CI testing.
+* Changed dependency of `symfony/http-foundation` to `~2.0`.
 * Fixed broken test.
 * Code cleanup.
 
