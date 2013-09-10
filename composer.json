@@ -2,7 +2,7 @@
     "name": "jyggen/curl",
     "type": "library",
     "description": "A simple and lightweight cURL library with support for multiple requests in parallel.",
-    "keywords": ["cURL", "HTTP", "Multi-thread", "parallel", "spider", "bot", "laravel"],
+    "keywords": ["cURL", "HTTP", "Multi-thread", "Parallel", "Spider", "Bot", "Request", "Crawler"],
     "homepage": "http://docs.jyggen.com/curl",
     "license": "MIT",
     "authors": [
