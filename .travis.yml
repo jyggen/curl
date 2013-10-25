@@ -6,7 +6,8 @@ php:
   - 5.5
 
 before_script:
-  - composer require symfony/http-foundation:${SYMFONY_VERSION}
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar require symfony/http-foundation:${SYMFONY_VERSION}
   - pear install pear/PHP_CodeSniffer
   - phpenv rehash
 
