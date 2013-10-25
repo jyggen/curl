@@ -54,61 +54,63 @@ class Curl
      */
     protected $requests;
 
+    public static function delete($urls, $data = null)
+    {
+        return static::make('delete', $urls, $data);
+    }
+
+    public static function get($urls, $data = null)
+    {
+        return static::make('get', $urls, $data);
+    }
+
+    public static function post($urls, $data = null)
+    {
+        return static::make('post', $urls, $data);
+    }
+
+    public static function put($urls, $data = null)
+    {
+        return static::make('put', $urls, $data);
+    }
+
     /**
      * Handle all static helpers.
+     *
      * @param  mixed $name
      * @param  array $arguments
      * @return mixed
      */
-    public static function __callStatic($name, $arguments)
+    protected static function make($verb, $urls, $data = null)
     {
-
-        $allowedVerbs = array('delete', 'get', 'post', 'put');
-
-        if (in_array($name, $allowedVerbs)) {
-
-            // We require at least one URL.
-            if (!isset($arguments[0])) {
-                $message = sprintf('Missing argument 1 for %s::%s()', get_called_class(), $name);
-                throw new InvalidArgumentException($message);
+        if (!is_array($urls)) {
+            $urls = array($urls => $data);
+        } elseif (!(bool)count(array_filter(array_keys($urls), 'is_string'))) {
+            foreach ($urls as $key => $url) {
+                $urls[$url] = null;
+                unset($urls[$key]);
             }
-
-            $urls = $arguments[0];
-            $data = (isset($arguments[1])) ? $arguments[1] : null;
-
-            if (!is_array($urls)) {
-                $urls = array($urls => $data);
-            } elseif (!(bool)count(array_filter(array_keys($urls), 'is_string'))) {
-                foreach ($urls as $key => $url) {
-                    $urls[$url] = null;
-                    unset($urls[$key]);
-                }
-            }
-
-            $dispatcher = new Dispatcher;
-            $requests   = array();
-            $dataStore  = array();
-
-            foreach ($urls as $url => $data) {
-                $requests[]  = new Request($url);
-                $dataStore[] = $data;
-            }
-
-            new static($name, $dispatcher, $requests, $dataStore);
-
-            $requests  = $dispatcher->get();
-            $responses = array();
-
-            foreach ($requests as $request) {
-                $responses[] = $request->getResponse();
-            }
-
-            return $responses;
-
-        } else {
-            throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', get_called_class(), $name));
         }
 
+        $dispatcher = new Dispatcher;
+        $requests   = array();
+        $dataStore  = array();
+
+        foreach ($urls as $url => $data) {
+            $requests[]  = new Request($url);
+            $dataStore[] = $data;
+        }
+
+        new static($verb, $dispatcher, $requests, $dataStore);
+
+        $requests  = $dispatcher->all();
+        $responses = array();
+
+        foreach ($requests as $request) {
+            $responses[] = $request->getResponse();
+        }
+
+        return $responses;
     }
 
     /**
