@@ -8,10 +8,10 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./vendor/autoload.php">
+         bootstrap="./bootstrap.php">
    <testsuites>
       <testsuite name="Curl Test Suite">
-         <directory suffix=".php">./tests/</directory>
+         <directory suffix="Tests.php">./tests/</directory>
       </testsuite>
    </testsuites>
    <filter>
