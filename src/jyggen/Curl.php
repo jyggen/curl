@@ -14,7 +14,6 @@ namespace jyggen;
 
 use jyggen\Curl\Dispatcher;
 use jyggen\Curl\DispatcherInterface;
-use jyggen\Curl\Exception\BadMethodCallException;
 use jyggen\Curl\Exception\InvalidArgumentException;
 use jyggen\Curl\Request;
 use jyggen\Curl\RequestInterface;
