@@ -15,108 +15,124 @@ use Mockery as m;
 
 class DispatcherTests extends PHPUnit_Framework_TestCase
 {
+    public function teardown()
+    {
+        m::close();
+        global $mockAddMulti;
+        $mockAddMulti = false;
+    }
 
-	public function teardown()
-	{
+    public function testConstruct()
+    {
+        $this->assertInstanceof('jyggen\\Curl\\Dispatcher', new Dispatcher);
+    }
 
-		m::close();
+    public function testGet()
+    {
+        $dispatcher = new Dispatcher;
+        $this->assertSame(array(), $dispatcher->all());
+        $this->assertNull($dispatcher->get(1));
+    }
 
-	}
+    public function testAdd()
+    {
+        $dispatcher = new Dispatcher;
+        $request    = m::mock('jyggen\\Curl\\RequestInterface');
 
-	public function testConstruct()
-	{
+        $request->shouldReceive('addMultiHandle')->andReturn(0);
 
-		$this->assertInstanceof('jyggen\\Curl\\Dispatcher', new Dispatcher);
+        $this->assertEquals(0, $dispatcher->add($request));
+        $this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
+    }
 
-	}
+    public function testClear()
+    {
+        $dispatcher = new Dispatcher;
+        $request    = m::mock('jyggen\\Curl\\RequestInterface');
 
-	public function testGet()
-	{
+        $request->shouldReceive('addMultiHandle')->andReturn(0);
+        $request->shouldReceive('removeMultiHandle')->andReturn(0);
 
-		$dispatcher = new Dispatcher;
-		$this->assertEquals(array(), $dispatcher->get());
-		$this->assertNull($dispatcher->get(1));
+        $this->assertEquals(0, $dispatcher->add($request));
+        $this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
 
-	}
+        $dispatcher->clear();
 
-	public function testAdd()
-	{
+        $this->assertEquals(array(), $dispatcher->all());
+    }
 
-		$dispatcher = new Dispatcher;
-		$request    = m::mock('jyggen\\Curl\\RequestInterface');
+    public function testRemove()
+    {
+        $dispatcher = new Dispatcher;
+        $request    = m::mock('jyggen\\Curl\\RequestInterface');
 
-		$request->shouldReceive('addMultiHandle')->andReturn(0);
+        $request->shouldReceive('addMultiHandle')->andReturn(0);
+        $request->shouldReceive('removeMultiHandle')->andReturn(0);
 
-		$this->assertEquals(0, $dispatcher->add($request));
-		$this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
+        $dispatcher->add($request);
+        $dispatcher->remove(0);
 
-	}
+        $this->assertEquals(array(), $dispatcher->all());
+    }
 
-	public function testClear()
-	{
+    public function testExecute()
+    {
+        $dispatcher = new Dispatcher;
+        $request1   = m::mock('jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
+        $request2   = m::mock('jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
 
-		$dispatcher = new Dispatcher;
-		$request    = m::mock('jyggen\\Curl\\RequestInterface');
+        $request1->shouldReceive('execute')->andReturn(true);
+        $request2->shouldReceive('execute')->andReturn(true);
+        $request1->shouldReceive('getRawResponse')->andReturnUsing(function () use ($request1) {
+            return curl_multi_getcontent($request1->getHandle());
+        });
+        $request2->shouldReceive('getRawResponse')->andReturnUsing(function () use ($request2) {
+            return curl_multi_getcontent($request2->getHandle());
+        });
 
-		$request->shouldReceive('addMultiHandle')->andReturn(0);
-		$request->shouldReceive('removeMultiHandle')->andReturn(0);
+        $dispatcher->add($request1);
+        $dispatcher->add($request2);
+        $dispatcher->execute();
 
-		$this->assertEquals(0, $dispatcher->add($request));
-		$this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
+        $response1 = $request1->getRawResponse();
+        $response2 = $request2->getRawResponse();
 
-		$dispatcher->clear();
+        $this->assertStringStartsWith('HTTP/1.1 200 OK', $response1);
+        $this->assertStringStartsWith('HTTP/1.1 200 OK', $response2);
+    }
 
-		$this->assertEquals(array(), $dispatcher->get());
+    /**
+     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedExceptionMessage Unable to add request to cURL multi handle (code #4)
+     */
+    public function testExecuteWithError()
+    {
+        global $mockAddMulti;
 
-	}
+        $mockAddMulti = true;
+        $dispatcher   = new Dispatcher;
+        $request1     = m::mock('jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
+        $request2     = m::mock('jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
 
-	public function testRemove()
-	{
+        $dispatcher->add($request1);
+        $dispatcher->add($request2);
+        $dispatcher->execute();
+    }
 
-		$dispatcher = new Dispatcher;
-		$request    = m::mock('jyggen\\Curl\\RequestInterface');
+    public function testStackSize()
+    {
+        $dispatcher = new Dispatcher;
+        $dispatcher->setStackSize(25);
+        $this->assertSame(25, $dispatcher->getStackSize());
+    }
 
-		$request->shouldReceive('addMultiHandle')->andReturn(0);
-		$request->shouldReceive('removeMultiHandle')->andReturn(0);
-
-		$dispatcher->add($request);
-		$dispatcher->remove(0);
-
-		$this->assertEquals(array(), $dispatcher->get());
-
-	}
-
-	public function testExecute()
-	{
-
-		$dispatcher = new Dispatcher;
-		$request1   = m::mock('jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
-		$request2   = m::mock('jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
-
-		$request1->shouldReceive('execute')->andReturn(true);
-		$request2->shouldReceive('execute')->andReturn(true);
-		$request1->shouldReceive('getRawResponse')->andReturnUsing(function() use ($request1) { return curl_multi_getcontent($request1->getHandle()); });
-		$request2->shouldReceive('getRawResponse')->andReturnUsing(function() use ($request2) { return curl_multi_getcontent($request2->getHandle()); });
-
-		$dispatcher->add($request1);
-		$dispatcher->add($request2);
-		$dispatcher->execute();
-
-		$response1 = $request1->getRawResponse();
-		$response2 = $request2->getRawResponse();
-
-		$this->assertStringStartsWith('HTTP/1.1 200 OK', $response1);
-		$this->assertStringStartsWith('HTTP/1.1 200 OK', $response2);
-
-	}
-
-	public function testExecuteWithError()
-	{
-
-		/**
-         * @todo Write test(s) if possible.
-         */
-
-	}
-
+    /**
+     * @expectedException        jyggen\Curl\Exception\InvalidArgumentException
+     * @expectedExceptionMessage setStackSize() expected an integer
+     */
+    public function testSetStackSizeInvalidArgument()
+    {
+        $dispatcher = new Dispatcher;
+        $dispatcher->setStackSize('string');
+    }
 }

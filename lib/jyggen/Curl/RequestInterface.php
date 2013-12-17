@@ -15,25 +15,9 @@ namespace jyggen\Curl;
 interface RequestInterface
 {
     /**
-     * Add the request to a cURL multi handle.
+     * Retrieve the cURL handle.
      *
-     * @param  curl_multi $multiHandle
-     * @return int
+     * @return curl
      */
-    public function addMultiHandle($multiHandle);
-
-    /**
-     * Execute the request.
-     *
-     * @return void
-     */
-    public function execute();
-
-    /**
-     * Remove the request from a cURL multi handle.
-     *
-     * @param  curl_multi $multiHandle
-     * @return int
-     */
-    public function removeMultiHandle($multiHandle);
+    public function getHandle();
 }

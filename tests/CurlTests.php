@@ -88,14 +88,4 @@ class CurlTests extends PHPUnit_Framework_TestCase
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('foo=bar&bar=foo', $content->data);
     }
-
-    /**
-     * @expectedException        jyggen\Curl\Exception\InvalidArgumentException
-     * @expectedExceptionMessage implement RequestInterface
-     */
-    public function testConstructException()
-    {
-        $dispatcher = new \jyggen\Curl\Dispatcher;
-        new Curl('GET', $dispatcher, array('request'), array());
-    }
 }

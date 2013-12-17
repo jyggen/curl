@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.1.0
+
+* Requests added to the dispatcher are now split into stacks to avoid a lot of simultaneously requests.
+* Stack size can be configured with `Dispatcher::setStackSize()`, default size is 42.
+* Added `Dispatcher::getStackSize()` to retrieve the currently used stack size.
+* Added `Dispatcher::executeWithCallback()` which allows you to run a request directly through a closure when it's done.
+* Added `Dispatcher::all()` to retrieve all requests added to the dispatcher.
+* `Request::__destruct()` will now close the cURL handle.
+* Refactored `Curl` to not use `__callStatic()` which should make the public API more obvious.
+* Calling `Dispatcher::get()` without a key is now deprecated. Use `Dispatcher::all()` instead.
+
 ## 3.0.1
 
 * Improved Travis CI testing.

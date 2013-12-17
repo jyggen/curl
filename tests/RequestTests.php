@@ -121,41 +121,6 @@ class RequestTests extends PHPUnit_Framework_TestCase
 
     }
 
-    public function testAddMultiHandle()
-    {
-
-        $request = $this->forgeRequest();
-        $multi   = curl_multi_init();
-        $this->assertTrue($request->addMultiHandle($multi));
-
-    }
-
-    /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
-     * @expectedExceptionMessage curl_multi
-     */
-    public function testAddMultiHandleWithInvalidHandle()
-    {
-
-        $request = new Request('http://example.com/');
-        $this->assertTrue($request->addMultiHandle('lolnope'));
-
-    }
-
-    /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
-     * @expectedExceptionMessage Unable to add request
-     */
-    public function testAddMultiHandleWithErrorCode()
-    {
-
-        $request = $this->forgeRequest();
-        $multi   = curl_multi_init();
-        $this->assertTrue($request->addMultiHandle($multi));
-        $request->addMultiHandle($multi);
-
-    }
-
     public function testIsExecuted()
     {
 
@@ -192,16 +157,6 @@ class RequestTests extends PHPUnit_Framework_TestCase
 
     }
 
-    public function testRemoveMultiHandle()
-    {
-
-        $request = $this->forgeRequest();
-        $multi   = curl_multi_init();
-        $request->addMultiHandle($multi);
-        $this->assertSame(0, $request->removeMultiHandle($multi));
-
-    }
-
     public function testRawResponse()
     {
 
@@ -212,11 +167,8 @@ class RequestTests extends PHPUnit_Framework_TestCase
 
     protected function forgeRequest($url = null)
     {
-
         $url or $url = 'http://httpbin.org/get';
-
         return new Request($url);
-
     }
 
 }

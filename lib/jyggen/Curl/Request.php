@@ -65,13 +65,6 @@ class Request implements RequestInterface
     protected $handle;
 
     /**
-     * Number of cURL multi handles attached.
-     *
-     * @var integer
-     */
-    protected $multiNo = 0;
-
-    /**
      * Response object.
      *
      * @var \jyggen\Curl\Response
@@ -86,16 +79,21 @@ class Request implements RequestInterface
      */
     public function __construct($url)
     {
-
         $this->handle  = curl_init($url);
         $this->headers = new HeaderBag(array(), $this);
 
         foreach ($this->defaults as $option => $value) {
-
             curl_setopt($this->handle, $option, $value);
-
         }
+    }
 
+    /**
+     * Shutdown sequence.
+     * @return void
+     */
+    public function __destruct()
+    {
+        curl_close($this->handle);
     }
 
     /**
@@ -105,11 +103,8 @@ class Request implements RequestInterface
      */
     public function getErrorMessage()
     {
-
         $error = curl_error($this->handle);
-
         return ($error === '') ? null : $error;
-
     }
 
     /**
@@ -119,9 +114,7 @@ class Request implements RequestInterface
      */
     public function getHandle()
     {
-
         return $this->handle;
-
     }
 
     /**
@@ -132,17 +125,10 @@ class Request implements RequestInterface
      */
     public function getInfo($key = null)
     {
-
         if ($key === null) { // If no key is supplied return all available information.
-
             return curl_getinfo($this->handle);
-
-        } else { // Otherwise retrieve information for the specified key.
-
-            return curl_getinfo($this->handle, $key);
-
         }
-
+        return curl_getinfo($this->handle, $key);
     }
 
     /**
@@ -152,9 +138,7 @@ class Request implements RequestInterface
      */
     public function getRawResponse()
     {
-
         return $this->content;
-
     }
 
     /**
@@ -184,7 +168,6 @@ class Request implements RequestInterface
      */
     public function setOption($option, $value = null)
     {
-
         if (is_array($option)) { // If it's an array, loop through each option and call this method recursively.
             foreach ($option as $opt => $val) {
                 $this->setOption($opt, $val);
@@ -200,38 +183,6 @@ class Request implements RequestInterface
     }
 
     /**
-     * Add this request to the supplied cURL multi handle.
-     *
-     * @param  curl_multi $multiHandle
-     * @return int
-     */
-    public function addMultiHandle($multiHandle)
-    {
-
-        // If it's a curl_multi resource add this request to it and throw an exception on failure.
-        if ($this->isValidMultiHandle($multiHandle)) {
-
-            $status = curl_multi_add_handle($multiHandle, $this->handle);
-
-            if ($status !== CURLM_OK) {
-
-                throw new CurlErrorException(sprintf('Unable to add request to cURL multi handle (code #%u)', $status));
-
-            }
-
-            $this->multiNo++;
-            return true;
-
-        } else { // Otherwise throw an exception!
-
-            $message = sprintf('Expects parameter 1 to be a curl_multi resource, %s given', gettype($multiHandle));
-            throw new CurlErrorException($message);
-
-        }
-
-    }
-
-    /**
      * Execute the request.
      *
      * @return void
@@ -239,39 +190,14 @@ class Request implements RequestInterface
     public function execute()
     {
 
-        // If the request is attached to a multi handle it has already been
-        // executed so all we have to do is to retrieve the response.
-        if ($this->hasMulti()) {
-
-            $this->content = curl_multi_getcontent($this->handle);
-
-        } else { // Otherwise we execute the request now and retrieve the response.
-
-            $this->content = curl_exec($this->handle);
-
-        }
+        $this->content = curl_exec($this->handle);
 
         // If the execution was successful flag it as executed.
         if ($this->isSuccessful()) {
-
             $this->executed = true;
-
         } else { // Otherwise throw an exception.
-
             throw new CurlErrorException($this->getErrorMessage());
-
         }
-
-    }
-
-    /**
-     * If the request is attached to one or more cURL multi handles.
-     * @return boolean
-     */
-    public function hasMulti()
-    {
-
-        return ($this->multiNo > 0) ? true : false;
 
     }
 
@@ -299,31 +225,9 @@ class Request implements RequestInterface
 
     }
 
-    /**
-     * Remove the request from a cURL multi handle.
-     *
-     * @param  curl_multi $multiHandle
-     * @return int
-     */
-    public function removeMultiHandle($multiHandle)
+    public function setRawResponse($content)
     {
-
-        $this->multiNo--;
-
-        return curl_multi_remove_handle($multiHandle, $this->handle);
-
-    }
-
-    /**
-     * Check if the argument is a valid cURL multi handle.
-     *
-     * @param  mixed  $multiHandle
-     * @return boolean
-     */
-    protected function isValidMultiHandle($multiHandle)
-    {
-
-        return (is_resource($multiHandle) and get_resource_type($multiHandle) === 'curl_multi');
-
+        $this->executed = true;
+        $this->content  = $content;
     }
 }

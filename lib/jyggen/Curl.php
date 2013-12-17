@@ -54,24 +54,24 @@ class Curl
      */
     protected $requests;
 
-    public static function delete($urls, $data = null)
+    public static function delete($urls, $data = null, $callback = null)
     {
-        return static::make('delete', $urls, $data);
+        return static::make('delete', $urls, $data, $callback);
     }
 
-    public static function get($urls, $data = null)
+    public static function get($urls, $data = null, $callback = null)
     {
-        return static::make('get', $urls, $data);
+        return static::make('get', $urls, $data, $callback);
     }
 
-    public static function post($urls, $data = null)
+    public static function post($urls, $data = null, $callback = null)
     {
-        return static::make('post', $urls, $data);
+        return static::make('post', $urls, $data, $callback);
     }
 
-    public static function put($urls, $data = null)
+    public static function put($urls, $data = null, $callback = null)
     {
-        return static::make('put', $urls, $data);
+        return static::make('put', $urls, $data, $callback);
     }
 
     /**
@@ -81,7 +81,7 @@ class Curl
      * @param  array $arguments
      * @return mixed
      */
-    protected static function make($verb, $urls, $data = null)
+    protected static function make($verb, $urls, $data, $callback)
     {
         if (!is_array($urls)) {
             $urls = array($urls => $data);
@@ -101,7 +101,7 @@ class Curl
             $dataStore[] = $data;
         }
 
-        new static($verb, $dispatcher, $requests, $dataStore);
+        new static($verb, $dispatcher, $requests, $dataStore, $callback);
 
         $requests  = $dispatcher->all();
         $responses = array();
@@ -122,7 +122,7 @@ class Curl
      * @param  array               $data
      * @return void
      */
-    public function __construct($method, DispatcherInterface $dispatcher, array $requests, array $data)
+    protected function __construct($method, DispatcherInterface $dispatcher, array $requests, array $data, $callback)
     {
 
         $this->dispatcher = $dispatcher;
@@ -138,7 +138,7 @@ class Curl
             }
         }
 
-        $this->makeRequest();
+        $this->makeRequest($callback);
 
     }
 
@@ -147,7 +147,7 @@ class Curl
      *
      * @return void
      */
-    protected function makeRequest()
+    protected function makeRequest($callback)
     {
 
          // Foreach request:
@@ -183,7 +183,11 @@ class Curl
         }
 
         // Execute the request(s).
-        $this->dispatcher->execute();
+        if ($callback !== null) {
+            $this->dispatcher->execute($callback);
+        } else {
+            $this->dispatcher->execute();
+        }
 
     }
 

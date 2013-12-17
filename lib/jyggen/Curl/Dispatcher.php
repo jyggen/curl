@@ -1,7 +1,6 @@
 <?php
 /**
  * A simple and lightweight cURL library with support for multiple requests in parallel.
- *
  * @package     Curl
  * @version     3.0.1
  * @author      Jonas Stendahl
@@ -14,139 +13,148 @@ namespace jyggen\Curl;
 
 use jyggen\Curl\DispatcherInterface;
 use jyggen\Curl\Exception\CurlErrorException;
-use jyggen\Curl\RequestnInterface;
+use jyggen\Curl\Exception\InvalidArgumentException;
 
 /**
  * Dispatcher
- *
  * This class acts as a wrapper around cURL multi functions.
  */
 class Dispatcher implements DispatcherInterface
 {
     /**
      * The cURL multi handle.
-     *
      * @var curl_multi
      */
     protected $handle;
 
     /**
      * All added requests.
-     *
      * @var array
      */
     protected $requests = array();
 
     /**
+     * Stack size.
+     * @var  int
+     */
+    protected $stackSize = 42;
+
+    /**
      * Create a new Dispatcher instance.
-     *
      * @return void
      */
     public function __construct()
     {
-
         $this->handle = curl_multi_init();
-
     }
 
     /**
-     * Add a REquest.
-     *
+     * Add a Request.
      * @param  RequestInterface $request
      * @return int
      */
     public function add(RequestInterface $request)
     {
-
-        // Tell the $request to use this handle.
-        $request->addMultiHandle($this->handle);
-
-        // Store the request.
         $this->requests[] = $request;
-
-        // Return the request's key.
         return (count($this->requests) - 1);
+    }
 
+    /**
+     * Retrieve all requests.
+     * @return array
+     */
+    public function all()
+    {
+        return $this->requests;
     }
 
     /**
      * Remove all requests.
-     *
      * @return void
      */
     public function clear()
     {
-
-        // Loop through all requests and remove
-        // their relationship to our handle.
-        foreach ($this->requests as $request) {
-
-            $request->removeMultiHandle($this->handle);
-
-        }
-
-        // Reset the requests array.
         $this->requests = array();
-
     }
 
     /**
      * Execute all added requests.
-     *
      * @return void
      */
-    public function execute()
+    public function execute(callable $callback = null)
     {
 
-        // Start processing the requests.
-        list($mrc, $active) = $this->process();
+        $stacks = $this->buildStacks();
 
-        // Keep processing requests until we're done.
-        while ($active and $mrc === CURLM_OK) {
+        foreach ($stacks as $requests) {
 
-            // Process the next request.
-            list($mrc, $active) = $this->process();
+            // Tell each request to use this dispatcher.
+            foreach ($requests as $request) {
+                $status = curl_multi_add_handle($this->handle, $request->getHandle());
+                if ($status !== CURLM_OK) {
+                    throw new CurlErrorException(sprintf('Unable to add request to cURL multi handle (code #%u)', $status));
+                }
+            }
+
+            // Start dispatching the requests.
+            $this->dispatch();
+
+            // Loop through all requests and remove their relationship to our dispatcher.
+            foreach ($requests as $request) {
+                $request->setRawResponse(curl_multi_getcontent($request->getHandle()));
+                curl_multi_remove_handle($this->handle, $request->getHandle());
+
+                if ($callback !== null) {
+                    $callback($request->getResponse());
+                }
+            }
 
         }
 
-        // Throw an exception if something went wrong.
-        if ($mrc !== CURLM_OK) {
-            throw new CurlErrorException('cURL read error #'.$mrc);
-        }
+    }
 
-        // Otherwise everything went okay, retrieve the data from each request.
+    public function executeWithCallback(callable $callback)
+    {
+
+        // Start dispatching the requests.
+        $this->dispatch();
+
+        // Retrieve the data from each request.
         foreach ($this->requests as $request) {
             $request->execute();
+            $callback($request->getResponse());
             $request->removeMultiHandle($this->handle);
         }
 
     }
 
     /**
-     * Retrieve all or a specific request.
-     *
+     * Retrieve a specific request.
      * @param  int   $key null
      * @return mixed
+     * @deprecated Calling this method without a key is deprecated, use Dispatcher::all() instead.
      */
     public function get($key = null)
     {
-
         // Return all requests if no key is specified.
         if ($key === null) {
-
             return $this->requests;
-
         } else { // Otherwise, if the key exists; return that request, else return null.
-
             return (isset($this->requests[$key])) ? $this->requests[$key] : null;
-
         }
+    }
 
+    /**
+     * Retrieve currently used stack size.
+     * @return int
+     */
+    public function getStackSize()
+    {
+        return $this->stackSize;
     }
 
     /**
      * Remove a specific request.
-     *
      * @param  int  $key
      * @return void
      */
@@ -159,6 +167,69 @@ class Dispatcher implements DispatcherInterface
             $this->requests[$key]->removeMultiHandle($this->handle);
             unset($this->requests[$key]);
 
+        }
+
+    }
+
+    /**
+     * Set stack size.
+     * @return void
+     */
+    public function setStackSize($size)
+    {
+        if (gettype($size) !== 'integer') {
+            throw new InvalidArgumentException('setStackSize() expected an integer, '.gettype($size).' received.');
+        }
+
+        $this->stackSize = $size;
+    }
+
+    /**
+     * Build stacks of requests.
+     * @return array
+     */
+    protected function buildStacks()
+    {
+
+        $stacks   = array();
+        $stackNo  = 0;
+        $currSize = 0;
+
+        foreach ($this->requests as $request) {
+
+            if ($currSize === $this->stackSize) {
+                $currSize = 0;
+                $stackNo++;
+            }
+
+            $stacks[$stackNo][] = $request;
+            $currSize++;
+
+        }
+
+        return $stacks;
+
+    }
+
+    /**
+     * Dispatch the requests.
+     * @return void
+     */
+    protected function dispatch()
+    {
+
+        // Start processing the requests.
+        list($mrc, $active) = $this->process();
+
+        // Keep processing requests until we're done.
+        while ($active and $mrc === CURLM_OK) {
+            // Process the next request.
+            list($mrc, $active) = $this->process();
+        }
+
+        // Throw an exception if something went wrong.
+        if ($mrc !== CURLM_OK) {
+            throw new CurlErrorException('cURL read error #'.$mrc);
         }
 
     }
