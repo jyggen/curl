@@ -92,7 +92,10 @@ class Dispatcher implements DispatcherInterface
             foreach ($requests as $request) {
                 $status = curl_multi_add_handle($this->handle, $request->getHandle());
                 if ($status !== CURLM_OK) {
-                    throw new CurlErrorException(sprintf('Unable to add request to cURL multi handle (code #%u)', $status));
+                    throw new CurlErrorException(sprintf(
+                        'Unable to add request to cURL multi handle (code #%u)',
+                        $status
+                    ));
                 }
             }
 
