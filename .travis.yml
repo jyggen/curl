@@ -4,16 +4,17 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
 
 before_script:
-  - curl -s http://getcomposer.org/installer | php
+  - composer self-update
   - php composer.phar require symfony/http-foundation:${SYMFONY_VERSION}
-  - pear install pear/PHP_CodeSniffer
+  - pyrus install pear/PHP_CodeSniffer
   - phpenv rehash
 
 script:
+  - phpcs --standard=psr2 src/
   - phpunit --coverage-text
-  - phpcs --standard=psr2 ./lib
 
 env:
   - SYMFONY_VERSION="~2.0"
@@ -21,3 +22,4 @@ env:
   - SYMFONY_VERSION="2.1.*"
   - SYMFONY_VERSION="2.2.*"
   - SYMFONY_VERSION="2.3.*"
+  - SYMFONY_VERSION="2.4.*"

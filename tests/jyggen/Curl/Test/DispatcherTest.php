@@ -10,10 +10,12 @@
  * @link        http://github.com/jyggen/curl
  */
 
+namespace jyggen\Curl\Test;
+
 use jyggen\Curl\Dispatcher;
 use Mockery as m;
 
-class DispatcherTests extends PHPUnit_Framework_TestCase
+class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
     public function teardown()
     {

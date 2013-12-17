@@ -10,10 +10,12 @@
  * @link        http://github.com/jyggen/curl
  */
 
+namespace jyggen\Curl\Test;
+
 use jyggen\Curl\Request;
 use Mockery as m;
 
-class RequestTests extends PHPUnit_Framework_TestCase
+class RequestTest extends \PHPUnit_Framework_TestCase
 {
 
     public function teardown()

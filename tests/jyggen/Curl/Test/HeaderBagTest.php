@@ -10,10 +10,12 @@
  * @link        http://github.com/jyggen/curl
  */
 
+namespace jyggen\Curl\Test;
+
 use jyggen\Curl\HeaderBag;
 use Mockery as m;
 
-class HeaderBagTests extends PHPUnit_Framework_TestCase
+class HeaderBagTest extends \PHPUnit_Framework_TestCase
 {
 
     public function teardown()
