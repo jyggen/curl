@@ -8,7 +8,7 @@ php:
 
 before_script:
   - composer self-update
-  - php composer.phar require symfony/http-foundation:${SYMFONY_VERSION}
+  - composer require symfony/http-foundation:${SYMFONY_VERSION}
   - pyrus install pear/PHP_CodeSniffer
   - phpenv rehash
 
