@@ -1,6 +1,9 @@
 ## Curl
 
-[![Latest Stable Version](https://poser.pugx.org/jyggen/curl/version.png)](https://packagist.org/packages/jyggen/curl) [![Total Downloads](https://poser.pugx.org/jyggen/curl/d/total.png)](https://packagist.org/packages/jyggen/curl) [![Build Status](https://travis-ci.org/jyggen/curl.png)](https://travis-ci.org/jyggen/curl)
+[![Build Status](https://travis-ci.org/jyggen/curl.png?branch=master)](https://travis-ci.org/jyggen/curl)
+[![Coverage Status](https://coveralls.io/repos/jyggen/curl/badge.png)](https://coveralls.io/r/jyggen/curl)
+[![Total Downloads](https://poser.pugx.org/jyggen/curl/downloads.png)](https://packagist.org/packages/jyggen/curl)
+[![Latest Stable Version](https://poser.pugx.org/jyggen/curl/v/stable.png)](https://packagist.org/packages/jyggen/curl)
 
 A lightweight cURL library with support for multiple requests in parallel.
 
@@ -23,7 +26,7 @@ Please create an issue or pull request on [GitHub](https://github.com/jyggen/cur
 
 #### Author
 
-Jonas Stendahl ([@jyggen](http://twitter.com/jyggen))  
+Jonas Stendahl ([@jyggen](http://twitter.com/jyggen))
 jonas.stendahl@gmail.com
 
 [See the list of contributors here](https://github.com/jyggen/curl/contributors).
