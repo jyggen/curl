@@ -10,13 +10,13 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl;
+namespace Jyggen\Curl;
 
-use jyggen\Curl\Exception\CurlErrorException;
-use jyggen\Curl\Exception\ProtectedOptionException;
-use jyggen\Curl\HeaderBag;
-use jyggen\Curl\Response;
-use jyggen\Curl\RequestInterface;
+use Jyggen\Curl\Exception\CurlErrorException;
+use Jyggen\Curl\Exception\ProtectedOptionException;
+use Jyggen\Curl\HeaderBag;
+use Jyggen\Curl\Response;
+use Jyggen\Curl\RequestInterface;
 
 /**
  * Request
@@ -28,7 +28,7 @@ class Request implements RequestInterface
     /**
      * A container of headers.
      *
-     * @var \jyggen\Curl\HeaderBag
+     * @var \Jyggen\Curl\HeaderBag
      */
     public $headers;
 
@@ -67,7 +67,7 @@ class Request implements RequestInterface
     /**
      * Response object.
      *
-     * @var \jyggen\Curl\Response
+     * @var \Jyggen\Curl\Response
      */
     protected $response;
 

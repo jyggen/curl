@@ -10,13 +10,13 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Exception;
+namespace Jyggen\Curl\Exception;
 
 /**
- * InvalidArgumentException
+ * CurlErrorException
  *
- * An exception thrown if an invalid argument is passed to a method.
+ * An exception thrown if an error occurs in libcurl.
  */
-class InvalidArgumentException extends \InvalidArgumentException
+class CurlErrorException extends \Exception
 {
 }

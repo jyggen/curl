@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Test;
+namespace Jyggen\Curl\Test;
 
-use jyggen\Curl\Response;
+use Jyggen\Curl\Response;
 use Mockery as m;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +28,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testForge()
     {
 
-        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $request   = m::mock('Jyggen\\Curl\\RequestInterface');
         $response  = 'HTTP/1.1 503 Service Temporarily Unavailable'."\r\n";
         $response .= 'Server: nginx'."\r\n";
         $response .= 'Date: Tue, 19 Feb 2013 12:59:40 GMT'."\r\n";

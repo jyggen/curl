@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl;
+namespace Jyggen\Curl;
 
-use jyggen\Curl\RequestInterface;
+use Jyggen\Curl\RequestInterface;
 
 /**
  * Response
