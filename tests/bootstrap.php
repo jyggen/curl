@@ -1,5 +1,5 @@
 <?php
-namespace jyggen\Curl {
+namespace Jyggen\Curl {
 
     require_once './vendor/autoload.php';
 

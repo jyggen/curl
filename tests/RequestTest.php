@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Test;
+namespace Jyggen\Curl\Test;
 
-use jyggen\Curl\Request;
+use Jyggen\Curl\Request;
 use Mockery as m;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +28,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
 
-        $this->assertInstanceof('jyggen\\Curl\\RequestInterface', $this->forgeRequest());
+        $this->assertInstanceof('Jyggen\\Curl\\RequestInterface', $this->forgeRequest());
 
     }
 
@@ -88,7 +88,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedException        Jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage Couldn't set option
      */
     public function testSetOptionError()
@@ -100,7 +100,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedException        Jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage Couldn't set option
      */
     public function testSetOptionArrayError()
@@ -112,7 +112,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\Curl\Exception\ProtectedOptionException
+     * @expectedException        Jyggen\Curl\Exception\ProtectedOptionException
      * @expectedExceptionMessage protected option
      */
     public function testSetProtectedOption()
@@ -140,7 +140,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedException        Jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage resolve host
      */
     public function testExecuteWithError()

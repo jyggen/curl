@@ -10,13 +10,14 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Exception;
+namespace Jyggen\Curl;
 
-/**
- * CurlErrorException
- *
- * An exception thrown if an error occurs in libcurl.
- */
-class CurlErrorException extends \Exception
+interface RequestInterface
 {
+    /**
+     * Retrieve the cURL handle.
+     *
+     * @return curl
+     */
+    public function getHandle();
 }

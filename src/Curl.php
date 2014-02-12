@@ -10,13 +10,13 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen;
+namespace Jyggen\Curl;
 
-use jyggen\Curl\Dispatcher;
-use jyggen\Curl\DispatcherInterface;
-use jyggen\Curl\Exception\InvalidArgumentException;
-use jyggen\Curl\Request;
-use jyggen\Curl\RequestInterface;
+use Jyggen\Curl\Dispatcher;
+use Jyggen\Curl\DispatcherInterface;
+use Jyggen\Curl\Exception\InvalidArgumentException;
+use Jyggen\Curl\Request;
+use Jyggen\Curl\RequestInterface;
 
 /**
  * Curl

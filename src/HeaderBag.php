@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl;
+namespace Jyggen\Curl;
 
-use jyggen\Curl\RequestInterface;
+use Jyggen\Curl\RequestInterface;
 
 /**
  * HeaderBag
@@ -24,7 +24,7 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     /**
      * Which request the instance belongs to.
      *
-     * @var \jyggen\Curl\RequestInterface
+     * @var \Jyggen\Curl\RequestInterface
      */
     protected $request;
 

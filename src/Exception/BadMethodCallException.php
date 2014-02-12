@@ -10,7 +10,7 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Exception;
+namespace Jyggen\Curl\Exception;
 
 /**
  * BadMethodCallException

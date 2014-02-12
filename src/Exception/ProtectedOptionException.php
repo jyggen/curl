@@ -10,8 +10,13 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl;
+namespace Jyggen\Curl\Exception;
 
-interface DispatcherInterface
+/**
+ * ProtectedOptionException
+ *
+ * An exception thrown when trying to change a protected value or option.
+ */
+class ProtectedOptionException extends \Exception
 {
 }

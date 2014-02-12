@@ -10,14 +10,8 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl;
+namespace Jyggen\Curl;
 
-interface RequestInterface
+interface DispatcherInterface
 {
-    /**
-     * Retrieve the cURL handle.
-     *
-     * @return curl
-     */
-    public function getHandle();
 }

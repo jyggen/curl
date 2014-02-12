@@ -2,12 +2,12 @@
 <phpunit bootstrap="./tests/bootstrap.php">
     <testsuites>
         <testsuite name="Curl Test Suite">
-            <directory>tests/jyggen</directory>
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">src/jyggen</directory>
+            <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
     <logging>
@@ -24,7 +24,7 @@
                         <object class="League\PHPUnitCoverageListener\Hook\Travis"/>
                     </element>
                     <element key="namespace">
-                        <string>jyggen\Curl</string>
+                        <string>Jyggen\Curl</string>
                     </element>
                     <element key="repo_token">
                         <string>e80c563DYJSaTOw3WYvfMEko8ntneer4O</string>

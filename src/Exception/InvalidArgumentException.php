@@ -10,13 +10,13 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Exception;
+namespace Jyggen\Curl\Exception;
 
 /**
- * ProtectedOptionException
+ * InvalidArgumentException
  *
- * An exception thrown when trying to change a protected value or option.
+ * An exception thrown if an invalid argument is passed to a method.
  */
-class ProtectedOptionException extends \Exception
+class InvalidArgumentException extends \InvalidArgumentException
 {
 }

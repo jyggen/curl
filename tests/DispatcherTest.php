@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Test;
+namespace Jyggen\Curl\Test;
 
-use jyggen\Curl\Dispatcher;
+use Jyggen\Curl\Dispatcher;
 use Mockery as m;
 
 class DispatcherTest extends \PHPUnit_Framework_TestCase
@@ -26,7 +26,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $this->assertInstanceof('jyggen\\Curl\\Dispatcher', new Dispatcher);
+        $this->assertInstanceof('Jyggen\\Curl\\Dispatcher', new Dispatcher);
     }
 
     public function testGet()
@@ -39,24 +39,24 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testAdd()
     {
         $dispatcher = new Dispatcher;
-        $request    = m::mock('jyggen\\Curl\\RequestInterface');
+        $request    = m::mock('Jyggen\\Curl\\RequestInterface');
 
         $request->shouldReceive('addMultiHandle')->andReturn(0);
 
         $this->assertEquals(0, $dispatcher->add($request));
-        $this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
+        $this->assertInstanceof('Jyggen\\Curl\RequestInterface', $dispatcher->get(0));
     }
 
     public function testClear()
     {
         $dispatcher = new Dispatcher;
-        $request    = m::mock('jyggen\\Curl\\RequestInterface');
+        $request    = m::mock('Jyggen\\Curl\\RequestInterface');
 
         $request->shouldReceive('addMultiHandle')->andReturn(0);
         $request->shouldReceive('removeMultiHandle')->andReturn(0);
 
         $this->assertEquals(0, $dispatcher->add($request));
-        $this->assertInstanceof('jyggen\\Curl\RequestInterface', $dispatcher->get(0));
+        $this->assertInstanceof('Jyggen\\Curl\RequestInterface', $dispatcher->get(0));
 
         $dispatcher->clear();
 
@@ -66,7 +66,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testRemove()
     {
         $dispatcher = new Dispatcher;
-        $request    = m::mock('jyggen\\Curl\\RequestInterface');
+        $request    = m::mock('Jyggen\\Curl\\RequestInterface');
 
         $request->shouldReceive('addMultiHandle')->andReturn(0);
         $request->shouldReceive('removeMultiHandle')->andReturn(0);
@@ -80,8 +80,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $dispatcher = new Dispatcher;
-        $request1   = m::mock('jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
-        $request2   = m::mock('jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
+        $request1   = m::mock('Jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
+        $request2   = m::mock('Jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
 
         $request1->shouldReceive('execute')->andReturn(true);
         $request2->shouldReceive('execute')->andReturn(true);
@@ -104,7 +104,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\Curl\Exception\CurlErrorException
+     * @expectedException        Jyggen\Curl\Exception\CurlErrorException
      * @expectedExceptionMessage Unable to add request to cURL multi handle (code #4)
      */
     public function testExecuteWithError()
@@ -113,8 +113,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
         $mockAddMulti = true;
         $dispatcher   = new Dispatcher;
-        $request1     = m::mock('jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
-        $request2     = m::mock('jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
+        $request1     = m::mock('Jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
+        $request2     = m::mock('Jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
 
         $dispatcher->add($request1);
         $dispatcher->add($request2);
@@ -129,7 +129,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        jyggen\Curl\Exception\InvalidArgumentException
+     * @expectedException        Jyggen\Curl\Exception\InvalidArgumentException
      * @expectedExceptionMessage setStackSize() expected an integer
      */
     public function testSetStackSizeInvalidArgument()

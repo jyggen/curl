@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Test;
+namespace Jyggen\Curl\Test;
 
-use jyggen\Curl;
+use Jyggen\Curl\Curl;
 use Mockery as m;
 
 class CurlTest extends \PHPUnit_Framework_TestCase
@@ -26,7 +26,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
         $responses = Curl::delete('http://httpbin.org/delete');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/delete', $content->url);
@@ -35,7 +35,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testGet()
     {
         $responses = Curl::get('http://httpbin.org/get');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/get', $content->url);
@@ -44,7 +44,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testPost()
     {
         $responses = Curl::post('http://httpbin.org/post');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/post', $content->url);
@@ -53,7 +53,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testPut()
     {
         $responses = Curl::put('http://httpbin.org/put');
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('http://httpbin.org/put', $content->url);
@@ -62,11 +62,11 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testMultipleUrls()
     {
         $responses = Curl::get(array('http://httpbin.org/get?bar=foo', 'http://httpbin.org/get?foo=bar'));
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('foo', $content->args->bar);
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[1]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[1]);
         $content = json_decode($responses[1]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('bar', $content->args->foo);
@@ -75,7 +75,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testPostWithData()
     {
         $responses = Curl::post('http://httpbin.org/post', array('foo' => 'bar', 'bar' => 'foo'));
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('bar', $content->form->foo);
@@ -85,7 +85,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     public function testPutWithData()
     {
         $responses = Curl::put('http://httpbin.org/put', array('foo' => 'bar', 'bar' => 'foo'));
-        $this->assertInstanceOf('jyggen\\Curl\\Response', $responses[0]);
+        $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('foo=bar&bar=foo', $content->data);

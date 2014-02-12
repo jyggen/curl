@@ -10,9 +10,9 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace jyggen\Curl\Test;
+namespace Jyggen\Curl\Test;
 
-use jyggen\Curl\HeaderBag;
+use Jyggen\Curl\HeaderBag;
 use Mockery as m;
 
 class HeaderBagTest extends \PHPUnit_Framework_TestCase
@@ -28,9 +28,9 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
 
-        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $request   = m::mock('Jyggen\\Curl\\RequestInterface');
         $headerbag = new HeaderBag(array(), $request);
-        $this->assertInstanceof('jyggen\\Curl\\HeaderBag', $headerbag);
+        $this->assertInstanceof('Jyggen\\Curl\\HeaderBag', $headerbag);
 
     }
 
@@ -38,7 +38,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
     {
 
         $phpunit   = $this;
-        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $request   = m::mock('Jyggen\\Curl\\RequestInterface');
         $headerbag = new HeaderBag(array(), $request);
         $request->shouldReceive('setOption')->times(1)->with(m::mustBe(CURLOPT_HTTPHEADER), m::type('array'));
         $headerbag->set('foo', 'bar');
@@ -49,7 +49,7 @@ class HeaderBagTest extends \PHPUnit_Framework_TestCase
     {
 
         $phpunit   = $this;
-        $request   = m::mock('jyggen\\Curl\\RequestInterface');
+        $request   = m::mock('Jyggen\\Curl\\RequestInterface');
         $headerbag = new HeaderBag(array(), $request);
         $request->shouldReceive('setOption')->times(1)->with(m::mustBe(CURLOPT_HTTPHEADER), m::type('array'));
         $headerbag->remove('foo');
