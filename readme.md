@@ -27,7 +27,6 @@ Please create an issue or pull request on [GitHub](https://github.com/jyggen/cur
 #### Author
 
 Jonas Stendahl ([@jyggen](http://twitter.com/jyggen))
-jonas.stendahl@gmail.com
 
 [See the list of contributors here](https://github.com/jyggen/curl/contributors).
 
