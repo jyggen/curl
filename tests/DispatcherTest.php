@@ -13,6 +13,7 @@
 namespace Jyggen\Curl\Test;
 
 use Jyggen\Curl\Dispatcher;
+use Jyggen\Curl\Request;
 use Mockery as m;
 
 class DispatcherTest extends \PHPUnit_Framework_TestCase
@@ -34,6 +35,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $dispatcher = new Dispatcher;
         $this->assertSame(array(), $dispatcher->all());
         $this->assertNull($dispatcher->get(1));
+        $this->assertSame(array(), $dispatcher->get());
     }
 
     public function testAdd()
@@ -80,17 +82,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testExecute()
     {
         $dispatcher = new Dispatcher;
-        $request1   = m::mock('Jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
-        $request2   = m::mock('Jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
-
-        $request1->shouldReceive('execute')->andReturn(true);
-        $request2->shouldReceive('execute')->andReturn(true);
-        $request1->shouldReceive('getRawResponse')->andReturnUsing(function () use ($request1) {
-            return curl_multi_getcontent($request1->getHandle());
-        });
-        $request2->shouldReceive('getRawResponse')->andReturnUsing(function () use ($request2) {
-            return curl_multi_getcontent($request2->getHandle());
-        });
+        $request1   = new Request('http://example.com/');
+        $request2   = new Request('http://example.org/');
 
         $dispatcher->add($request1);
         $dispatcher->add($request2);
@@ -136,5 +129,53 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $dispatcher = new Dispatcher;
         $dispatcher->setStackSize('string');
+    }
+
+    public function testExecuteStacked()
+    {
+        $dispatcher = new Dispatcher;
+
+        for ($i = 0; $i <= $dispatcher->getStackSize() + 5; $i++) {
+            $request = new Request('http://httpbin.org/get');
+            $dispatcher->add($request);
+        }
+
+        $dispatcher->execute();
+        $requests = $dispatcher->all();
+
+        foreach ($requests as $request) {
+            $this->assertStringStartsWith('HTTP/1.1 200 OK', $request->getRawResponse());
+        }
+    }
+
+    /**
+     * @expectedException        Jyggen\Curl\Exception\CurlErrorException
+     * @expectedExceptionMessage cURL read error #4
+     */
+    public function testExecuteWithProcessError()
+    {
+        global $mockMultiExec;
+
+        $mockMultiExec = true;
+        $dispatcher    = new Dispatcher;
+        $request1      = m::mock('Jyggen\\Curl\\Request', array('http://example.com/'))->shouldDeferMissing();
+        $request2      = m::mock('Jyggen\\Curl\\Request', array('http://example.org/'))->shouldDeferMissing();
+
+        $dispatcher->add($request1);
+        $dispatcher->add($request2);
+        $dispatcher->execute();
+    }
+
+    public function testExecuteWithCallback()
+    {
+        $dispatcher = new Dispatcher;
+        $request    = new Request('http://example.com/');
+        $check      = false;
+
+        $dispatcher->add($request);
+        $dispatcher->execute(function () use (&$check) {
+            $check = true;
+        });
+        $this->assertTrue($check);
     }
 }

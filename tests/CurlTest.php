@@ -90,4 +90,14 @@ class CurlTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
         $this->assertSame('foo=bar&bar=foo', $content->data);
     }
+
+    public function testExecuteWithCallback()
+    {
+        $check     = false;
+        $responses = Curl::get('http://httpbin.org/get', null, function () use (&$check) {
+            $check = true;
+        });
+
+        $this->assertTrue($check);
+    }
 }

@@ -32,6 +32,23 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testDestruct()
+    {
+        $request          = new Request('http://google.com/');
+        $request->headers = null;
+        $handle            = $request->getHandle();
+
+        if (defined('HHVM_VERSION')) {
+            $this->assertSame('cURL handle', get_resource_type($handle));
+        } else {
+            $this->assertSame('curl', get_resource_type($handle));
+        }
+
+        unset($request);
+
+        $this->assertSame('Unknown', get_resource_type($handle));
+    }
+
     public function testGetErrorMessage()
     {
 

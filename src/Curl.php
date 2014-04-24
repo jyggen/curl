@@ -128,13 +128,8 @@ class Curl
         $this->method     = strtoupper($method);
 
         foreach ($requests as $key => $request) {
-            if ($request instanceof RequestInterface) {
-                $this->requests[] = $request;
-                $this->data[$key] = $data[$key];
-            } else {
-                $msg = 'Request #%u must implement RequestInterface';
-                throw new InvalidArgumentException(sprintf($msg, $key, gettype($request)));
-            }
+            $this->requests[] = $request;
+            $this->data[$key] = $data[$key];
         }
 
         $this->makeRequest($callback);

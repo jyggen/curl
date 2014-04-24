@@ -116,21 +116,6 @@ class Dispatcher implements DispatcherInterface
 
     }
 
-    public function executeWithCallback(callable $callback)
-    {
-
-        // Start dispatching the requests.
-        $this->dispatch();
-
-        // Retrieve the data from each request.
-        foreach ($this->requests as $request) {
-            $request->execute();
-            $callback($request->getResponse());
-            $request->removeMultiHandle($this->handle);
-        }
-
-    }
-
     /**
      * Retrieve a specific request.
      * @param  int   $key null

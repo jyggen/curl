@@ -13,4 +13,15 @@ namespace Jyggen\Curl {
         return \curl_multi_add_handle($multi, $curl);
     }
 
+    $mockMultiExec = false;
+    function curl_multi_exec($handle, &$active)
+    {
+        global $mockMultiExec;
+        if ($mockMultiExec) {
+            $active = false;
+            return CURLM_INTERNAL_ERROR;
+        }
+        return \curl_multi_exec($handle, $active);
+    }
+
 }

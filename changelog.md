@@ -1,11 +1,13 @@
 # Changelog
 
-## 3.1.0
+## 4.0.0
 
+* Changed namespace from `jyggen\Curl` to `Jyggen\Curl`.
+* Moved `Curl` from `jyggen\Curl` to `Jyggen\Curl\Curl`.
 * Requests added to the dispatcher are now split into stacks to avoid a lot of simultaneously requests.
 * Stack size can be configured with `Dispatcher::setStackSize()`, default size is 42.
 * Added `Dispatcher::getStackSize()` to retrieve the currently used stack size.
-* Added `Dispatcher::executeWithCallback()` which allows you to run a request directly through a closure when it's done.
+* `Dispatcher::execute()` now allows you to pass a closure to run each response through.
 * Added `Dispatcher::all()` to retrieve all requests added to the dispatcher.
 * `Request::__destruct()` will now close the cURL handle.
 * Refactored `Curl` to not use `__callStatic()` which should make the public API more obvious.
