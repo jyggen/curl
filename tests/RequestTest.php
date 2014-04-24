@@ -46,7 +46,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         unset($request);
 
-        $this->assertSame('Unknown', get_resource_type($handle));
+        if (defined('HHVM_VERSION')) {
+            $this->assertSame('cURL handle', get_resource_type($handle));
+        } else {
+            $this->assertSame('Unknown', get_resource_type($handle));
+        }
     }
 
     public function testGetErrorMessage()
