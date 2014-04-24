@@ -11,6 +11,7 @@
 
 namespace Jyggen\Curl;
 
+use Closure;
 use Jyggen\Curl\DispatcherInterface;
 use Jyggen\Curl\Exception\CurlErrorException;
 use Jyggen\Curl\Exception\InvalidArgumentException;
@@ -81,7 +82,7 @@ class Dispatcher implements DispatcherInterface
      * Execute all added requests.
      * @return void
      */
-    public function execute(callable $callback = null)
+    public function execute(Closure $callback = null)
     {
 
         $stacks = $this->buildStacks();
