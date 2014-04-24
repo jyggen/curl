@@ -12,6 +12,7 @@ matrix:
 
 before_script:
   - composer self-update
+  - composer update
 
 script:
   - ./vendor/bin/phpcs --standard=psr2 src/
