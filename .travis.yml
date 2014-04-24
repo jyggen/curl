@@ -9,18 +9,15 @@ php:
   
 matrix:
   fast_finish: true
-  allow_failures:
-    - php: hhvm
 
 before_script:
   - composer self-update
   - composer require symfony/http-foundation:${SYMFONY_VERSION}
-  - pyrus install pear/PHP_CodeSniffer
   - phpenv rehash
 
 script:
-  - phpcs --standard=psr2 src/
-  - phpunit --coverage-text
+  - ./vendor/bin/phpcs --standard=psr2 src/
+  - ./vendor/bin/phpunit --coverage-text
 
 env:
   - SYMFONY_VERSION="~2.0"
