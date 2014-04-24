@@ -44,7 +44,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $request = $this->forgeRequest();
         $this->assertInternalType('resource', $request->getHandle());
-        $this->assertSame('curl', get_resource_type($request->getHandle()));
+        if (defined('HHVM_VERSION')) {
+            $this->assertSame('cURL handle', get_resource_type($request->getHandle()));
+        } else {
+            $this->assertSame('curl', get_resource_type($request->getHandle()));
+        }
 
     }
 
