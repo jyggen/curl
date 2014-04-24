@@ -12,17 +12,7 @@ matrix:
 
 before_script:
   - composer self-update
-  - composer require symfony/http-foundation:${SYMFONY_VERSION}
-  - phpenv rehash
 
 script:
   - ./vendor/bin/phpcs --standard=psr2 src/
   - ./vendor/bin/phpunit --coverage-text
-
-env:
-  - SYMFONY_VERSION="~2.0"
-  - SYMFONY_VERSION="2.0.*"
-  - SYMFONY_VERSION="2.1.*"
-  - SYMFONY_VERSION="2.2.*"
-  - SYMFONY_VERSION="2.3.*"
-  - SYMFONY_VERSION="2.4.*"
