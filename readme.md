@@ -12,7 +12,7 @@ A lightweight cURL library with support for multiple requests in parallel.
 
 ### Documentation
 
-Documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl).
+Documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl) (currently down, see [the docs repo](https://github.com/jyggen/docs/tree/master/curl) instead).
 
 ### About
 
