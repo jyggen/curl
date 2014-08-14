@@ -12,6 +12,9 @@
 * `Request::__destruct()` will now close the cURL handle.
 * Refactored `Curl` to not use `__callStatic()` which should make the public API more obvious.
 * Calling `Dispatcher::get()` without a key is now deprecated. Use `Dispatcher::all()` instead.
+* Added support for CurlFile to static helpers.
+* Improved the static helper for PUT requests.
+* Improved Travis CI testing.
 
 ## 3.0.1
 
