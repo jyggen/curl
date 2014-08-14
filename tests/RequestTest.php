@@ -17,19 +17,14 @@ use Mockery as m;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
-
     public function teardown()
     {
-
         m::close();
-
     }
 
     public function testConstruct()
     {
-
         $this->assertInstanceof('Jyggen\\Curl\\RequestInterface', $this->forgeRequest());
-
     }
 
     public function testDestruct()
@@ -38,11 +33,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request->headers = null;
         $handle            = $request->getHandle();
 
-        if (defined('HHVM_VERSION')) {
-            $this->assertSame('cURL handle', get_resource_type($handle));
-        } else {
-            $this->assertSame('curl', get_resource_type($handle));
-        }
+        $this->assertSame('curl', get_resource_type($handle));
 
         unset($request);
 
@@ -55,61 +46,43 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testGetErrorMessage()
     {
-
         $this->assertSame(null, $this->forgeRequest()->getErrorMessage());
-
     }
 
     public function testGetHandle()
     {
-
         $request = $this->forgeRequest();
         $this->assertInternalType('resource', $request->getHandle());
-        if (defined('HHVM_VERSION')) {
-            $this->assertSame('cURL handle', get_resource_type($request->getHandle()));
-        } else {
-            $this->assertSame('curl', get_resource_type($request->getHandle()));
-        }
-
+        $this->assertSame('curl', get_resource_type($request->getHandle()));
     }
 
     public function testGetInfo()
     {
-
         $this->assertInternalType('array', $this->forgeRequest()->getInfo());
-
     }
 
     public function testGetInfoWithKey()
     {
-
         $this->assertSame('http://httpbin.org/get', $this->forgeRequest()->getInfo(CURLINFO_EFFECTIVE_URL));
-
     }
 
     public function testGetResponse()
     {
-
         $this->assertSame(null, $this->forgeRequest()->getResponse());
-
     }
 
     public function testSetOption()
     {
-
         $request = $this->forgeRequest();
         $request->setOption(CURLOPT_URL, 'http://example.org/');
         $this->assertSame('http://example.org/', $request->getInfo(CURLINFO_EFFECTIVE_URL));
-
     }
 
     public function testSetOptionArray()
     {
-
         $request = $this->forgeRequest();
         $request->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_URL => 'http://example.org/'));
         $this->assertSame('http://example.org/', $request->getInfo(CURLINFO_EFFECTIVE_URL));
-
     }
 
     /**
@@ -118,10 +91,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetOptionError()
     {
-
         $request = $this->forgeRequest();
         @$request->setOption(CURLOPT_FILE, 'nope');
-
     }
 
     /**
@@ -130,10 +101,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetOptionArrayError()
     {
-
         $request = $this->forgeRequest();
         @$request->setOption(array(CURLOPT_FOLLOWLOCATION => true, CURLOPT_FILE => 'nope'));
-
     }
 
     /**
@@ -142,26 +111,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetProtectedOption()
     {
-
         $request = $this->forgeRequest();
         $request->setOption(CURLOPT_RETURNTRANSFER, true);
-
     }
 
     public function testIsExecuted()
     {
-
         $this->assertFalse($this->forgeRequest()->isExecuted());
-
     }
 
     public function testExecute()
     {
-
         $request = $this->forgeRequest();
         $request->execute();
         $this->assertTrue($request->isExecuted());
-
     }
 
     /**
@@ -170,26 +133,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteWithError()
     {
-
         $request = $this->forgeRequest('foobar');
         $request->execute();
-
     }
 
     public function testIsSuccessful()
     {
-
         $request = $this->forgeRequest();
         $this->assertTrue($request->isSuccessful());
-
     }
 
     public function testRawResponse()
     {
-
         $request = $this->forgeRequest();
         $this->assertSame(null, $request->getRawResponse());
-
     }
 
     protected function forgeRequest($url = null)
@@ -197,5 +154,4 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $url or $url = 'http://httpbin.org/get';
         return new Request($url);
     }
-
 }
