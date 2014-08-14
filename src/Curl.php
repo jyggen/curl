@@ -147,11 +147,7 @@ class Curl
          // Foreach request:
         foreach ($this->requests as $key => $request) {
 
-            if (isset($this->data[$key]) and $this->data[$key] !== null) {
-                $data = http_build_query($this->data[$key]);
-            } else {
-                $data = null;
-            }
+            $data = (isset($this->data[$key]) and $this->data[$key] !== null) ? $this->data[$key] : null;
 
             // Follow any 3xx HTTP status code.
             $request->setOption(CURLOPT_FOLLOWLOCATION, true);
@@ -208,18 +204,9 @@ class Curl
 
     protected function preparePutRequest(RequestInterface $request, $data)
     {
+        $request->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
         if ($data !== null) {
-            // Write the PUT data to memory.
-            $file = fopen('php://temp', 'rw+');
-            fwrite($file, $data);
-            rewind($file);
-
-            // Add the PUT data to the request.
-            $request->setOption(CURLOPT_INFILE, $file);
-            $request->setOption(CURLOPT_INFILESIZE, strlen($data));
-            $request->setOption(CURLOPT_PUT, true);
-        } else {
-            $request->setOption(CURLOPT_CUSTOMREQUEST, 'PUT');
+            $request->setOption(CURLOPT_POSTFIELDS, $data);
         }
     }
 }

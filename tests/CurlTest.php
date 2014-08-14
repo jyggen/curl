@@ -88,7 +88,8 @@ class CurlTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Jyggen\\Curl\\Response', $responses[0]);
         $content = json_decode($responses[0]->getContent());
         $this->assertSame(JSON_ERROR_NONE, json_last_error());
-        $this->assertSame('foo=bar&bar=foo', $content->data);
+        $this->assertSame('bar', $content->form->foo);
+        $this->assertSame('foo', $content->form->bar);
     }
 
     public function testExecuteWithCallback()
