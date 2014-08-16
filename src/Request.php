@@ -60,7 +60,7 @@ class Request implements RequestInterface
     /**
      * The cURL resource attached.
      *
-     * @var curl
+     * @var resource
      */
     protected $handle;
 

@@ -24,7 +24,7 @@ class Dispatcher implements DispatcherInterface
 {
     /**
      * The cURL multi handle.
-     * @var curl_multi
+     * @var resource
      */
     protected $handle;
 
