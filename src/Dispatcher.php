@@ -128,9 +128,10 @@ class Dispatcher implements DispatcherInterface
         // Return all requests if no key is specified.
         if ($key === null) {
             return $this->requests;
-        } else { // Otherwise, if the key exists; return that request, else return null.
-            return (isset($this->requests[$key])) ? $this->requests[$key] : null;
         }
+
+        // Otherwise, if the key exists; return that request, else return null.
+        return (isset($this->requests[$key])) ? $this->requests[$key] : null;
     }
 
     /**

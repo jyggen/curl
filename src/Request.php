@@ -148,15 +148,11 @@ class Request implements RequestInterface
      */
     public function getResponse()
     {
-
         if ($this->response === null and $this->isExecuted()) {
-
             $this->response = Response::forge($this);
-
         }
 
         return $this->response;
-
     }
 
     /**
@@ -172,14 +168,16 @@ class Request implements RequestInterface
             foreach ($option as $opt => $val) {
                 $this->setOption($opt, $val);
             }
-        } elseif (!array_key_exists($option, $this->defaults)) { // Else if it isn't a default value.
-            if (curl_setopt($this->handle, $option, $value) === false) {
-                throw new CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
-            }
-        } else { // Else it's a protected default value and shouldn't be overwritten, throw an exception!
+            return;
+        }
+
+        if (array_key_exists($option, $this->defaults)) { // If it is a default value.
             throw new ProtectedOptionException(sprintf('Unable to set protected option #%u', $option));
         }
 
+        if (curl_setopt($this->handle, $option, $value) === false) {
+            throw new CurlErrorException(sprintf('Couldn\'t set option #%u', $option));
+        }
     }
 
     /**
@@ -189,16 +187,14 @@ class Request implements RequestInterface
      */
     public function execute()
     {
-
         $this->content = curl_exec($this->handle);
 
-        // If the execution was successful flag it as executed.
-        if ($this->isSuccessful()) {
-            $this->executed = true;
-        } else { // Otherwise throw an exception.
+        // If the execution wasn't successful, throw an exception.
+        if ($this->isSuccessful() === false) {
             throw new CurlErrorException($this->getErrorMessage());
         }
 
+        $this->executed = true;
     }
 
     /**
@@ -208,9 +204,7 @@ class Request implements RequestInterface
      */
     public function isExecuted()
     {
-
         return ($this->executed) ? true : false;
-
     }
 
     /**
@@ -220,9 +214,7 @@ class Request implements RequestInterface
      */
     public function isSuccessful()
     {
-
         return ($this->getErrorMessage() === null) ? true : false;
-
     }
 
     public function setRawResponse($content)
