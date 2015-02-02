@@ -53,24 +53,24 @@ class Curl
      */
     protected $requests;
 
-    public static function delete($urls, $data = null, $callback = null)
+    public static function delete($urls, $headers = [], $data = null, $callback = null)
     {
-        return static::make('delete', $urls, $data, $callback);
+        return static::make('delete', $urls, $headers, $data, $callback);
     }
 
-    public static function get($urls, $data = null, $callback = null)
+    public static function get($urls, $headers = [], $data = null, $callback = null)
     {
-        return static::make('get', $urls, $data, $callback);
+        return static::make('get', $urls, $headers, $data, $callback);
     }
 
-    public static function post($urls, $data = null, $callback = null)
+    public static function post($urls, $headers = [], $data = null, $callback = null)
     {
-        return static::make('post', $urls, $data, $callback);
+        return static::make('post', $urls, $headers, $data, $callback);
     }
 
-    public static function put($urls, $data = null, $callback = null)
+    public static function put($urls, $headers = [], $data = null, $callback = null)
     {
-        return static::make('put', $urls, $data, $callback);
+        return static::make('put', $urls, $headers, $data, $callback);
     }
 
     /**
@@ -80,7 +80,7 @@ class Curl
      * @param  array $arguments
      * @return mixed
      */
-    protected static function make($verb, $urls, $data, $callback)
+    protected static function make($verb, $urls, $headers, $data, $callback)
     {
         if (!is_array($urls)) {
             $urls = array($urls => $data);
@@ -96,7 +96,14 @@ class Curl
         $dataStore  = array();
 
         foreach ($urls as $url => $data) {
-            $requests[]  = new Request($url);
+            $request = new Request($url);
+
+            foreach ($headers as $header) {
+                $request->setOption(CURLOPT_HTTPHEADER, $header);
+            }
+
+            $requests[] = $request;
+
             $dataStore[] = $data;
         }
 
