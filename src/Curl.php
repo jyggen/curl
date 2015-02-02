@@ -53,22 +53,22 @@ class Curl
      */
     protected $requests;
 
-    public static function delete($urls, $headers = [], $data = null, $callback = null)
+    public static function delete($urls, $headers = array(), $data = null, $callback = null)
     {
         return static::make('delete', $urls, $headers, $data, $callback);
     }
 
-    public static function get($urls, $headers = [], $data = null, $callback = null)
+    public static function get($urls, $headers = array(), $data = null, $callback = null)
     {
         return static::make('get', $urls, $headers, $data, $callback);
     }
 
-    public static function post($urls, $headers = [], $data = null, $callback = null)
+    public static function post($urls, $headers = array(), $data = null, $callback = null)
     {
         return static::make('post', $urls, $headers, $data, $callback);
     }
 
-    public static function put($urls, $headers = [], $data = null, $callback = null)
+    public static function put($urls, $headers = array(), $data = null, $callback = null)
     {
         return static::make('put', $urls, $headers, $data, $callback);
     }
