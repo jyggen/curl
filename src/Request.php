@@ -75,7 +75,6 @@ class Request implements RequestInterface
      * Create a new Request instance.
      *
      * @param  string $url
-     * @return void
      */
     public function __construct($url)
     {
@@ -110,7 +109,7 @@ class Request implements RequestInterface
     /**
      * Retrieve the cURL handle.
      *
-     * @return curl
+     * @return resource
      */
     public function getHandle()
     {

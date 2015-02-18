@@ -17,7 +17,7 @@ interface RequestInterface
     /**
      * Retrieve the cURL handle.
      *
-     * @return curl
+     * @return resource
      */
     public function getHandle();
 }

@@ -75,10 +75,7 @@ class Curl
 
     /**
      * Handle all static helpers.
-     *
-     * @param  mixed $name
-     * @param  array $arguments
-     * @return mixed
+     * @return array
      */
     protected static function make($verb, $urls, $data, $callback)
     {
@@ -119,7 +116,6 @@ class Curl
      * @param  DispatcherInterface $dispatcher
      * @param  array               $requests
      * @param  array               $data
-     * @return void
      */
     protected function __construct($method, DispatcherInterface $dispatcher, array $requests, array $data, $callback)
     {

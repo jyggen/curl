@@ -42,7 +42,6 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * Create a new Dispatcher instance.
-     * @return void
      */
     public function __construct()
     {
