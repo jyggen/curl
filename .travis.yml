@@ -10,6 +10,7 @@ php:
   - hhvm-nightly
 
 install:
+  - travis_retry composer self-update
   - travis_retry composer install --no-interaction --prefer-source --prefer-lowest
 
 script:
