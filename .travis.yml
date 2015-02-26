@@ -11,7 +11,7 @@ php:
 
 install:
   - travis_retry composer self-update
-  - travis_retry composer install --no-interaction --prefer-source --prefer-lowest
+  - travis_retry composer update --no-interaction --prefer-source --prefer-lowest
 
 script:
   - phpunit --coverage-text --coverage-clover=coverage.clover
