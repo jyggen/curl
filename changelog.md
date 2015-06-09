@@ -20,6 +20,7 @@ All notable changes to this library will be documented in this file.
 - Requests added to the dispatcher are now split into stacks to avoid a lot of simultaneously requests.
 - A closure can be passed to `execute()` on `Dispatcher`. It'll be used as a callback for each response. 
 - `__destruct()` on `Request` will now close the internal cURL resource.
+- The library now depends on `^2.0.5` of `symfony/http-foundation`.
 
 ### Improved
 - Refactored `Curl` away from `__callStatic()` to make the public class API more obvious.
