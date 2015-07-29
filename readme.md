@@ -7,7 +7,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/jyggen/curl.svg?style=flat)](https://scrutinizer-ci.com/g/jyggen/curl)
 [![Total Downloads](https://img.shields.io/packagist/dt/jyggen/curl.svg?style=flat)](https://packagist.org/packages/jyggen/curl)
 
-A lightweight cURL library with support for multiple requests in parallel. This package is compliant with [PSR-1], [PSR-2] and [PSR-4].
+A lightweight cURL library with support for asynchronous requests. This package is compliant with [PSR-1], [PSR-2] and [PSR-4].
 
 [Find Curl on Packagist/Composer](https://packagist.org/packages/jyggen/curl)
 
