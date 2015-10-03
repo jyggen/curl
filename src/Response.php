@@ -42,6 +42,10 @@ class Response extends \Symfony\Component\HttpFoundation\Response
             }
         }
 
+        if (empty($headers)) {
+            return new static($content, self::HTTP_REQUEST_TIMEOUT);
+        }
+
         $headerBag = [];
         $info      = $request->getInfo();
         $status    = explode(' ', $headers[0]);
