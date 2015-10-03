@@ -18,7 +18,7 @@ All notable changes to this library will be documented in this file.
 - Migrated to PSR-4 autoloading.
 - Moved `Curl` from `jyggen\Curl` to `Jyggen\Curl\Curl`.
 - Requests added to the dispatcher are now split into stacks to avoid a lot of simultaneously requests.
-- A closure can be passed to `execute()` on `Dispatcher`. It'll be used as a callback for each response. 
+- A callable can be passed to `execute()` on `Dispatcher`. It'll be used as a callback for each response. 
 - `__destruct()` on `Request` will now close the internal cURL resource.
 - The library now depends on `^2.0.5` of `symfony/http-foundation`.
 
