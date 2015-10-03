@@ -14,7 +14,6 @@
 
 namespace Jyggen\Curl\Exception;
 
-
 /**
  * Thrown to indicate that there was an error with the cURL request.
  */

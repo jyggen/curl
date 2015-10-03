@@ -155,8 +155,13 @@ class Curl
      * @param array $data
      * @param callable $callback
      */
-    protected function __construct($verb, DispatcherInterface $dispatcher, array $requests, array $data, callable $callback = null)
-    {
+    protected function __construct(
+        $verb,
+        DispatcherInterface $dispatcher,
+        array $requests,
+        array $data,
+        callable $callback = null
+    ) {
         $this->dispatcher = $dispatcher;
         $this->verb       = strtoupper($verb);
 
