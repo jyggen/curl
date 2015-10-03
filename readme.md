@@ -27,7 +27,7 @@
 [coverage]: https://coveralls.io/r/jyggen/curl?branch=master
 [downloads]: https://packagist.org/packages/jyggen/curl
 
-jyggen/cur is a PHP 5.4+ library for making asynchronous HTTP requests. This package is compliant with [PSR-1], [PSR-2] and [PSR-4].
+jyggen/curl is a PHP 5.4+ library for making asynchronous HTTP requests. This package is compliant with [PSR-1], [PSR-2] and [PSR-4].
 
 [Find Curl on Packagist/Composer](https://packagist.org/packages/jyggen/curl)
 
