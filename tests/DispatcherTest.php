@@ -38,7 +38,6 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $dispatcher = new Dispatcher;
         $this->assertSame(array(), $dispatcher->all());
         $this->assertNull($dispatcher->get(1));
-        $this->assertSame(array(), $dispatcher->get());
     }
 
     public function testAdd()
