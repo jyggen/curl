@@ -80,7 +80,7 @@ class Curl
     protected static function make($verb, $urls, $data, $callback)
     {
         if (!is_array($urls)) {
-            $urls = array($urls => $data);
+            $urls = [$urls => $data];
         } elseif (!(bool)count(array_filter(array_keys($urls), 'is_string'))) {
             foreach ($urls as $key => $url) {
                 $urls[$url] = null;
@@ -89,8 +89,8 @@ class Curl
         }
 
         $dispatcher = new Dispatcher;
-        $requests   = array();
-        $dataStore  = array();
+        $requests   = [];
+        $dataStore  = [];
 
         foreach ($urls as $url => $data) {
             $requests[]  = new Request($url);
@@ -100,7 +100,7 @@ class Curl
         new static($verb, $dispatcher, $requests, $dataStore, $callback);
 
         $requests  = $dispatcher->all();
-        $responses = array();
+        $responses = [];
 
         foreach ($requests as $request) {
             $responses[] = $request->getResponse();

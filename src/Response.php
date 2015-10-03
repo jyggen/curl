@@ -33,17 +33,17 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $response   = $request->getRawResponse();
         $content    = (strlen($response) === $headerSize) ? '' : substr($response, $headerSize);
         $rawHeaders = rtrim(substr($response, 0, $headerSize));
-        $headers    = array();
+        $headers    = [];
 
         foreach (preg_split('/(\\r?\\n)/', $rawHeaders) as $header) {
             if ($header) {
                 $headers[] = $header;
             } else {
-                $headers = array();
+                $headers = [];
             }
         }
 
-        $headerBag = array();
+        $headerBag = [];
         $info      = $request->getInfo();
         $status    = explode(' ', $headers[0]);
         $status    = explode('/', $status[0]);

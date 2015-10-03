@@ -32,7 +32,7 @@ class Dispatcher implements DispatcherInterface
      * All added requests.
      * @var array
      */
-    protected $requests = array();
+    protected $requests = [];
 
     /**
      * Stack size.
@@ -74,14 +74,14 @@ class Dispatcher implements DispatcherInterface
      */
     public function clear()
     {
-        $this->requests = array();
+        $this->requests = [];
     }
 
     /**
      * Execute all added requests.
      * @return void
      */
-    public function execute(Closure $callback = null)
+    public function execute(callable $callback = null)
     {
 
         $stacks = $this->buildStacks();
@@ -180,7 +180,7 @@ class Dispatcher implements DispatcherInterface
     protected function buildStacks()
     {
 
-        $stacks   = array();
+        $stacks   = [];
         $stackNo  = 0;
         $currSize = 0;
 
@@ -239,7 +239,7 @@ class Dispatcher implements DispatcherInterface
             $mrc = curl_multi_exec($this->handle, $active);
         } while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
-        return array($mrc, $active);
+        return [$mrc, $active];
 
     }
 }

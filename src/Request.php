@@ -45,10 +45,10 @@ class Request implements RequestInterface
      *
      * @var array
      */
-    protected $defaults = array(
+    protected $defaults = [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HEADER         => true,
-    );
+    ];
 
     /**
      * If this request has been executed.
@@ -79,7 +79,7 @@ class Request implements RequestInterface
     public function __construct($url)
     {
         $this->handle  = curl_init($url);
-        $this->headers = new HeaderBag(array(), $this);
+        $this->headers = new HeaderBag([], $this);
 
         foreach ($this->defaults as $option => $value) {
             curl_setopt($this->handle, $option, $value);

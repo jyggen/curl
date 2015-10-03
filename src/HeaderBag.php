@@ -77,7 +77,7 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     protected function updateRequest()
     {
 
-        $headers = array();
+        $headers = [];
         foreach ($this->all() as $key => $values) {
             foreach ($values as $value) {
                 $headers[] = $key.': '.$value;
