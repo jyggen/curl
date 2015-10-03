@@ -28,7 +28,6 @@ class Response extends \Symfony\Component\HttpFoundation\Response
      */
     public static function forge(RequestInterface $request)
     {
-
         $headerSize = $request->getInfo(CURLINFO_HEADER_SIZE);
         $response   = $request->getRawResponse();
         $content    = (strlen($response) === $headerSize) ? '' : substr($response, $headerSize);
@@ -51,10 +50,8 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         unset($headers[0]);
 
         foreach ($headers as $header) {
-
             list($key, $value)     = explode(': ', $header);
             $headerBag[trim($key)] = trim($value);
-
         }
 
         $response = new static($content, $info['http_code'], $headerBag);
@@ -62,6 +59,5 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $response->setCharset(substr(strstr($response->headers->get('Content-Type'), '='), 1));
 
         return $response;
-
     }
 }

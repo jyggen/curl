@@ -83,11 +83,9 @@ class Dispatcher implements DispatcherInterface
      */
     public function execute(callable $callback = null)
     {
-
         $stacks = $this->buildStacks();
 
         foreach ($stacks as $requests) {
-
             // Tell each request to use this dispatcher.
             foreach ($requests as $request) {
                 $status = curl_multi_add_handle($this->handle, $request->getHandle());
@@ -111,9 +109,7 @@ class Dispatcher implements DispatcherInterface
                     $callback($request->getResponse());
                 }
             }
-
         }
-
     }
 
     /**
@@ -149,7 +145,6 @@ class Dispatcher implements DispatcherInterface
      */
     public function remove($key)
     {
-
         // Make sure the request exists before we try to remove it.
         if (array_key_exists($key, $this->requests)) {
 
@@ -157,7 +152,6 @@ class Dispatcher implements DispatcherInterface
             unset($this->requests[$key]);
 
         }
-
     }
 
     /**
@@ -179,13 +173,11 @@ class Dispatcher implements DispatcherInterface
      */
     protected function buildStacks()
     {
-
         $stacks   = [];
         $stackNo  = 0;
         $currSize = 0;
 
         foreach ($this->requests as $request) {
-
             if ($currSize === $this->stackSize) {
                 $currSize = 0;
                 $stackNo++;
@@ -193,11 +185,9 @@ class Dispatcher implements DispatcherInterface
 
             $stacks[$stackNo][] = $request;
             $currSize++;
-
         }
 
         return $stacks;
-
     }
 
     /**
@@ -206,7 +196,6 @@ class Dispatcher implements DispatcherInterface
      */
     protected function dispatch()
     {
-
         // Start processing the requests.
         list($mrc, $active) = $this->process();
 
@@ -220,7 +209,6 @@ class Dispatcher implements DispatcherInterface
         if ($mrc !== CURLM_OK) {
             throw new CurlErrorException('cURL read error #'.$mrc);
         }
-
     }
 
     /**
@@ -229,7 +217,6 @@ class Dispatcher implements DispatcherInterface
      */
     protected function process()
     {
-
         // Workaround for PHP Bug #61141.
         if (curl_multi_select($this->handle) === -1) {
             usleep(100);
@@ -240,6 +227,5 @@ class Dispatcher implements DispatcherInterface
         } while ($mrc === CURLM_CALL_MULTI_PERFORM);
 
         return [$mrc, $active];
-
     }
 }

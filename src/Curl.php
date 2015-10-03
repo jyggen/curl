@@ -119,7 +119,6 @@ class Curl
      */
     protected function __construct($method, DispatcherInterface $dispatcher, array $requests, array $data, $callback)
     {
-
         $this->dispatcher = $dispatcher;
         $this->method     = strtoupper($method);
 
@@ -129,7 +128,6 @@ class Curl
         }
 
         $this->makeRequest($callback);
-
     }
 
     /**
@@ -139,10 +137,8 @@ class Curl
      */
     protected function makeRequest($callback)
     {
-
-         // Foreach request:
+        // Foreach request:
         foreach ($this->requests as $key => $request) {
-
             $data = (isset($this->data[$key]) and $this->data[$key] !== null) ? $this->data[$key] : null;
 
             // Follow any 3xx HTTP status code.
@@ -165,7 +161,6 @@ class Curl
 
             // Add the request to the dispatcher.
             $this->dispatcher->add($request);
-
         }
 
         // Execute the request(s).

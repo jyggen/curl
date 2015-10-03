@@ -36,10 +36,8 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
      */
     public function __construct(array $headers, RequestInterface $request)
     {
-
         $this->request = $request;
         parent::__construct($headers);
-
     }
 
     /**
@@ -49,10 +47,8 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
      */
     public function remove($key)
     {
-
         parent::remove($key);
         $this->updateRequest();
-
     }
 
     /**
@@ -64,10 +60,8 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
      */
     public function set($key, $values, $replace = true)
     {
-
         parent::set($key, $values, $replace);
         $this->updateRequest();
-
     }
 
     /**
@@ -76,7 +70,6 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
      */
     protected function updateRequest()
     {
-
         $headers = [];
         foreach ($this->all() as $key => $values) {
             foreach ($values as $value) {
@@ -85,6 +78,5 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
         }
 
         $this->request->setOption(CURLOPT_HTTPHEADER, $headers);
-
     }
 }
