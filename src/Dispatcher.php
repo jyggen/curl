@@ -1,6 +1,7 @@
 <?php
 /**
  * A simple and lightweight cURL library with support for multiple requests in parallel.
+ *
  * @package     Curl
  * @version     3.0.1
  * @author      Jonas Stendahl

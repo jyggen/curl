@@ -127,7 +127,7 @@ class Request implements RequestInterface
         if ($key === null) { // If no key is supplied return all available information.
             return curl_getinfo($this->handle);
         }
-    
+
         return curl_getinfo($this->handle, $key);
     }
 
