@@ -9,24 +9,6 @@
 [![Coverage Status][badge-coverage]][coverage]
 [![Total Downloads][badge-downloads]][downloads]
 
-[badge-source]: https://img.shields.io/badge/source-jyggen/curl-blue.svg?style=flat-square
-[badge-release]: https://img.shields.io/github/release/jyggen/curl.svg?style=flat-square
-[badge-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[badge-build]: https://img.shields.io/travis/jyggen/curl/master.svg?style=flat-square
-[badge-hhvm]: https://img.shields.io/hhvm/jyggen/curl.svg?style=flat-square
-[badge-quality]: https://img.shields.io/scrutinizer/g/jyggen/curl/master.svg?style=flat-square
-[badge-coverage]: https://img.shields.io/coveralls/jyggen/curl/master.svg?style=flat-square
-[badge-downloads]: https://img.shields.io/packagist/dt/jyggen/curl.svg?style=flat-square
-
-[source]: https://github.com/jyggen/curl
-[release]: https://github.com/jyggen/curl/releases
-[license]: https://github.com/jyggen/curl/blob/master/LICENSE
-[build]: https://travis-ci.org/jyggen/curl
-[hhvm]: http://hhvm.h4cc.de/package/jyggen/curl
-[quality]: https://scrutinizer-ci.com/g/jyggen/curl/
-[coverage]: https://coveralls.io/r/jyggen/curl?branch=master
-[downloads]: https://packagist.org/packages/jyggen/curl
-
 jyggen/curl is a PHP 5.4+ library for making asynchronous HTTP requests. This package is compliant with [PSR-1], [PSR-2] and [PSR-4].
 
 [Find Curl on Packagist/Composer](https://packagist.org/packages/jyggen/curl)
@@ -35,9 +17,9 @@ jyggen/curl is a PHP 5.4+ library for making asynchronous HTTP requests. This pa
 [PSR-2]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md
 [PSR-4]: https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md
 
-### Documentation
+### API Documentation
 
-Documentation for this library is available at [docs.jyggen.com](http://docs.jyggen.com/curl) (currently down, see [the docs repo](https://github.com/jyggen/docs/tree/master/curl) instead).
+The [latest class API documentation][apidocs] is available online.
 
 ### About
 
@@ -59,3 +41,23 @@ Jonas Stendahl ([@jyggen](http://twitter.com/jyggen))
 #### License
 
 This library is licensed under the MIT license.
+
+[apidocs]: https://docs.jyggen.com/jyggen-curl/latest/
+
+[badge-source]: https://img.shields.io/badge/source-jyggen/curl-blue.svg?style=flat-square
+[badge-release]: https://img.shields.io/github/release/jyggen/curl.svg?style=flat-square
+[badge-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
+[badge-build]: https://img.shields.io/travis/jyggen/curl/master.svg?style=flat-square
+[badge-hhvm]: https://img.shields.io/hhvm/jyggen/curl.svg?style=flat-square
+[badge-quality]: https://img.shields.io/scrutinizer/g/jyggen/curl/master.svg?style=flat-square
+[badge-coverage]: https://img.shields.io/coveralls/jyggen/curl/master.svg?style=flat-square
+[badge-downloads]: https://img.shields.io/packagist/dt/jyggen/curl.svg?style=flat-square
+
+[source]: https://github.com/jyggen/curl
+[release]: https://github.com/jyggen/curl/releases
+[license]: https://github.com/jyggen/curl/blob/master/LICENSE
+[build]: https://travis-ci.org/jyggen/curl
+[hhvm]: http://hhvm.h4cc.de/package/jyggen/curl
+[quality]: https://scrutinizer-ci.com/g/jyggen/curl/
+[coverage]: https://coveralls.io/r/jyggen/curl?branch=master
+[downloads]: https://packagist.org/packages/jyggen/curl
