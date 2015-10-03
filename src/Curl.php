@@ -114,7 +114,7 @@ class Curl
      * @param callable $callback
      * @return array
      */
-    protected static function make($verb, $urls, $data, callable $callback)
+    protected static function make($verb, $urls, $data, callable $callback = null)
     {
         if (!is_array($urls)) {
             $urls = [$urls => $data];
@@ -155,7 +155,7 @@ class Curl
      * @param array $data
      * @param callable $callback
      */
-    protected function __construct($verb, DispatcherInterface $dispatcher, array $requests, array $data, callable $callback)
+    protected function __construct($verb, DispatcherInterface $dispatcher, array $requests, array $data, callable $callback = null)
     {
         $this->dispatcher = $dispatcher;
         $this->verb       = strtoupper($verb);
@@ -173,7 +173,7 @@ class Curl
      *
      * @param callable $callback
      */
-    protected function makeRequest(callable $callback)
+    protected function makeRequest(callable $callback = null)
     {
         // Foreach request:
         foreach ($this->requests as $key => $request) {
