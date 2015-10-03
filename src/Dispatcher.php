@@ -102,6 +102,10 @@ class Dispatcher implements DispatcherInterface
 
             // Loop through all requests and remove their relationship to our dispatcher.
             foreach ($requests as $request) {
+                if ($request->isSuccessful() === false) {
+                    throw new CurlErrorException($request->getErrorMessage());
+                }
+
                 $request->setRawResponse(curl_multi_getcontent($request->getHandle()));
                 curl_multi_remove_handle($this->handle, $request->getHandle());
 
