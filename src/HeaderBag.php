@@ -1,37 +1,38 @@
 <?php
 /**
- * A simple and lightweight cURL library with support for multiple requests in parallel.
+ * This file is part of the jyggen/curl library
  *
- * @package     Curl
- * @version     3.0.1
- * @author      Jonas Stendahl
- * @license     MIT License
- * @copyright   2013 Jonas Stendahl
- * @link        http://github.com/jyggen/curl
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @copyright Copyright (c) Jonas Stendahl <jonas.stendahl@gmail.com>
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://jyggen.com/projects/jyggen-curl Documentation
+ * @link https://packagist.org/packages/jyggen/curl Packagist
+ * @link https://github.com/jyggen/curl GitHub
  */
 
 namespace Jyggen\Curl;
 
 use Jyggen\Curl\RequestInterface;
+use Symfony\Component\HttpFoundation\HeaderBag as SymfonyHeaderBag;
 
 /**
- * HeaderBag
- *
- * This is a container for HTTP headers.
+ * A container for HTTP headers.
  */
-class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
+class HeaderBag extends SymfonyHeaderBag
 {
     /**
-     * Which request the instance belongs to.
+     * The request this bag belongs to.
      *
-     * @var \Jyggen\Curl\RequestInterface
+     * @var RequestInterface
      */
     protected $request;
 
     /**
-     * Constructor.
+     * Constructs a `HeaderBag` instance.
      *
-     * @param array            $headers
+     * @param array $headers
      * @param RequestInterface $request
      */
     public function __construct(array $headers, RequestInterface $request)
@@ -54,9 +55,9 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     /**
      * Sets a header by name.
      *
-     * @param string  $key
-     * @param mixed   $values
-     * @param Boolean $replace
+     * @param string $key
+     * @param string|array $values
+     * @param bool $replace
      */
     public function set($key, $values, $replace = true)
     {
@@ -65,8 +66,7 @@ class HeaderBag extends \Symfony\Component\HttpFoundation\HeaderBag
     }
 
     /**
-     * Update the associated request with the values of this container.
-     * @return void
+     * Updates the headers in the associated request.
      */
     protected function updateRequest()
     {

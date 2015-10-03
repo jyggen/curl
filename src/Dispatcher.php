@@ -1,13 +1,15 @@
 <?php
 /**
- * A simple and lightweight cURL library with support for multiple requests in parallel.
+ * This file is part of the jyggen/curl library
  *
- * @package     Curl
- * @version     3.0.1
- * @author      Jonas Stendahl
- * @license     MIT License
- * @copyright   2013 Jonas Stendahl
- * @link        http://github.com/jyggen/curl
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @copyright Copyright (c) Jonas Stendahl <jonas.stendahl@gmail.com>
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://jyggen.com/projects/jyggen-curl Documentation
+ * @link https://packagist.org/packages/jyggen/curl Packagist
+ * @link https://github.com/jyggen/curl GitHub
  */
 
 namespace Jyggen\Curl;
@@ -18,31 +20,33 @@ use Jyggen\Curl\Exception\CurlErrorException;
 use Jyggen\Curl\Exception\InvalidArgumentException;
 
 /**
- * Dispatcher
- * This class acts as a wrapper around cURL multi functions.
+ * Sends HTTP requests asynchronously.
  */
 class Dispatcher implements DispatcherInterface
 {
     /**
      * The cURL multi handle.
+     *
      * @var resource
      */
     protected $handle;
 
     /**
      * All added requests.
+     *
      * @var array
      */
     protected $requests = [];
 
     /**
-     * Stack size.
-     * @var  int
+     * The size of each request stack.
+     *
+     * @var integer
      */
     protected $stackSize = 42;
 
     /**
-     * Create a new Dispatcher instance.
+     * Constructs a `Dispatcher` instance.
      */
     public function __construct()
     {
@@ -50,9 +54,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Add a Request.
-     * @param  RequestInterface $request
-     * @return int
+     * {@inheritdoc}
      */
     public function add(RequestInterface $request)
     {
@@ -61,8 +63,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Retrieve all requests.
-     * @return array
+     * {@inheritdoc}
      */
     public function all()
     {
@@ -70,8 +71,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Remove all requests.
-     * @return void
+     * {@inheritdoc}
      */
     public function clear()
     {
@@ -79,8 +79,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Execute all added requests.
-     * @return void
+     * {@inheritdoc}
      */
     public function execute(callable $callback = null)
     {
@@ -118,25 +117,18 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Retrieve a specific request.
-     * @param  int   $key null
-     * @return mixed
-     * @deprecated Calling this method without a key is deprecated, use Dispatcher::all() instead.
+     * {@inheritdoc}
      */
-    public function get($key = null)
+    public function get($key)
     {
-        // Return all requests if no key is specified.
-        if ($key === null) {
-            return $this->requests;
-        }
-
         // Otherwise, if the key exists; return that request, else return null.
         return (isset($this->requests[$key])) ? $this->requests[$key] : null;
     }
 
     /**
-     * Retrieve currently used stack size.
-     * @return int
+     * Retrieves the maximum stack size.
+     *
+     * @return integer
      */
     public function getStackSize()
     {
@@ -144,9 +136,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Remove a specific request.
-     * @param  int  $key
-     * @return void
+     * {@inheritdoc}
      */
     public function remove($key)
     {
@@ -158,8 +148,9 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Set stack size.
-     * @return void
+     * Sets the maximum stack size.
+     *
+     * @param integer $size
      */
     public function setStackSize($size)
     {
@@ -171,7 +162,8 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Build stacks of requests.
+     * Builds stacks of requests.
+     *
      * @return array
      */
     protected function buildStacks()
@@ -194,8 +186,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Dispatch the requests.
-     * @return void
+     * Dispatches all requests in the stack.
      */
     protected function dispatch()
     {
@@ -215,7 +206,8 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Process requests.
+     * Processes all requests.
+     *
      * @return array
      */
     protected function process()
