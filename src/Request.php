@@ -144,7 +144,7 @@ class Request implements RequestInterface
     /**
      * Get the response.
      *
-     * @return array
+     * @return Response
      */
     public function getResponse()
     {
