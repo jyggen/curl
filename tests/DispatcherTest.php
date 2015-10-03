@@ -10,7 +10,7 @@
  * @link        http://github.com/jyggen/curl
  */
 
-namespace Jyggen\Curl\Test;
+namespace Jyggen\Curl;
 
 use Jyggen\Curl\Dispatcher;
 use Jyggen\Curl\Request;
