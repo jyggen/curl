@@ -147,10 +147,8 @@ class Dispatcher implements DispatcherInterface
     {
         // Make sure the request exists before we try to remove it.
         if (array_key_exists($key, $this->requests)) {
-
             $this->requests[$key]->removeMultiHandle($this->handle);
             unset($this->requests[$key]);
-
         }
     }
 
