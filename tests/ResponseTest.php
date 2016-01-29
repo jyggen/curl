@@ -36,16 +36,17 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $response .= 'Server: nginx'."\r\n";
         $response .= 'Date: Tue, 19 Feb 2013 12:59:40 GMT'."\r\n";
         $response .= 'Content-Type: text/html; charset=utf-8'."\r\n";
+        $response .= 'Age: '."\r\n";
         $response .= 'Set-Cookie: foo=bar; expires=Mon, 23-Dec-2019 23:50:00 GMT; path=/; domain=localhost'."\r\n";
         $response .= "\r\n";
         $response .= 'supermegafoxyawesomehot';
 
         $request->shouldReceive('getRawResponse')->andReturn($response);
-        $request->shouldReceive('getInfo')->with(CURLINFO_HEADER_SIZE)->andReturn(226);
+        $request->shouldReceive('getInfo')->with(CURLINFO_HEADER_SIZE)->andReturn(233);
         $request->shouldReceive('getInfo')->andReturn(array('http_code' => 503));
 
         $response = Response::forge($request);
-
+        //var_dump($response->getContent());die;
         $this->assertSame('supermegafoxyawesomehot', $response->getContent());
         $this->assertSame('1.1', $response->getProtocolVersion());
         $this->assertSame('utf-8', $response->getCharset());
