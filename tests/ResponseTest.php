@@ -46,7 +46,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $request->shouldReceive('getInfo')->andReturn(array('http_code' => 503));
 
         $response = Response::forge($request);
-        //var_dump($response->getContent());die;
+
         $this->assertSame('supermegafoxyawesomehot', $response->getContent());
         $this->assertSame('1.1', $response->getProtocolVersion());
         $this->assertSame('utf-8', $response->getCharset());
