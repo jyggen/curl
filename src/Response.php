@@ -34,6 +34,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         $headerSize = $request->getInfo(CURLINFO_HEADER_SIZE);
         $response   = $request->getRawResponse();
         $content    = (strlen($response) === $headerSize) ? '' : substr($response, $headerSize);
+
         $rawHeaders = rtrim(substr($response, 0, $headerSize));
         $headers    = [];
 
@@ -53,8 +54,12 @@ class Response extends \Symfony\Component\HttpFoundation\Response
         unset($headers[0]);
 
         foreach ($headers as $header) {
-            list($key, $value)     = explode(': ', $header);
-            $headerBag[trim($key)] = trim($value);
+            $headerPair = explode(': ', $header);
+
+            if (count($headerPair) > 1) {
+                list($key, $value)     = $headerPair;
+                $headerBag[trim($key)] = trim($value);
+            }
         }
 
         $response = new static($content, $info['http_code'], $headerBag);
