@@ -53,7 +53,7 @@ class Response extends \Symfony\Component\HttpFoundation\Response
 
         foreach ($headers as $header) {
 
-            list($key, $value)     = explode(': ', $header);
+            list($key, $value)     = array_pad(explode(':', $header), 2, '');
             $headerBag[trim($key)] = trim($value);
 
         }
