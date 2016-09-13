@@ -9,22 +9,25 @@ All notable changes to this library will be documented in this file.
 - `setStackSize()` to `Dispatcher` to set its stack size.
 - Support for `CurlFile` to `post()` and `put()` on `Curl`. [GH-15]
 
-### Deprecated
+### Removed
 - Calling `get()` on `Dispatcher` without a key. Use `all()` on `Dispatcher` instead.
 
 ### Changed
 
+- Bumped minimum PHP version to 5.4.
 - Moved to the namespace `Jyggen\Curl`.
 - Migrated to PSR-4 autoloading.
 - Moved `Curl` from `jyggen\Curl` to `Jyggen\Curl\Curl`.
 - Requests added to the dispatcher are now split into stacks to avoid a lot of simultaneously requests.
-- A callable can be passed to `execute()` on `Dispatcher`. It'll be used as a callback for each response. 
+- A callable can be passed to `execute()` on `Dispatcher`. It'll be used as a callback for each response.
 - `__destruct()` on `Request` will now close the internal cURL resource.
 - The library now depends on `^2.0.5` of `symfony/http-foundation`.
 
 ### Improved
+- Parsing of empty headers.
 - Refactored `Curl` away from `__callStatic()` to make the public class API more obvious.
 - Improved the PUT support on `Curl`.
+- Throw exception if request is unsuccessful.
 - Travis CI testing.
 
 ## 3.0.1 - 2013-08-21
