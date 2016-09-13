@@ -1,3 +1,5 @@
+_This repository is no longer actively developed (though I'll still maintain it and merge pull requests when needed). It's been a fun ride but there are [way better libraries](https://packagist.org/packages/guzzlehttp/guzzle) out there nowadays. If anyone wants to take over futher development of the project let me know!_
+
 ## jyggen/curl
 
 [![Source Code][badge-source]][source]
