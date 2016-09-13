@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this library will be documented in this file.
 
-## 4.0.0 - *unreleased*
+## 4.0.0 - 2015-09-13
 
 ### Added
 - `all()` to `Dispatcher` to retrieve all requests attached to it.
