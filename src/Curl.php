@@ -212,7 +212,6 @@ class Curl
         } else {
             $this->dispatcher->execute();
         }
-
     }
 
     /**
